@@ -1,0 +1,25 @@
+:root {
+    --primary-color: rgb(157, 206, 252);
+    --secondary-color: rgb(211, 211, 211);
+}
+
+.sidebar {
+    background-color: var(--primary-color);
+}
+
+.main-content {
+    background-color: var(--secondary-color);
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+h4 {
+    padding: 10px;
+}
