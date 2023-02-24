@@ -1,14 +1,7 @@
 :root {
     --primary-color: rgb(157, 206, 252);
     --secondary-color: rgb(211, 211, 211);
-}
 
-.sidebar {
-    background-color: var(--primary-color);
-}
-
-.main-content {
-    background-color: var(--secondary-color);
 }
 
 a {
@@ -16,10 +9,39 @@ a {
     color: black;
 }
 
-h1, h2 {
-    text-align: center;
+.sidebar {
+    background-color: var(--primary-color);
 }
 
-h4 {
-    padding: 10px;
+.sidebar h2 {
+    margin-top: 1em;
+}
+
+.views li {
+    background-color: var(--secondary-color);
+}
+
+/* user-defined categories */
+.life {
+    background-color: orange;
+}
+
+.work {
+    background-color: greenyellow;
+}
+
+.senior-design {
+    background-color: lightcoral;
+}
+
+.intro-to-computer-architecture {
+    background-color: beige;
+}
+
+.innovation-and-design {
+    background-color: violet;
+}
+
+.intro-to-cybersecurity {
+    background-color: aquamarine;
 }
