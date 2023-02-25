@@ -56,3 +56,18 @@ a {
 .intro-to-cybersecurity {
     background-color: aquamarine;
 }
+
+#show-all {
+    background-color: var(--secondary-color);
+    color: black;
+    border: none;
+    padding: 1em;
+    border-radius: 1em;
+}
+
+#show-all-div {
+    position: absolute;
+    bottom: 0;
+    padding: 1em;
+    align-content: right;
+}
