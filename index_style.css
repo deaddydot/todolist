@@ -1,7 +1,6 @@
 :root {
     --primary-color: rgb(157, 206, 252);
     --secondary-color: rgb(211, 211, 211);
-
 }
 
 a {
@@ -21,6 +20,18 @@ a {
     background-color: var(--secondary-color);
 }
 
+.main-content {
+    background-color: var(--secondary-color);
+}
+
+.card {
+    margin-bottom: 1em;
+}
+
+.card, .list-group-item, .card-header {
+    border: none;
+}
+
 /* user-defined categories */
 .life {
     background-color: orange;
@@ -35,7 +46,7 @@ a {
 }
 
 .intro-to-computer-architecture {
-    background-color: beige;
+    background-color: burlywood;
 }
 
 .innovation-and-design {
