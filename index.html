@@ -8,6 +8,8 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
         <!-- Include CSS-->
         <link rel="stylesheet" href="index_style.css" />
+        <!-- Include JavaScript -->
+        <script src="hide_checked.js"></script>
         <title>Tasktastic!</title>
     </head>
     <body class="h-100">
@@ -69,19 +71,19 @@
                                 <li class="list-group-item life">
                                     <h2>Life</h2>
                                 </li>
-                                <li class="list-group-item life">
-                                    <div class="form-check" id="check9000">
+                                <li class="list-group-item life task">
+                                    <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="check1" name="option1" value="something">
                                         <label class="form-check-label" for="check1">Mow the lawn</label>
                                     </div>
                                 </li>
-                                <li class="list-group-item life">
+                                <li class="list-group-item life task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="check2" name="option2" value="something">
                                         <label class="form-check-label" for="check2">Get groceries</label>
                                     </div>
                                 </li>
-                                <li class="list-group-item life">
+                                <li class="list-group-item life task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input">
                                         <label class="form-check-label">Relax</label>
@@ -94,19 +96,19 @@
                                 <li class="list-group-item work">
                                     <h2>Work</h2>
                                 </li>
-                                <li class="list-group-item work">
+                                <li class="list-group-item work task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="check1" name="option1" value="something">
                                         <label class="form-check-label" for="check1">Finish presentation</label>
                                     </div>
                                 </li>
-                                <li class="list-group-item work">
+                                <li class="list-group-item work task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="check2" name="option2" value="something">
                                         <label class="form-check-label" for="check2">Finish code</label>
                                     </div>
                                 </li>
-                                <li class="list-group-item work">
+                                <li class="list-group-item work task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input">
                                         <label class="form-check-label">Help out coworker</label>
@@ -123,25 +125,25 @@
                                 <li class="list-group-item senior-design">
                                     <h2>Senior Design</h2>
                                 </li>
-                                <li class="list-group-item senior-design">
+                                <li class="list-group-item senior-design task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="check1" name="option1" value="something">
                                         <label class="form-check-label" for="check1">Finish CSS</label>
                                     </div>
                                 </li>
-                                <li class="list-group-item senior-design">
+                                <li class="list-group-item senior-design task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="check2" name="option2" value="something">
                                         <label class="form-check-label" for="check2">Prepare for presentation</label>
                                     </div>
                                 </li>
-                                <li class="list-group-item senior-design">
+                                <li class="list-group-item senior-design task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input">
                                         <label class="form-check-label">Register for Engineering Open House</label>
                                     </div>
                                 </li>
-                                <li class="list-group-item senior-design">
+                                <li class="list-group-item senior-design task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input">
                                         <label class="form-check-label">Register for Engineering Open House</label>
@@ -154,19 +156,19 @@
                                 <li class="list-group-item innovation-and-design">
                                     <h2>Innovation and Design</h2>
                                 </li>
-                                <li class="list-group-item innovation-and-design">
+                                <li class="list-group-item innovation-and-design task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="check1" name="option1" value="something">
                                         <label class="form-check-label" for="check1">Finish project proposal</label>
                                     </div>
                                 </li>
-                                <li class="list-group-item innovation-and-design">
+                                <li class="list-group-item innovation-and-design task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="check2" name="option2" value="something">
                                         <label class="form-check-label" for="check2">Figure out what kind of RFID reader is needed</label>
                                     </div>
                                 </li>
-                                <li class="list-group-item innovation-and-design">
+                                <li class="list-group-item innovation-and-design task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input">
                                         <label class="form-check-label">Make Trello cards</label>
@@ -183,13 +185,13 @@
                                 <li class="list-group-item intro-to-computer-architecture">
                                     <h2>Intro to Computer Architecture</h2>
                                 </li>
-                                <li class="list-group-item intro-to-computer-architecture">
+                                <li class="list-group-item intro-to-computer-architecture task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="check1" name="option1" value="something">
                                         <label class="form-check-label" for="check1">Homework</label>
                                     </div>
                                 </li>
-                                <li class="list-group-item intro-to-computer-architecture">
+                                <li class="list-group-item intro-to-computer-architecture task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="check2" name="option2" value="something">
                                         <label class="form-check-label" for="check2">Study for quiz</label>
@@ -202,19 +204,19 @@
                                 <li class="list-group-item intro-to-cybersecurity">
                                     <h2>Intro to Cybersecurity</h2>
                                 </li>
-                                <li class="list-group-item intro-to-cybersecurity">
+                                <li class="list-group-item intro-to-cybersecurity task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="check1" name="option1" value="something">
                                         <label class="form-check-label" for="check1">Finish project proposal</label>
                                     </div>
                                 </li>
-                                <li class="list-group-item intro-to-cybersecurity">
+                                <li class="list-group-item intro-to-cybersecurity task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="check2" name="option2" value="something">
                                         <label class="form-check-label" for="check2">Figure out what kind of RFID reader is needed</label>
                                     </div>
                                 </li>
-                                <li class="list-group-item intro-to-cybersecurity">
+                                <li class="list-group-item intro-to-cybersecurity task">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input">
                                         <label class="form-check-label">Make Trello cards</label>
