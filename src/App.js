@@ -9,6 +9,19 @@ import TaskViewCol3 from './TaskView/TaskViewCol3';
 import ShowAllCheckboxes from './ShowAllCheckboxes';
 
 export class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { showAll: false };
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    const newState = !this.state.showAll;
+    this.setState({ showAll: newState });
+  }
+
   componentDidMount() {
     document.title = 'Tasktastic';
   }
@@ -18,10 +31,10 @@ export class App extends React.Component {
       <Container fluid='true'>
         <Row>
           <Col style={{ paddingLeft: '0', paddingRight: '0' }}><Sidebar /></Col>
-          <Col style={{ paddingLeft: '0', paddingRight: '0' }}><TaskViewCol1 /></Col>
-          <Col style={{ paddingLeft: '0', paddingRight: '0' }}><TaskViewCol2 /></Col>
-          <Col style={{ paddingLeft: '0', paddingRight: '0' }}><TaskViewCol3 /></Col>
-          <ShowAllCheckboxes />
+          <Col style={{ paddingLeft: '0', paddingRight: '0' }}><TaskViewCol1 showAll={this.state.showAll} /></Col>
+          <Col style={{ paddingLeft: '0', paddingRight: '0' }}><TaskViewCol2 showAll={this.state.showAll} /></Col>
+          <Col style={{ paddingLeft: '0', paddingRight: '0' }}><TaskViewCol3 showAll={this.state.showAll} /></Col>
+          <ShowAllCheckboxes onClick={() => this.handleClick()} />
         </Row>
       </Container>
     );

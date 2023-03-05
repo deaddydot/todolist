@@ -4,39 +4,29 @@ import Button from 'react-bootstrap/Button'
 export default class ShowAllCheckboxes extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { show_all_enabled: false };
+    this.state = { showAll: true };
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  showAll() {
-    this.state.show_all_enabled = !this.state.show_all_enabled;
-
-    const checkboxes = document.getElementsByClassName('checkbox');
-    console.log(checkboxes.length);
+  handleChange() {
+    const newState = !this.state.showAll;
+    this.setState({ showAll: newState });
     const showAllButton = document.getElementById('show-all');
 
-    if (this.state.show_all_enabled) {
-      console.log('hide');
+    if (this.state.showAll) {
       showAllButton.innerHTML = "Hide checked checkboxes";
-      for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].style.display = 'block';
-      }
     }
     else {
-      console.log('show');
-      showAllButton.innerHTML = "Show checked checkboxes";
-      for (var i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].state.checked) {
-          console.log('none');
-          checkboxes[i].style.display = 'none';
-        }
-      }
+      showAllButton.innerHTML = "Show all checkboxes";
     }
+
+    this.props.onClick();
   }
 
   render() {
     return (
       <div id='show-all-div'>
-        <Button id='show-all' onClick={ () => this.showAll() }>Show all checkboxes</Button>
+        <Button id='show-all' onClick={() => this.handleChange()}>Show all checkboxes</Button>
       </div>
     );
   }
