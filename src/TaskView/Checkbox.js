@@ -3,14 +3,28 @@ import Form from 'react-bootstrap/Form'
 
 export default class Checkbox extends React.Component {
     constructor(props) {
-        super(props);
-        this.state = { display: 'block' };
-        this.changeDisplay = this.changeDisplay.bind(this);
+      super(props);
+      this.state = { 
+        display: 'block',
+        checked: false
+      };
+    }
+
+    UNSAFE_componentWillReceiveProps () {
+      if (!this.props.showAll) {
+        this.setState({ display: 'block' });
+      } else if (this.props.showAll && this.state.checked) {
+        this.setState({ display: 'none' });
+      }
     }
 
     changeDisplay() {
+      const newState = !this.state.checked;
+      this.setState({ checked: newState });
+      if (!this.props.showAll && !this.state.checked) {
         const newDisplay = this.state.display === 'block' ? 'none' : 'block';
         this.setState({ display: newDisplay });
+      }
     }
 
     render() {
