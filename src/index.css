@@ -1,0 +1,58 @@
+:root {
+  --primary-color: rgb(157, 206, 252);
+  --secondary-color: rgb(211, 211, 211);
+  --life: orange;
+  --work: greenyellow;
+  --senior-design: lightcoral;
+  --intro-to-computer-architecture: burlywood;
+  --innovation-and-design: violet;
+  --intro-to-cybersecurity: aquamarine;
+}
+
+.card {
+  margin-bottom: 1em;
+}
+
+.card, .list-group-item, .card-header {
+  border: none;
+}
+
+/* user-defined categories */
+.life {
+  background-color: orange;
+}
+
+.work {
+  background-color: greenyellow;
+}
+
+.senior-design {
+  background-color: lightcoral;
+}
+
+.intro-to-computer-architecture {
+  background-color: burlywood;
+}
+
+.innovation-and-design {
+  background-color: violet;
+}
+
+.intro-to-cybersecurity {
+  background-color: aquamarine;
+}
+
+#show-all {
+  background-color: var(--secondary-color);
+  color: black;
+  border: none;
+  padding: 1em;
+  border-radius: 1em;
+}
+
+#show-all-div {
+  position: absolute;
+  bottom: 0;
+  padding-left: 2rem;
+  align-content: right;
+}
