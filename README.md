@@ -16,7 +16,7 @@ Here are the steps to do that with Fork which I highly recommend downloading if 
 		Select 'Local Changes' in the top left and select and stage the files you changed here.
 		Enter a commit describing what you've changed and add a description if you need to describe further.
 		'Commit' in the bottom right.
-		'Push' in the top left, selecting the branch you're currently on and origin/main as the destination and push this.
+		'Push' in the top left, selecting the branch you're currently on and that branch as the destination and push this.
 		From there a pull request can be created from that branch in Github, and we can merge that branch with main if the changes are solid.
 
 If you would like to push changes to the build so they will render on our active webpage, you can navigate to your app folder in the command line and run this with some commit message: npm run deploy -- -m "commit message"
