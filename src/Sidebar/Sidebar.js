@@ -12,7 +12,7 @@ function Sidebar() {
   const [open2, setOpen2] = useState(false);
 
   return (
-    <div className='sidebar' style={{paddingLeft: '20px'}}>
+    <div className='sidebar' style={{padding: '20px'}}>
       <Row style={{height: '10%', alignContent: 'center'}}>
         <h1 className='text-center'>Tasktastic</h1>
       </Row>
