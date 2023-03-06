@@ -18,14 +18,18 @@ Here are the steps to do that with Fork which I highly recommend downloading if 
 		'Commit' in the bottom right.
 		'Push' in the top left, selecting the branch you're currently on and that branch as the destination and push this.
 		From there a pull request can be created from that branch in Github, and we can merge that branch with main if the changes are solid.
-
-If you would like to push changes to the build so they will render on our active webpage, you can navigate to your app folder in the command line and run this with some commit message: npm run deploy -- -m "commit message"
 	
 To create a new React app if you'd like to test or whatnot, run this command in a folder you'd like to create a react app in with whatever you'd like the folder of the project to be named: npx create-react-app <appName>
 To use Bootstrap in your app run this command, still in that folder on the command line: npm install react-bootstrap bootstrap
 
 To start a react app so that it will render in your browser for testing on your local computer, navigate in the command line to the app folder and run this command: npm start
 This should open up the browser and display what you have coded.
+
+
+
+
+
+This should hopefully soon be available to view the page at deaddydot.github.io/todolist once we get that up. That page will only be temporary until we start using a database, when we'll need to switch to AWS.
 
 
 
