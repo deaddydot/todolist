@@ -4,12 +4,14 @@ import Collapse from 'react-bootstrap/Collapse';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Row from 'react-bootstrap/Row';
 import Categories from './Categories';
+import Timeframes from './Timeframes';
 import './Sidebar.css';
 import './../index.css';
 
 function Sidebar() {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [open3, setOpen3] = useState(false);
 
   return (
     <div className='sidebar' style={{padding: '20px'}}>
@@ -25,9 +27,12 @@ function Sidebar() {
             <div id='collapse1' style={{margin: '10px', borderRadius: '10px'}}>
                 <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'var(--secondary-color)'}}><h4>Categories</h4></ListGroup.Item>
                 <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'var(--secondary-color)'}}><h4>Calendar</h4></ListGroup.Item>
+                <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'var(--secondary-color)'}}><h4>Completed</h4></ListGroup.Item>
             </div>
           </Collapse>
         </ListGroup>
+      </Row>
+      <Row>
         <ListGroup>
           <Button style={{width: '100%', backgroundColor: 'var(--primary-color)', border: 'none', color: 'black'}} onClick={() => setOpen2(!open2)} aria-controls='collapse2' aria-expanded={open2}>
             <h2>Filter by Categories</h2>
@@ -35,6 +40,18 @@ function Sidebar() {
           <Collapse in={open2}>
             <div id='collapse2' style={{margin: '10px', borderRadius: '10px'}}>
               <Categories />
+            </div>
+          </Collapse>
+        </ListGroup>
+      </Row>
+      <Row>
+        <ListGroup>
+          <Button style={{width: '100%', backgroundColor: 'var(--primary-color)', border: 'none', color: 'black'}} onClick={() => setOpen3(!open3)} aria-controls='collapse3' aria-expanded={open3}>
+            <h2>Filter by Timeframe</h2>
+          </Button>
+          <Collapse in={open3}>
+            <div id='collapse3' style={{margin: '10px', borderRadius: '10px'}}>
+              <Timeframes />
             </div>
           </Collapse>
         </ListGroup>
