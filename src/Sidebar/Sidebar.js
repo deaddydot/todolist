@@ -8,7 +8,11 @@ import Timeframes from './Timeframes';
 import './Sidebar.css';
 import './../index.css';
 
-function Sidebar() {
+function Sidebar(props) {
+  function changeView(view) {
+    props.onInput(view);
+  }
+
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [open3, setOpen3] = useState(false);
@@ -25,9 +29,9 @@ function Sidebar() {
           </Button>
           <Collapse in={open}>
             <div id='collapse1' style={{margin: '10px', borderRadius: '10px'}}>
-                <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'var(--secondary-color)'}}><h4>Categories</h4></ListGroup.Item>
-                <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'var(--secondary-color)'}}><h4>Calendar</h4></ListGroup.Item>
-                <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'var(--secondary-color)'}}><h4>Completed</h4></ListGroup.Item>
+                <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'var(--secondary-color)'}}><h4><button onClick={() => changeView('task')}>Categories</button></h4></ListGroup.Item>
+                <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'var(--secondary-color)'}}><h4><button onClick={() => changeView('calendar')}>Calendar</button></h4></ListGroup.Item>
+                <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'var(--secondary-color)'}}><h4><button>Completed</button></h4></ListGroup.Item>
             </div>
           </Collapse>
         </ListGroup>
