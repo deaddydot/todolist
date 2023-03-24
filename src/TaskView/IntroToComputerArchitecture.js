@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
-import Checkbox from './Checkbox';
+import Checkbox from '../Checkbox';
 
 export default class IntroToComputerArchitecture extends React.Component {
   constructor(props) {
