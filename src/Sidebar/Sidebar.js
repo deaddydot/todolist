@@ -29,9 +29,21 @@ function Sidebar(props) {
           </Button>
           <Collapse in={open}>
             <div id='collapse1' style={{margin: '10px', borderRadius: '10px'}}>
-                <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'var(--secondary-color)'}}><h4><button onClick={() => changeView('task')}>Categories</button></h4></ListGroup.Item>
-                <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'var(--secondary-color)'}}><h4><button onClick={() => changeView('calendar')}>Calendar</button></h4></ListGroup.Item>
-                <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'var(--secondary-color)'}}><h4><button>Completed</button></h4></ListGroup.Item>
+                <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'lightgreen', padding: '0', margin: '0'}}>
+                  <Button style={{width: '100%', backgroundColor: 'lightgreen', border: 'none', color: 'black'}} onClick={() => changeView('task')}>
+                    <h4>Categories</h4>
+                  </Button>
+                </ListGroup.Item>
+                <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'violet', padding: '0', margin: '0'}}>
+                  <Button style={{width: '100%', backgroundColor: 'violet', border: 'none', color: 'black'}} onClick={() => changeView('calendar')}>
+                    <h4>Calendar</h4>
+                  </Button>
+                </ListGroup.Item>
+                <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'yellow', padding: '0', margin: '0'}}>
+                  <Button style={{width: '100%', backgroundColor: 'yellow', border: 'none', color: 'black'}} >
+                    <h4>Completed</h4>
+                  </Button>
+                </ListGroup.Item>
             </div>
           </Collapse>
         </ListGroup>
