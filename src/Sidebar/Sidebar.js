@@ -7,6 +7,7 @@ import Categories from './Categories';
 import Timeframes from './Timeframes';
 import './Sidebar.css';
 import './../index.css';
+import AddTaskButton from './AddTask/addTaskButton';
 
 function Sidebar(props) {
   function changeView(view) {
@@ -61,6 +62,7 @@ function Sidebar(props) {
         </ListGroup>
       </Row>
       <Row>
+        <AddTaskButton />
         <ListGroup>
           <Button style={{width: '100%', backgroundColor: 'var(--primary-color)', border: 'none', color: 'black'}} onClick={() => setOpen3(!open3)} aria-controls='collapse3' aria-expanded={open3}>
             <h2>Filter by Timeframe</h2>
