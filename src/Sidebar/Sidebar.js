@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Categories from './Categories';
 import './Sidebar.css';
 import './../index.css';
+import AddTaskButton from './AddTask/addTaskButton';
 
 function Sidebar() {
   const [open, setOpen] = useState(false);
@@ -40,7 +41,7 @@ function Sidebar() {
         </ListGroup>
       </Row>
       <Row>
-        <h2 className='text-center'>Add a task</h2>
+        <AddTaskButton />
       </Row>
       <Row>
         <h2 className='text-center'>Settings</h2>
