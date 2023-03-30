@@ -1,26 +1,26 @@
 {
     {
-	"id": 1,
-	"title": "Homework",
-    "description": "Chemistry HW Chapter 6",
-    "deadline": "Wed, 10 May 2023 01:11:16 GMT",
-    "completed": "False",
-    "created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
+        "id": 1,
+        "title": "Homework",
+        "description": "Chemistry HW Chapter 6",
+        "deadline": "Wed, 10 May 2023 01:11:16 GMT",
+        "completed": "False",
+        "created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     },
     {
 	"id": 2,
 	"title": "Feed the dog",
-    "description": "2 full bowls of dog food",
-    "deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
-    "completed": "True",
-    "created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
+	"description": "2 full bowls of dog food",
+	"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
+	"completed": "True",
+	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     },
     {
 	"id": 3,
 	"title": "",
-    "description": "2 full bowls of dog food",
-    "deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
-    "completed": "True",
-    "created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
+        "description": "2 full bowls of dog food",
+        "deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
+        "completed": "True",
+        "created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     }
 }
