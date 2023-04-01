@@ -13,7 +13,8 @@ export default class JsonCheckbox extends React.Component {
   UNSAFE_componentWillReceiveProps () {
     if (!this.props.showAll) {
       this.setState({ display: 'block' });
-    } else if (this.props.showAll && this.state.checked) {
+    }
+    else if (this.props.showAll && this.state.checked) {
       this.setState({ display: 'none' });
     }
   }
