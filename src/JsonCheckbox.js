@@ -1,7 +1,7 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
 
-export default class Checkbox extends React.Component {
+export default class JsonCheckbox extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
@@ -30,7 +30,10 @@ export default class Checkbox extends React.Component {
   render() {
     return (
       // <label><input type='checkbox' className='checkbox' value='value' />{this.props.task}</label>
-      <Form.Check className='checkbox' type='checkbox' label={this.props.task} onClick={() => this.changeDisplay()} style={{display: this.state.display}}/>
+      <div style={{display: this.state.display}} >
+        <Form.Check className='checkbox' type='checkbox' label={this.props.label} onClick={() => this.changeDisplay()} />
+        <p>Due: {this.props.deadline}</p>
+      </div>
     );
   }
 }

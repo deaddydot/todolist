@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
+import JsonCheckbox from './JsonCheckbox';
+import Card from 'react-bootstrap/Card';
+import {Col, Row} from 'react-bootstrap';
 
 export default class DataFromJson extends React.Component {
   constructor(props) {
@@ -20,7 +22,7 @@ export default class DataFromJson extends React.Component {
 
   fetchData = async () => {
     try {
-      const response = await axios.get('/data.json');
+      const response = await axios.get('/data2.json');
       this.setState({ data: response.data });
     }
     catch(error) {
@@ -31,18 +33,71 @@ export default class DataFromJson extends React.Component {
   render() {
     const { data } = this.state;
 
+    const categoryCount = Object.keys(data).length;
+    const categoriesPerColumn = Math.ceil(categoryCount / 3);
+    const columns = [[], [], []];
+
+    Object.keys(data).forEach((category, index) => {
+      const columnIndex = Math.floor(index / categoriesPerColumn);
+      columns[columnIndex].push(category);
+    });
+
     return (
-      <Container>
-        {data.map((item, index) => (
-          <React.Fragment key={item.id}>
-            <Form.Check className='checkbox' type='checkbox' label={item.title} onClick={() => this.changeDisplay()} style={{display: this.state.display}}/>
-            <p>Due: {item.deadline}</p>
-          </React.Fragment>
+      <Row style={{backgroundColor: 'var(--secondary-color)', height: '100vh'}}>
+        {columns.map((column, colIndex) => (
+          <Col key={`column-${colIndex}`}>
+            {column.map((category, index) => (
+              <React.Fragment key={`category-${index}`}>
+                <Card style={{backgroundColor: `var(--${category})`, border: 'none', padding: '1rem'}}>
+                  <h2>{category}</h2>
+                  {data[category].map((item, itemIndex) => (
+                    <React.Fragment key={item.id}>
+                      <JsonCheckbox label={item.title} deadline={item.deadline}  showAll={this.props.showAll} />
+                    </React.Fragment>
+                  ))}
+                </Card>
+              </React.Fragment>
+            ))}
+          </Col>
         ))}
-      </Container>
+      </Row>
     );
   }
 }
+
+// render() {
+//   const { data } = this.state;
+
+//   return (
+//     <Container>
+//       {Object.keys(data).map((category, index) => (
+//         <React.Fragment key={index}>
+//           <h2>{category}</h2>
+//           {data[category].map((item, itemIndex) => (
+//             <React.Fragment key={itemIndex.id}>
+//               <Form.Check className='checkbox' type='checkbox' label={item.title} onClick={() => this.changeDisplay()} style={{display: this.state.display}}/>
+//               <p>Due: {item.deadline}</p>
+//             </React.Fragment>
+//           ))}
+//         </React.Fragment>
+//       ))}
+//     </Container>
+//   );
+// }
+// }
+
+
+//   return (
+//     <Container>
+//       {data.map((item, index) => (
+//         <React.Fragment key={item.id}>
+//           <Form.Check className='checkbox' type='checkbox' label={item.title} onClick={() => this.changeDisplay()} style={{display: this.state.display}}/>
+//           <p>Due: {item.deadline}</p>
+//         </React.Fragment>
+//       ))}
+//     </Container>
+//   );
+// }
 
 
 // import React from 'react';
