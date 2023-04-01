@@ -4,6 +4,7 @@ import Row from 'react-bootstrap/Row';
 import TaskViewCol1 from './TaskViewCol1';
 import TaskViewCol2 from './TaskViewCol2';
 import TaskViewCol3 from './TaskViewCol3';
+import DataFromJson from '../DataFromJson';
 
 export default class TaskView extends React.Component {
   constructor(props) {
@@ -13,9 +14,7 @@ export default class TaskView extends React.Component {
   render() {
     return (
       <Row>
-        <Col style={{ paddingLeft: '0', paddingRight: '0' }}><TaskViewCol1 showAll={this.props.showAll} /></Col>
-        <Col style={{ paddingLeft: '0', paddingRight: '0' }}><TaskViewCol2 showAll={this.props.showAll} /></Col>
-        <Col style={{ paddingLeft: '0', paddingRight: '0' }}><TaskViewCol3 showAll={this.props.showAll} /></Col>
+        <DataFromJson showAll={this.props.showAll}/>
       </Row>
     );
   }

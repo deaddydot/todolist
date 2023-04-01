@@ -1,7 +1,6 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Checkbox from '../Checkbox';
-import DataFromJson from '../DataFromJson';
 
 export default class InnovationAndDesign extends React.Component {
   constructor(props) {
@@ -12,7 +11,6 @@ export default class InnovationAndDesign extends React.Component {
     return (
       <Card style={{backgroundColor: 'var(--innovation-and-design)', border: 'none', padding: '1rem'}}>
         <h4 style={{margin: '1rem'}}>Innovation and Design</h4>
-          <DataFromJson />
           <Checkbox task='Gather materials' showAll={this.props.showAll} />
           <Checkbox task='Build prototype' showAll={this.props.showAll} />
           <Checkbox task='Present project' showAll={this.props.showAll} />
