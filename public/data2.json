@@ -4,15 +4,15 @@
         	"id": 1,
         	"title": "Finish Calendar View",
         	"description": "Chemistry HW Chapter 6",
-        	"deadline": "Wed, 10 May 2023 01:11:16 GMT",
+        	"deadline": "Sun, 10 May 2023 01:11:16 GMT",
         	"completed": "False",
-        	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
+        	"created_at": "Sun, 29 Mar 2023 01:11:16 GMT"
     	},
     	{
 			"id": 2,
 			"title": "Team meeting",
 			"description": "2 full bowls of dog food",
-			"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
+			"deadline": "Wed, 30 Mar 2023 01:11:16 GMT",
 			"completed": "True",
 			"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     	},
@@ -22,135 +22,183 @@
         	"description": "Idk",
         	"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
         	"completed": "False",
-        	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
+        	"created_at": "Fri, 29 Mar 2023 01:11:16 GMT"
+    	},
+		{
+        	"id": 4,
+        	"title": "Prepare Prototype 3 goals",
+        	"description": "Chemistry HW Chapter 6",
+        	"deadline": "Tue, 10 May 2023 01:11:16 GMT",
+        	"completed": "False",
+        	"created_at": "Sun, 29 Mar 2023 01:11:16 GMT"
     	}
 	],
 	"innovation-and-design": [
 		{
-        	"id": 1,
-        	"title": "Finish Calendar View",
+        	"id": 5,
+        	"title": "Fix Pi issues",
         	"description": "Chemistry HW Chapter 6",
-        	"deadline": "Wed, 10 May 2023 01:11:16 GMT",
+        	"deadline": "Sun, 10 May 2023 01:11:16 GMT",
         	"completed": "False",
-        	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
+        	"created_at": "Sun, 29 Mar 2023 01:11:16 GMT"
     	},
     	{
-			"id": 2,
+			"id": 6,
 			"title": "Team meeting",
 			"description": "2 full bowls of dog food",
-			"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
+			"deadline": "Mon, 30 Mar 2023 01:11:16 GMT",
 			"completed": "True",
-			"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
+			"created_at": "Mon, 29 Mar 2023 01:11:16 GMT"
     	},
     	{
-			"id": 3,
-			"title": "Present",
+			"id": 7,
+			"title": "Submit video",
         	"description": "Idk",
         	"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
         	"completed": "False",
-        	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
+        	"created_at": "Thu, 29 Mar 2023 01:11:16 GMT"
     	}
 	],
 	"life": [
 		{
-        	"id": 1,
-        	"title": "Finish Calendar View",
+        	"id": 8,
+        	"title": "Homework",
         	"description": "Chemistry HW Chapter 6",
-        	"deadline": "Wed, 10 May 2023 01:11:16 GMT",
+        	"deadline": "Mon, 10 May 2023 01:11:16 GMT",
         	"completed": "False",
         	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     	},
     	{
-			"id": 2,
-			"title": "Team meeting",
+			"id": 9,
+			"title": "Pack stuff",
 			"description": "2 full bowls of dog food",
-			"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
+			"deadline": "Sat, 30 Mar 2023 01:11:16 GMT",
 			"completed": "True",
 			"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     	},
     	{
-			"id": 3,
-			"title": "Present",
+			"id": 10,
+			"title": "Move stuff",
         	"description": "Idk",
-        	"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
+        	"deadline": "Sun, 30 Mar 2023 01:11:16 GMT",
+        	"completed": "False",
+        	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
+    	},
+		{
+			"id": 11,
+			"title": "Clean",
+        	"description": "Idk",
+        	"deadline": "Sat, 30 Mar 2023 01:11:16 GMT",
+        	"completed": "False",
+        	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
+    	},
+		{
+			"id": 12,
+			"title": "Taxes",
+        	"description": "Idk",
+        	"deadline": "Wed, 30 Mar 2023 01:11:16 GMT",
+        	"completed": "False",
+        	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
+    	},
+		{
+			"id": 13,
+			"title": "DnD",
+        	"description": "Idk",
+        	"deadline": "Tue, 30 Mar 2023 01:11:16 GMT",
         	"completed": "False",
         	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     	}
 	],
 	"work": [
 		{
-        	"id": 1,
-        	"title": "Finish Calendar View",
+        	"id": 14,
+        	"title": "Install software",
         	"description": "Chemistry HW Chapter 6",
         	"deadline": "Wed, 10 May 2023 01:11:16 GMT",
         	"completed": "False",
         	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     	},
     	{
-			"id": 2,
-			"title": "Team meeting",
+			"id": 15,
+			"title": "Fix database issue",
 			"description": "2 full bowls of dog food",
-			"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
+			"deadline": "Mon, 30 Mar 2023 01:11:16 GMT",
 			"completed": "True",
 			"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     	},
     	{
-			"id": 3,
-			"title": "Present",
+			"id": 16,
+			"title": "Do scripts",
         	"description": "Idk",
         	"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
+        	"completed": "False",
+        	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
+    	},
+		{
+			"id": 17,
+			"title": "Training videos",
+        	"description": "Idk",
+        	"deadline": "Fri, 30 Mar 2023 01:11:16 GMT",
         	"completed": "False",
         	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     	}
 	],
 	"intro-to-computer-architecture": [
 		{
-        	"id": 1,
-        	"title": "Finish Calendar View",
+        	"id": 18,
+        	"title": "Attend Class",
         	"description": "Chemistry HW Chapter 6",
-        	"deadline": "Wed, 10 May 2023 01:11:16 GMT",
+        	"deadline": "Tue, 10 May 2023 01:11:16 GMT",
         	"completed": "False",
         	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     	},
     	{
-			"id": 2,
-			"title": "Team meeting",
+			"id": 19,
+			"title": "Attend Class",
 			"description": "2 full bowls of dog food",
 			"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
 			"completed": "True",
 			"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     	},
     	{
-			"id": 3,
-			"title": "Present",
+			"id": 20,
+			"title": "Homework",
         	"description": "Idk",
-        	"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
+        	"deadline": "Sat, 30 Mar 2023 01:11:16 GMT",
         	"completed": "False",
         	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     	}
 	],
 	"intro-to-cybersecurity": [
 		{
-        	"id": 1,
-        	"title": "Finish Calendar View",
+        	"id": 21,
+        	"title": "Lab",
         	"description": "Chemistry HW Chapter 6",
-        	"deadline": "Wed, 10 May 2023 01:11:16 GMT",
+        	"deadline": "Tue, 10 May 2023 01:11:16 GMT",
         	"completed": "False",
         	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     	},
     	{
-			"id": 2,
-			"title": "Team meeting",
+			"id": 22,
+			"title": "Lab help session",
 			"description": "2 full bowls of dog food",
-			"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
+			"deadline": "Mon, 30 Mar 2023 01:11:16 GMT",
 			"completed": "True",
 			"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     	},
     	{
-			"id": 3,
-			"title": "Present",
+			"id": 23,
+			"title": "Watch Videos",
         	"description": "Idk",
-        	"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
+        	"deadline": "Mon, 30 Mar 2023 01:11:16 GMT",
+        	"completed": "False",
+        	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
+    	},
+		{
+			"id": 24,
+			"title": "Attend Class",
+        	"description": "Idk",
+        	"deadline": "Wed, 30 Mar 2023 01:11:16 GMT",
         	"completed": "False",
         	"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
     	}

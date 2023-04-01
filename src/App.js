@@ -11,7 +11,7 @@ export class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { showAll: false, showTask: true, showCalendar: false };
+    this.state = { showAll: false, showTask: true, showCalendar: false, view: 'task' };
 
     this.handleClick = this.handleClick.bind(this);
     this.changeView = this.changeView.bind(this);
@@ -19,15 +19,15 @@ export class App extends React.Component {
 
   handleClick() {
     const newState = !this.state.showAll;
-    this.setState({ showAll: newState, showTask: true, showCalendar: false });
+    this.setState({ showAll: newState });
   }
 
   changeView(view) {
     if (view === 'task') {
-      this.setState({ showTask: true, showCalendar: false });
+      this.setState({ showTask: true, showCalendar: false, view: 'task' });
     }
     else if (view === 'calendar') {
-      this.setState({ showTask: false, showCalendar: true });
+      this.setState({ showTask: false, showCalendar: true, view: 'calendar' });
     }
   }
 
