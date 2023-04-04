@@ -20,13 +20,16 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    tasks = db.relationship('Task', backref='category', lazy=True)
 
     def __repr__(self):
         return f"Category(name={self.name}, user_id={self.user_id})"
 
-    def __init__(self, name, user_id):
-        self.name = name
-        self.user_id = user_id
+    def get_default_category(self):
+        default_category = Category.query.filter_by(name='Default', user_id=self.user_id).first()
+        if default_category:
+            return default_category
+        return Category(name='Default', user_id=self.user_id)
 
 # Task class
 class Task(db.Model):
@@ -37,15 +40,18 @@ class Task(db.Model):
     deadline = db.Column(db.TIMESTAMP)
     completed = db.Column(db.Boolean, default=False)
     priority = db.Column(db.Integer, default=3)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
 
     def __repr__(self):
         return f"Task: {self.title}"
     
-    def __init__(self, title, description, deadline, priority):
+    def __init__(self, title, description, deadline, priority, category_id=None):
         self.title = title
         self.description = description
         self.deadline = deadline
         self.priority = priority
+        self.category_id = category_id or self.category.get_default_category().id
+
 
 def format_task(task):
     return {
@@ -79,76 +85,72 @@ def create_task():
     title = request.json["title"]
     description = request.json["description"]
     deadline = request.json["deadline"]
-    
-    # Create a new task object and add it to the database
-    task = Task(title=title, description=description, deadline=deadline)
+    user_id = request.json["user_id"]
+
+    # Find the default category for the user
+    default_category = Category.query.filter_by(user_id=user_id, name='Default').first()
+
+    # Create a new task object and add it to the database with the default category
+    task = Task(title=title, description=description, deadline=deadline, category=default_category)
     db.session.add(task)
     db.session.commit()
 
     # Return the formatted task as a response
     return format_task(task)
     
-# # Get all tasks
-# @app.route("/tasks", methods=["GET"])
-# def get_tasks():
-#     tasks = Task.query.order_by(Task.id.asc()).all()
-#     task_list = []
-#     for task in tasks:
-#         task_list.append(format_task(task))
-#     return task_list
+# Get all tasks
+@app.route("/tasks/<int:user_id>", methods=["GET"])
+def get_tasks(user_id):
+    # Retrieve all tasks for a specific user
+    tasks = Task.query.filter_by(user_id=user_id).order_by(Task.id.asc()).all()
+    task_list = []
+    for task in tasks:
+        task_list.append(format_task(task))
+    return jsonify(task_list)
 
-# # Get single task
-# @app.route("/tasks/<id>", methods=["GET"])
-# def get_task(id):
-#     task = Task.query.filter_by(id=id).one()
-#     formatted_task = format_task(task)
-#     return formatted_task
+# Get single task
+@app.route("/tasks/<int:id>", methods=["GET"])
+def get_task(id):
+    task = Task.query.filter_by(id=id).one_or_none()
+    if task is None:
+        return {"error": "Task not found"}, 404
+    formatted_task = format_task(task)
+    return formatted_task
 
-# # Delete task
-# @app.route("/tasks/<id>", methods=["DELETE"])
-# def delete_task(id):
-#     task = Task.query.filter_by(id=id).one()
-#     db.session.delete(task)
-#     db.session.commit()
-#     return f'Task {id} deleted'
+# Delete task
+@app.route("/tasks/<int:id>", methods=["DELETE"])
+def delete_task(id):
+    task = Task.query.filter_by(id=id).first()
+    if task:
+        db.session.delete(task)
+        db.session.commit()
+        return f"Task {id} deleted"
+    else:
+        return f"Task {id} not found", 404
     
-# # Edit task
-# @app.route("/tasks/<id>", methods=["PUT"])
-# def update_task(id):
-#     task = Task.query.filterby(id=id).one()
-#     description = request.json['description']
-#     task.update(dict(description=description, created_at = datetime.utcnow()))
-#     db.session.commit()
-#     return task
+# Edit task
+@app.route("/tasks/<id>", methods=["PUT"])
+def update_task(id):
+    # Find the task in the database
+    task = Task.query.filter_by(id=id).one()
 
+    # Update the task with the new data from the request
+    if "title" in request.json:
+        task.title = request.json["title"]
+    if "description" in request.json:
+        task.description = request.json["description"]
+    if "deadline" in request.json:
+        task.deadline = request.json["deadline"]
+    if "completed" in request.json:
+        task.completed = request.json["completed"]
+    if "priority" in request.json:
+        task.priority = request.json["priority"]
 
-    # # Return the updated data
-    # return jsonify(
-    #     {
-    #         "id": id,
-    #         "title": title,
-    #         "description": description,
-    #         "date": date,
-    #         "completed": completed,
-    #     }
-    # )
+    # Commit the changes to the database
+    db.session.commit()
 
-# @app.route("/tasks/<int:id>", methods=["DELETE"])
-# def delete_task(id):
-#     # Delete the data from the database
-#     conn = psycopg2.connect(**conn_params)
-#     cursor = conn.cursor()
-#     cursor.execute(
-#         """
-#         DELETE FROM test-schema.task
-#         WHERE id=%s;
-#         """,
-#         (id,),
-#     )
-#     conn.commit()
-
-    # Return a success message
-    return jsonify({"message": "Task deleted successfully."})
+    # Return the updated task as a response
+    return format_task(task)
 
 if __name__ == "__main__":
     app.run()
