@@ -1,172 +1,151 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import event
 from datetime import datetime
-import psycopg2
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:s0r8Jh7Qv4&m@localhost/test'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ubuntu:ubuntu@3.129.218.132/test1'
+
 db = SQLAlchemy(app)
 
-class Event(db.Model):
+app.app_context().push()
+
+# User class
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    categories = db.relationship('Category', backref='user', lazy=True)
+
+# Category class
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f"Event: {self.description}"
+        return f"Category(name={self.name}, user_id={self.user_id})"
+
+    def __init__(self, name, user_id):
+        self.name = name
+        self.user_id = user_id
+
+# Task class
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text)
+    created_at = db.Column(db.TIMESTAMP, nullable=False, default=datetime.utcnow)
+    deadline = db.Column(db.TIMESTAMP)
+    completed = db.Column(db.Boolean, default=False)
+    priority = db.Column(db.Integer, default=3)
+
+    def __repr__(self):
+        return f"Task: {self.title}"
     
-    def __init__(self, description):
+    def __init__(self, title, description, deadline, priority):
+        self.title = title
         self.description = description
+        self.deadline = deadline
+        self.priority = priority
 
-def format_event(event):
+def format_task(task):
     return {
-        "description": event.description,
-        "id": event.id,
-        "created_at": event.created_at
+        "id": task.id,
+        "title": task.title,
+        "description": task.description,
+        "created_at": task.created_at,
+        "deadline": task.deadline,
+        "completed": task.completed
     }
-
-# Define your PostgreSQL connection parameters
-conn_params = {
-    "host": "localhost",
-    "database": "test",
-    "user": "postgres",
-    "password": "s0r8Jh7Qv4&m",
-}
 
 # Define a route that queries the database
 @app.route("/")
 def hello():
-    # Establish a connection to the database
-    #conn = psycopg2.connect(**conn_params)
-    #cursor = conn.cursor()
-
-    # Execute a test SQL command
-    #cursor.execute("SELECT version();")
-    #row = cursor.fetchone()
-
-    # Close the database connection
-    #cursor.close()
-    #conn.close()
-
-
-
-    # Return the database version number
     return "Hello"
 
-# Create event
-@app.route("/events", methods=["POST"])
-def create_event():
+# Create a database when a new row is added to user table
+@event.listens_for(User, 'after_insert')
+def create_default_category(mapper, connection, target):
+    # create a new category with default values
+    default_category = Category(name='Default', user_id=target.id)
+    # add the category to the session
+    db.session.add(default_category)
+    # commit the transaction
+    db.session.commit()
+
+# Create task
+@app.route("/tasks", methods=["POST"])
+def create_task():
     # Extract the data from the request
+    title = request.json["title"]
     description = request.json["description"]
-    event = Event(description)
-    db.session.add(event)
-    db.session.commit()
-    return format_event(event)
-
-# Get all events
-@app.route("/events", methods=["GET"])
-def get_events():
-    events = Event.query.order_by(Event.id.asc()).all()
-    event_list = []
-    for event in events:
-        event_list.append(format_event(event))
-    return event_list
-
-# Get single event
-@app.route("/events/<id>", methods=["GET"])
-def get_event(id):
-    event = Event.query.filter_by(id=id).one()
-    formatted_event = format_event(event)
-    return formatted_event
-
-# Delete event
-@app.route("/events/<id>", methods=["DELETE"])
-def delete_event(id):
-    event = Event.query.filter_by(id=id).one()
-    db.session.delete(event)
-    db.session.commit()
-    return f'Event {id} deleted'
+    deadline = request.json["deadline"]
     
-# Edit event
-@app.route("/events/<id>", methods=["PUT"])
-def update_event(id):
-    event = Event.query.filterby(id=id).one()
-    description = request.json['description']
-    event.update(dict(description=description, created_at = datetime.utcnow()))
+    # Create a new task object and add it to the database
+    task = Task(title=title, description=description, deadline=deadline)
+    db.session.add(task)
     db.session.commit()
-    return event
 
-# def read_tasks():
-#     # Query the data from the database
+    # Return the formatted task as a response
+    return format_task(task)
+    
+# # Get all tasks
+# @app.route("/tasks", methods=["GET"])
+# def get_tasks():
+#     tasks = Task.query.order_by(Task.id.asc()).all()
+#     task_list = []
+#     for task in tasks:
+#         task_list.append(format_task(task))
+#     return task_list
+
+# # Get single task
+# @app.route("/tasks/<id>", methods=["GET"])
+# def get_task(id):
+#     task = Task.query.filter_by(id=id).one()
+#     formatted_task = format_task(task)
+#     return formatted_task
+
+# # Delete task
+# @app.route("/tasks/<id>", methods=["DELETE"])
+# def delete_task(id):
+#     task = Task.query.filter_by(id=id).one()
+#     db.session.delete(task)
+#     db.session.commit()
+#     return f'Task {id} deleted'
+    
+# # Edit task
+# @app.route("/tasks/<id>", methods=["PUT"])
+# def update_task(id):
+#     task = Task.query.filterby(id=id).one()
+#     description = request.json['description']
+#     task.update(dict(description=description, created_at = datetime.utcnow()))
+#     db.session.commit()
+#     return task
+
+
+    # # Return the updated data
+    # return jsonify(
+    #     {
+    #         "id": id,
+    #         "title": title,
+    #         "description": description,
+    #         "date": date,
+    #         "completed": completed,
+    #     }
+    # )
+
+# @app.route("/tasks/<int:id>", methods=["DELETE"])
+# def delete_task(id):
+#     # Delete the data from the database
 #     conn = psycopg2.connect(**conn_params)
 #     cursor = conn.cursor()
 #     cursor.execute(
 #         """
-#         SELECT id, title, description, date, completed
-#         FROM test-schema.task;
-#         """
+#         DELETE FROM test-schema.task
+#         WHERE id=%s;
+#         """,
+#         (id,),
 #     )
-#     rows = cursor.fetchall()
-
-#     # Return the queried data
-#     tasks = []
-#     for row in rows:
-#         task = {
-#             "id": row[0],
-#             "title": row[1],
-#             "description": row[2],
-#             "date": row[3],
-#             "completed": row[4],
-#         }
-#         tasks.append(task)
-
-#     return jsonify(tasks)
-
-@app.route("/tasks/<int:id>", methods=["PUT"])
-def update_task(id):
-    # Extract the data from the request
-    title = request.json["title"]
-    description = request.json["description"]
-    date = request.json["date"]
-    completed = request.json["completed"]
-
-    # Update the data in the database
-    conn = psycopg2.connect(**conn_params)
-    cursor = conn.cursor()
-    cursor.execute(
-        """
-        UPDATE test-schema.task
-        SET title=%s, description=%s, date=%s, completed=%s
-        WHERE id=%s;
-        """,
-        (title, description, date, completed, id),
-    )
-    conn.commit()
-
-    # Return the updated data
-    return jsonify(
-        {
-            "id": id,
-            "title": title,
-            "description": description,
-            "date": date,
-            "completed": completed,
-        }
-    )
-
-@app.route("/tasks/<int:id>", methods=["DELETE"])
-def delete_task(id):
-    # Delete the data from the database
-    conn = psycopg2.connect(**conn_params)
-    cursor = conn.cursor()
-    cursor.execute(
-        """
-        DELETE FROM test-schema.task
-        WHERE id=%s;
-        """,
-        (id,),
-    )
-    conn.commit()
+#     conn.commit()
 
     # Return a success message
     return jsonify({"message": "Task deleted successfully."})
