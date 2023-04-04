@@ -25,3 +25,5 @@ yarn-error.log*
 # .pack files
 *.pack*
 *.eslintcache
+
+/.cache
