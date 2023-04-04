@@ -48,19 +48,20 @@ class Task(db.Model):
     def __init__(self, title, description, deadline, priority, category_id=None):
         self.title = title
         self.description = description
-        self.deadline = deadline
         self.priority = priority
-        self.category_id = category_id or self.category.get_default_category().id
+        self.category_id = category_id
+        self.deadline = deadline if deadline else None
 
 
-def format_task(task):
+
+def format_task(task, category):
     return {
-        "id": task.id,
-        "title": task.title,
-        "description": task.description,
-        "created_at": task.created_at,
-        "deadline": task.deadline,
-        "completed": task.completed
+            "id": task.id,
+            "title": task.title,
+            "description": task.description,
+            "created_at": task.created_at,
+            "deadline": task.deadline,
+            "completed": task.completed,
     }
 
 # Define a route that queries the database
