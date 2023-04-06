@@ -1,7 +1,7 @@
 {
   "name": "todolist_react",
   "version": "0.1.0",
-  "homepage": "https://deaddydot.github.io/todolist",
+  "homepage": "https://jrcarver.github.io/tasktastic",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",

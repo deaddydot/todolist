@@ -18,7 +18,7 @@ export default class CalendarViewData extends React.Component {
 
   fetchData = async () => {
     try {
-      const response = await axios.get('https://deaddydot.github.io/todolist/data2.json');
+      const response = await axios.get('/data2.json');
       const parsedData = this.parseDeadlines(response.data);
       this.setState({ data: parsedData });
     }

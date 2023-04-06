@@ -2,13 +2,12 @@ import React from 'react';
 import Row from 'react-bootstrap/Row';
 import CalendarTable from './CalendarTable';
 import CalendarViewData from './CalendarViewData';
-import CalendarViewDataDatabase from './CalendarViewDataDatabase';
 
 export default class CalendarView extends React.Component {
 
   render() {
     return (
-      <CalendarViewDataDatabase showAll={this.props.showAll} />
+      <CalendarViewData showAll={this.props.showAll} />
     );
   }
 }

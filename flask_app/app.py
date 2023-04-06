@@ -2,10 +2,8 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from datetime import datetime
-from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ubuntu:ubuntu@3.129.218.132/test1'
 
 db = SQLAlchemy(app)
@@ -105,10 +103,10 @@ def create_task():
 @app.route("/tasks/<int:user_id>", methods=["GET"])
 def get_tasks(user_id):
     # Retrieve all tasks for a specific user
-    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id).order_by(Task.id.asc()).all()
+    tasks = Task.query.filter_by(user_id=user_id).order_by(Task.id.asc()).all()
     task_list = []
-    for task, category in tasks:
-        task_list.append(format_task(task, category))
+    for task in tasks:
+        task_list.append(format_task(task))
     return jsonify(task_list)
 
 # Get single task
@@ -119,18 +117,6 @@ def get_task(id):
         return {"error": "Task not found"}, 404
     formatted_task = format_task(task)
     return formatted_task
-
-# Get all tasks by categories
-@app.route("/tasks-by-categories/<int:user_id>", methods=["GET"])
-def get_tasks_by_categories(user_id):
-    # Retrieve all tasks for a specific user, grouped by categories
-    categories = db.session.query(Category).filter_by(user_id=user_id).all()
-    categories_dict = {}
-    for category in categories:
-        tasks = category.tasks
-        formatted_tasks = [format_task(task, category) for task in tasks]
-        categories_dict[category.name] = formatted_tasks
-    return jsonify(categories_dict)
 
 # Delete task
 @app.route("/tasks/<int:id>", methods=["DELETE"])

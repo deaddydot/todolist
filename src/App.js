@@ -7,7 +7,7 @@ import TaskView from './TaskView/TaskView';
 import CalendarView from './CalendarView/CalendarView';
 import ShowAllCheckboxes from './ShowAllCheckboxes';
 
-const baseUrl = "http://127.0.0.1:5000"
+const baseUrl = "http://localhost:5000"
 
 export class App extends React.Component {
   constructor(props) {
