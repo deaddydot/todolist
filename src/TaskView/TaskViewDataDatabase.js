@@ -3,37 +3,32 @@ import axios from 'axios';
 import JsonCheckbox from '../JsonCheckbox';
 import {Col, Row, Card} from 'react-bootstrap';
 
-export default class TaskViewData extends React.Component {
+export default class TaskViewDataDatabase extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = { 
-      data: []
+    this.state = {
+      tasksByCategory: [],
     };
   }
 
   componentDidMount() {
-    this.fetchData();
-  }
-
-  fetchData = async () => {
-    try {
-      const response = await axios.get('https://deaddydot.github.io/todolist/data2.json');
-      this.setState({ data: response.data });
-    }
-    catch(error) {
-      console.error('Error fetching data: ', error);
-    }
+    axios.get('http://127.0.0.1:5000/tasks-by-categories/0')
+      .then(response => {
+        this.setState({ tasksByCategory: response.data });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   render() {
-    const { data } = this.state;
+    const { tasksByCategory } = this.state;
 
-    const categoryCount = Object.keys(data).length;
+    const categoryCount = Object.keys(tasksByCategory).length;
     const categoriesPerColumn = Math.ceil(categoryCount / 3);
     const columns = [[], [], []];
 
-    Object.keys(data).forEach((category, index) => {
+    Object.keys(tasksByCategory).forEach((category, index) => {
       const columnIndex = Math.floor(index / categoriesPerColumn);
       columns[columnIndex].push(category);
     });
@@ -46,7 +41,7 @@ export default class TaskViewData extends React.Component {
               <React.Fragment key={`category-${index}`}>
                 <Card style={{backgroundColor: `var(--${category})`, border: 'none', padding: '1rem'}}>
                   <h2>{category}</h2>
-                  {data[category].map((item, itemIndex) => (
+                  {tasksByCategory[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
                       <JsonCheckbox label={item.title} deadline={item.deadline}  showAll={this.props.showAll} />
                     </React.Fragment>
