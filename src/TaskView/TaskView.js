@@ -5,6 +5,7 @@ import TaskViewCol1 from './TaskViewCol1';
 import TaskViewCol2 from './TaskViewCol2';
 import TaskViewCol3 from './TaskViewCol3';
 import TaskViewData from './TaskViewData';
+import TaskViewDataDatabase from './TaskViewDataDatabase';
 
 export default class TaskView extends React.Component {
   constructor(props) {
@@ -14,7 +15,7 @@ export default class TaskView extends React.Component {
   render() {
     return (
       <Row>
-        <TaskViewData showAll={this.props.showAll}/>
+        <TaskViewDataDatabase showAll={this.props.showAll} />
       </Row>
     );
   }
