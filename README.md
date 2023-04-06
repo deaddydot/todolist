@@ -9,7 +9,6 @@ Tasktastic is a simple task management application built with React, Flask, and 
 ## Prerequisites
 Before you can run Tasktastic on your machine, you will need to have the following installed:
 - [Node.js](https://nodejs.org/en/)
-- [Yarn](https://yarnpkg.com/)
 - [Python](https://www.python.org/downloads/)
 - [Flask](https://flask.palletsprojects.com/en/2.0.x/installation/)
 - [PostgreSQL](https://www.postgresql.org/download/)
@@ -31,7 +30,7 @@ cd todolist
 Install the frontend dependencies:
 
 `
-yarn install
+npm install react-bootstrap axios react-scripts
 `
 
 Install the backend dependencies:
@@ -61,7 +60,7 @@ flask run
 Start the React development server:
 
 `
-yarn start
+npm start
 `
 
 Open Tasktastic in your browser: 
