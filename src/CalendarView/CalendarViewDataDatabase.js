@@ -3,7 +3,7 @@ import axios from 'axios';
 import JsonCheckbox from '../JsonCheckbox';
 import {Col, Row, Card} from 'react-bootstrap';
 
-export default class CalendarViewData extends React.Component {
+export default class CalendarViewDataDatabase extends React.Component {
   constructor(props) {
     super(props);
 
@@ -17,14 +17,14 @@ export default class CalendarViewData extends React.Component {
   }
 
   fetchData = async () => {
-    try {
-      const response = await axios.get('https://deaddydot.github.io/todolist/data2.json');
-      const parsedData = this.parseDeadlines(response.data);
-      this.setState({ data: parsedData });
-    }
-    catch(error) {
-      console.error('Error fetching data: ', error);
-    }
+    axios.get('http://127.0.0.1:5000/tasks-by-categories/0')
+      .then(response => {
+        const parsedData = this.parseDeadlines(response.data);
+        this.setState({ data: parsedData });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   parseDeadlines(data) {
@@ -55,6 +55,10 @@ export default class CalendarViewData extends React.Component {
             break;
           case 'Sat':
             dayOfWeek = 6;
+            break;
+          default:
+            dayOfWeek = 0;
+            break;
         }
 
         return {...item, dayOfWeek, category};
@@ -88,6 +92,9 @@ export default class CalendarViewData extends React.Component {
                 ))}
               </Card>
             );
+          }
+          else {
+            return null;
           }
         })}
       </Col>

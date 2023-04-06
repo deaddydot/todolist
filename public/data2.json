@@ -1,63 +1,63 @@
 {
 	"senior-design": [
 		{
-        	"id": 1,
-        	"title": "Finish Calendar View",
-        	"description": "Chemistry HW Chapter 6",
-        	"deadline": "Sun, 10 May 2023 01:11:16 GMT",
-        	"completed": "False",
-        	"created_at": "Sun, 29 Mar 2023 01:11:16 GMT"
-    	},
-    	{
+			"id": 1,
+			"title": "Finish Calendar View",
+			"description": "Chemistry HW Chapter 6",
+			"deadline": "Sun, 10 May 2023 01:11:16 GMT",
+			"completed": "False",
+			"created_at": "Sun, 29 Mar 2023 01:11:16 GMT"
+    },
+    {
 			"id": 2,
 			"title": "Team meeting",
 			"description": "2 full bowls of dog food",
 			"deadline": "Wed, 30 Mar 2023 01:11:16 GMT",
 			"completed": "True",
 			"created_at": "Wed, 29 Mar 2023 01:11:16 GMT"
-    	},
-    	{
+    },
+    {
 			"id": 3,
 			"title": "Present",
-        	"description": "Idk",
-        	"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
-        	"completed": "False",
-        	"created_at": "Fri, 29 Mar 2023 01:11:16 GMT"
-    	},
+			"description": "Idk",
+			"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
+			"completed": "False",
+			"created_at": "Fri, 29 Mar 2023 01:11:16 GMT"
+    },
 		{
-        	"id": 4,
-        	"title": "Prepare Prototype 3 goals",
-        	"description": "Chemistry HW Chapter 6",
-        	"deadline": "Tue, 10 May 2023 01:11:16 GMT",
-        	"completed": "False",
-        	"created_at": "Sun, 29 Mar 2023 01:11:16 GMT"
-    	}
+			"id": 4,
+			"title": "Prepare Prototype 3 goals",
+			"description": "Chemistry HW Chapter 6",
+			"deadline": "Tue, 10 May 2023 01:11:16 GMT",
+			"completed": "False",
+			"created_at": "Sun, 29 Mar 2023 01:11:16 GMT"
+    }
 	],
 	"innovation-and-design": [
 		{
-        	"id": 5,
-        	"title": "Fix Pi issues",
-        	"description": "Chemistry HW Chapter 6",
-        	"deadline": "Sun, 10 May 2023 01:11:16 GMT",
-        	"completed": "False",
-        	"created_at": "Sun, 29 Mar 2023 01:11:16 GMT"
-    	},
-    	{
+			"id": 5,
+			"title": "Fix Pi issues",
+			"description": "Chemistry HW Chapter 6",
+			"deadline": "Sun, 10 May 2023 01:11:16 GMT",
+			"completed": "False",
+			"created_at": "Sun, 29 Mar 2023 01:11:16 GMT"
+		},
+		{
 			"id": 6,
 			"title": "Team meeting",
 			"description": "2 full bowls of dog food",
 			"deadline": "Mon, 30 Mar 2023 01:11:16 GMT",
 			"completed": "True",
 			"created_at": "Mon, 29 Mar 2023 01:11:16 GMT"
-    	},
-    	{
+    },
+    {
 			"id": 7,
 			"title": "Submit video",
-        	"description": "Idk",
-        	"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
-        	"completed": "False",
-        	"created_at": "Thu, 29 Mar 2023 01:11:16 GMT"
-    	}
+			"description": "Idk",
+			"deadline": "Thu, 30 Mar 2023 01:11:16 GMT",
+			"completed": "False",
+			"created_at": "Thu, 29 Mar 2023 01:11:16 GMT"
+    }
 	],
 	"life": [
 		{
