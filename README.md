@@ -83,3 +83,9 @@ Please make sure to update tests as appropriate.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Team members
+- Jack Carver: Team lead, Front-end developer
+- Drew Nguyen: Back-end developer, database specialist
+- Long Ta: Back End developer, authentication specialist
+- Hudson Bailey: Front-end developer
