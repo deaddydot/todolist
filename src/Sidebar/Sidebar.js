@@ -62,7 +62,6 @@ function Sidebar(props) {
         </ListGroup>
       </Row>
       <Row>
-        <AddTaskButton />
         <ListGroup>
           <Button style={{width: '100%', backgroundColor: 'var(--primary-color)', border: 'none', color: 'black'}} onClick={() => setOpen3(!open3)} aria-controls='collapse3' aria-expanded={open3}>
             <h2>Filter by Timeframe</h2>
@@ -75,7 +74,7 @@ function Sidebar(props) {
         </ListGroup>
       </Row>
       <Row>
-        <h2 className='text-center'>Add a task</h2>
+        <AddTaskButton />
       </Row>
       <Row>
         <h2 className='text-center'>Settings</h2>

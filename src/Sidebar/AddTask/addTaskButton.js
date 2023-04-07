@@ -1,5 +1,6 @@
 import React from "react";
 import "./styles.css";
+import AddTaskForm from "./AddTaskForm";
 //import styles from "./styles.css";
 
 const ModalLooks = {
@@ -62,21 +63,10 @@ modalopen() {
   render() {
     return (
       <>
-        <button id="myBtn" onClick={this.modalopen} style={{height: 100, width: "100%", backgroundColor: "var(--primary-color)", border: "none"}}>Open Modal</button>
+        <button id="myBtn" onClick={this.modalopen} style={{height: 100, width: "100%", backgroundColor: "var(--primary-color)", border: "none"}}><h2>Add a task</h2></button>
   
         {this.state.displayModal && (
-          <div className="myModal" style={ModalLooks} /*onClick={this.modalopen}*/>
-            <div /*className={styles.ModalContent}*/ style={ModalContent} className="modal-content">
-            <div class="modal-header">
-              <h2>Create Your Task</h2>
-              <span style={Close} className="close" onClick={this.modalopen}>&times;</span>
-            </div>
-              
-              <p className="title">
-                What is the task?: <input type="text" id="task" placeholder="Task here"/>
-              </p>
-            </div>
-          </div>
+          <AddTaskForm />
         )}
       </>
     );
