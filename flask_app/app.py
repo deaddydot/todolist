@@ -89,17 +89,26 @@ def create_task():
     description = request.json["description"]
     deadline = request.json["deadline"]
     user_id = request.json["user_id"]
+    category_id = request.json["category_id"]
 
-    # Find the default category for the user
-    default_category = Category.query.filter_by(user_id=user_id, name='Default').first()
+    # Find the category for the given ID
+    category = Category.query.get(category_id)
 
-    # Create a new task object and add it to the database with the default category
-    task = Task(title=title, description=description, deadline=deadline, category=default_category)
+    # Create a new task object and add it to the database with the specified category
+    task = Task(title=title, description=description, deadline=deadline, priority=3, category_id=category_id)
     db.session.add(task)
     db.session.commit()
 
-    # Return the formatted task as a response
-    return format_task(task)
+    # Retrieve all tasks for the user, grouped by categories
+    categories = Category.query.filter_by(user_id=user_id).all()
+    tasksByCategory = {}
+    for category in categories:
+        tasks = category.tasks
+        formatted_tasks = [format_task(task, category) for task in tasks]
+        tasksByCategory[category.name] = formatted_tasks
+
+    # Return the updated tasksByCategory object as a response
+    return jsonify(tasksByCategory)
     
 # Get all tasks
 @app.route("/tasks/<int:user_id>", methods=["GET"])
