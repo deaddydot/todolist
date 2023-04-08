@@ -30,7 +30,7 @@ cd todolist
 Install the frontend dependencies:
 
 `
-npm install react react-bootstrap axios react-scripts
+npm install react react-bootstrap axios react-scripts react-dom bootstrap
 `
 
 Install the backend dependencies:
