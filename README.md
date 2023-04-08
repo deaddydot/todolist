@@ -40,6 +40,7 @@ pip install -r requirements.txt
 `
 
 Install flask-cors:
+
 `
 pip install -U flask-cors
 `
