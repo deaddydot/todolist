@@ -4,23 +4,43 @@ import Button from 'react-bootstrap/Button'
 export default class ShowAllCheckboxes extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { showAll: true };
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange() {
-    const newState = !this.state.showAll;
-    this.setState({ showAll: newState });
     const showAllButton = document.getElementById('show-all');
 
-    if (this.state.showAll) {
-      showAllButton.innerHTML = "Hide checked checkboxes";
+    if (this.props.showAll) {
+      showAllButton.textContent = "Show all checkboxes";
     }
     else {
-      showAllButton.innerHTML = "Show all checkboxes";
+      if (this.props.view === 'completed') {
+        showAllButton.textContent = "Hide unchecked checkboxes";
+      }
+      else {
+        showAllButton.textContent = "Hide checked checkboxes";
+      }
     }
 
     this.props.onClick();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.showAll !== this.props.showAll) {
+      const showAllButton = document.getElementById('show-all');
+
+      if (this.props.showAll) {
+        if (this.props.view === 'completed') {
+          showAllButton.textContent = "Hide unchecked checkboxes";
+        }
+        else {
+          showAllButton.textContent = "Hide checked checkboxes";
+        }
+      }
+      else {
+        showAllButton.textContent = "Show all checkboxes";
+      }
+    }
   }
 
   render() {

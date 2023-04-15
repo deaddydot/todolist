@@ -26,6 +26,7 @@ export class App extends React.Component {
   }
 
   changeView(view) {
+    this.setState({ showAll: false });
     if (view === 'task') {
       this.setState({ showTask: true, showCalendar: false, showCompleted: false, view: 'task' });
     }
@@ -33,7 +34,7 @@ export class App extends React.Component {
       this.setState({ showTask: false, showCalendar: true, showCompleted: false, view: 'calendar' });
     }
     else if (view === 'completed') {
-      this.setState({ showTask: false, showCalendar: false, showCompleted: true, view: 'calendar' });
+      this.setState({ showTask: false, showCalendar: false, showCompleted: true, view: 'completed' });
     }
   }
 
@@ -61,7 +62,7 @@ export class App extends React.Component {
               <CompletedView showAll={this.state.showAll} />
             </Col>
           )}
-          <ShowAllCheckboxes onClick={() => this.handleClick()} />
+          <ShowAllCheckboxes onClick={() => this.handleClick()} showAll={this.state.showAll} view={this.state.view} />
         </Row>
       </Container>
     );
