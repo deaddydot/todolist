@@ -29,15 +29,15 @@ export default class JsonCheckbox extends React.Component {
     if (!this.props.showAll && !this.state.checked) {
       const newDisplay = this.state.display === 'block' ? 'none' : 'block';
       this.setState({ display: newDisplay });
+    }
 
-      // Make an API request to toggle the completed status of the task
-      const taskId = this.props.taskId;
-      const completed = newState;
-      try {
-        await axios.put(`${this.props.flaskUrl}/tasks/${taskId}`, { completed });
-      } catch (error) {
-        console.error(error);
-      }
+    // Make an API request to toggle the completed status of the task
+    const taskId = this.props.taskId;
+    const completed = newState;
+    try {
+      await axios.put(`${this.props.flaskUrl}/tasks/${taskId}`, { completed });
+    } catch (error) {
+      console.error(error);
     }
   }
 
