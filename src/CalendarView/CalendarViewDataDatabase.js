@@ -17,7 +17,7 @@ export default class CalendarViewDataDatabase extends React.Component {
   }
 
   fetchData = async () => {
-    axios.get('http://127.0.0.1:5000/tasks-by-categories/0')
+    axios.get(`${this.props.flaskUrl}/tasks-by-categories/0`)
       .then(response => {
       const data = response.data;
       const filteredData = {};

@@ -12,12 +12,14 @@ export default class JsonCheckbox extends React.Component {
     this.changeDisplay = this.changeDisplay.bind(this);
   }
 
-  UNSAFE_componentWillReceiveProps () {
-    if (!this.props.showAll) {
-      this.setState({ display: 'block' });
-    }
-    else if (this.props.showAll && this.state.checked) {
-      this.setState({ display: 'none' });
+  componentDidUpdate(prevProps) {
+    if (prevProps.showAll !== this.props.showAll) {
+      if (this.props.showAll) {
+        this.setState({ display: 'block' });
+      }
+      else if (!this.props.showAll && this.state.checked) {
+        this.setState({ display: 'none' });
+      }
     }
   }
 

@@ -39,17 +39,18 @@ export default class AddTaskButton extends React.Component {
     this.modalopen = this.modalopen.bind(this);
 
   }
-modalopen() {
-  const temp = !this.state.displayModal;
-  this.setState({displayModal: temp})
 
-  // const modal = document.querySelectorAll("myModal");
-  // if (modal.style.display === 'none') {
-  //   modal.style.display = 'block';
-  // } else {
-  //   modal.style.display = 'none';
-  // }
-}
+  modalopen() {
+    const temp = !this.state.displayModal;
+    this.setState({displayModal: temp})
+
+    // const modal = document.querySelectorAll("myModal");
+    // if (modal.style.display === 'none') {
+    //   modal.style.display = 'block';
+    // } else {
+    //   modal.style.display = 'none';
+    // }
+  }
 
 
 // When the user clicks on <span> (x), close the modal
@@ -66,7 +67,7 @@ modalopen() {
         <button id="myBtn" onClick={this.modalopen} style={{height: 100, width: "100%", backgroundColor: "var(--primary-color)", border: "none"}}><h2>Add a task</h2></button>
   
         {this.state.displayModal && (
-          <AddTaskForm />
+          <AddTaskForm flaskUrl={this.props.flaskUrl} />
         )}
       </>
     );

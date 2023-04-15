@@ -8,7 +8,7 @@ export default class CalendarView extends React.Component {
 
   render() {
     return (
-      <CalendarViewDataDatabase showAll={this.props.showAll} />
+      <CalendarViewDataDatabase showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
     );
   }
 }

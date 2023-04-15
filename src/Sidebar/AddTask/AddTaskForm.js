@@ -24,7 +24,7 @@ export default class AddTaskForm extends React.Component {
     };
     try {
       const response = await axios.post(
-        "http://localhost:5000/tasks",
+        `${this.props.flaskUrl}/tasks`,
         data
       );
       console.log(response.data);

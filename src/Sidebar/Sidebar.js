@@ -74,7 +74,7 @@ function Sidebar(props) {
         </ListGroup>
       </Row>
       <Row>
-        <AddTaskButton />
+        <AddTaskButton flaskUrl={props.flaskUrl} />
       </Row>
       <Row>
         <h2 className='text-center'>Settings</h2>
