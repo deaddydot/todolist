@@ -2,7 +2,7 @@ import React from 'react';
 import Form from 'react-bootstrap/Form'
 import axios from 'axios';
 
-export default class JsonCheckbox extends React.Component {
+export default class CompletedViewJsonCheckbox extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
@@ -12,22 +12,21 @@ export default class JsonCheckbox extends React.Component {
     this.changeDisplay = this.changeDisplay.bind(this);
   }
 
-  UNSAFE_componentWillReceiveProps () {
-    if (!this.props.showAll) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.showAll !== this.props.showAll && !this.props.showAll) {
       this.setState({ display: 'block' });
-    }
-    else if (this.props.showAll && this.state.checked) {
+    } else if (prevProps.showAll !== this.props.showAll && this.props.showAll && !this.state.checked) {
       this.setState({ display: 'none' });
     }
   }
 
-  async changeDisplay() {
-    const newState = !this.state.checked;
+  async changeDisplay(event) {
+    const newState = event.target.checked;
     this.setState({ checked: newState });
-    if (!this.props.showAll && !this.state.checked) {
-      const newDisplay = this.state.display === 'block' ? 'none' : 'block';
+    if (!this.props.showAll) {
+      const newDisplay = newState ? 'block' : 'none';
       this.setState({ display: newDisplay });
-
+  
       // Make an API request to toggle the completed status of the task
       const taskId = this.props.taskId;
       const completed = newState;
@@ -36,13 +35,15 @@ export default class JsonCheckbox extends React.Component {
       } catch (error) {
         console.error(error);
       }
+    } else if (this.props.showAll && !newState) {
+      this.setState({ display: 'none' });
     }
   }
 
   render() {
     return (
       <div style={{display: this.state.display}} >
-        <Form.Check className='checkbox' type='checkbox' label={this.props.label} onClick={() => this.changeDisplay()} />
+        <Form.Check className='checkbox' type='checkbox' label={this.props.label} defaultChecked={this.props.checked} onChange={(event) => this.changeDisplay(event)} />
         <p>Due: {this.props.deadline}</p>
       </div>
     );

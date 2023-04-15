@@ -5,6 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Sidebar from './Sidebar/Sidebar';
 import TaskView from './TaskView/TaskView';
 import CalendarView from './CalendarView/CalendarView';
+import CompletedView from './CompletedView/CompletedView';
 import ShowAllCheckboxes from './ShowAllCheckboxes';
 
 const baseUrl = "http://127.0.0.1:5000"
@@ -13,7 +14,7 @@ export class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { showAll: false, showTask: true, showCalendar: false, view: 'task' };
+    this.state = { showAll: false, showTask: true, showCalendar: false, showCompleted: false, view: 'task' };
 
     this.handleClick = this.handleClick.bind(this);
     this.changeView = this.changeView.bind(this);
@@ -26,10 +27,13 @@ export class App extends React.Component {
 
   changeView(view) {
     if (view === 'task') {
-      this.setState({ showTask: true, showCalendar: false, view: 'task' });
+      this.setState({ showTask: true, showCalendar: false, showCompleted: false, view: 'task' });
     }
     else if (view === 'calendar') {
-      this.setState({ showTask: false, showCalendar: true, view: 'calendar' });
+      this.setState({ showTask: false, showCalendar: true, showCompleted: false, view: 'calendar' });
+    }
+    else if (view === 'completed') {
+      this.setState({ showTask: false, showCalendar: false, showCompleted: true, view: 'calendar' });
     }
   }
 
@@ -50,6 +54,11 @@ export class App extends React.Component {
           {this.state.showCalendar && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
               <CalendarView showAll={this.state.showAll} />
+            </Col>
+          )}
+          {this.state.showCompleted && (
+            <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
+              <CompletedView showAll={this.state.showAll} />
             </Col>
           )}
           <ShowAllCheckboxes onClick={() => this.handleClick()} />

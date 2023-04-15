@@ -169,12 +169,17 @@ def update_task(id):
         task.completed = request.json["completed"]
     if "priority" in request.json:
         task.priority = request.json["priority"]
+    if "category_id" in request.json:
+        category_id = request.json["category_id"]
+        category = Category.query.get(category_id)
+        if category:
+            task.category = category
 
     # Commit the changes to the database
     db.session.commit()
 
     # Return the updated task as a response
-    return format_task(task)
+    return format_task(task, task.category)
 
 if __name__ == "__main__":
     app.run()

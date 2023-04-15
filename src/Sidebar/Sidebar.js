@@ -41,7 +41,7 @@ function Sidebar(props) {
                   </Button>
                 </ListGroup.Item>
                 <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: 'yellow', padding: '0', margin: '0'}}>
-                  <Button style={{width: '100%', backgroundColor: 'yellow', border: 'none', color: 'black'}} >
+                  <Button style={{width: '100%', backgroundColor: 'yellow', border: 'none', color: 'black'}} onClick={() => changeView('completed')} >
                     <h4>Completed</h4>
                   </Button>
                 </ListGroup.Item>

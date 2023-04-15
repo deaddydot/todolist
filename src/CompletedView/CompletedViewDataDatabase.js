@@ -1,9 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import JsonCheckbox from '../JsonCheckbox';
+import CompletedViewJsonCheckbox from './CompletedViewJsonCheckbox';
 import {Col, Row, Card} from 'react-bootstrap';
 
-export default class TaskViewDataDatabase extends React.Component {
+export default class CompletedViewDataDatabase extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -46,7 +46,7 @@ export default class TaskViewDataDatabase extends React.Component {
     // Filter out completed tasks
     const filteredTasksByCategory = {};
     Object.keys(tasksByCategory).forEach(category => {
-      filteredTasksByCategory[category] = tasksByCategory[category].filter(task => !task.completed);
+      filteredTasksByCategory[category] = tasksByCategory[category].filter(task => task.completed);
     });
   
     const categoryCount = Object.keys(filteredTasksByCategory).length;
@@ -68,7 +68,7 @@ export default class TaskViewDataDatabase extends React.Component {
                   <h2>{category}</h2>
                   {filteredTasksByCategory[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
-                      <JsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} showAll={this.props.showAll} />
+                      <CompletedViewJsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} checked={true} showAll={this.props.showAll} />
                     </React.Fragment>
                   ))}
                 </Card>

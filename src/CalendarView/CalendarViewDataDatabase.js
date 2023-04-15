@@ -19,13 +19,21 @@ export default class CalendarViewDataDatabase extends React.Component {
   fetchData = async () => {
     axios.get('http://127.0.0.1:5000/tasks-by-categories/0')
       .then(response => {
-        const parsedData = this.parseDeadlines(response.data);
-        this.setState({ data: parsedData });
+      const data = response.data;
+      const filteredData = {};
+      Object.keys(data).forEach(category => {
+        const tasks = data[category].filter(task => !task.completed);
+        if (tasks.length > 0) {
+          filteredData[category] = tasks;
+        }
+      });
+      this.setState({ data: this.parseDeadlines(filteredData) });
       })
       .catch(error => {
         console.log(error);
       });
   }
+
 
   parseDeadlines(data) {
     const parsedData = {};
@@ -88,7 +96,7 @@ export default class CalendarViewDataDatabase extends React.Component {
               <Card key={`${index}-${category}`} style={{ backgroundColor: `var(--${category})`}}>
                 <h3>{category}</h3>
                 {itemsInCategory.map(item => (
-                  <JsonCheckbox key={item.id} label={item.title} deadline={item.deadline} showAll={this.props.showAll} />
+                  <JsonCheckbox key={item.id} label={item.title} deadline={item.deadline} taskId={item.id} showAll={this.props.showAll} />
                 ))}
               </Card>
             );
