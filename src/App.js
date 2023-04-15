@@ -8,7 +8,12 @@ import CalendarView from './CalendarView/CalendarView';
 import CompletedView from './CompletedView/CompletedView';
 import ShowAllCheckboxes from './ShowAllCheckboxes';
 
-const baseUrl = "http://127.0.0.1:5000"
+
+// dev flask url
+const flaskUrl = "http://127.0.0.1:5000"
+
+// prod flask url
+// const flaskUrl = "http://3.82.154.110:5000"
 
 export class App extends React.Component {
   constructor(props) {
@@ -46,20 +51,20 @@ export class App extends React.Component {
     return (
       <Container fluid='true'>
         <Row>
-          <Col style={{ paddingLeft: '0', paddingRight: '0' }} xs={2}><Sidebar onInput={this.changeView.bind(this)} /></Col>
+          <Col style={{ paddingLeft: '0', paddingRight: '0' }} xs={2}><Sidebar onInput={this.changeView.bind(this)} flaskUrl={flaskUrl} /></Col>
           {this.state.showTask && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
-              <div id='TaskView'><TaskView showAll={this.state.showAll} /></div>
+              <div id='TaskView'><TaskView showAll={this.state.showAll} flaskUrl={flaskUrl} /></div>
             </Col>
           )}
           {this.state.showCalendar && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
-              <CalendarView showAll={this.state.showAll} />
+              <CalendarView showAll={this.state.showAll} flaskUrl={flaskUrl} />
             </Col>
           )}
           {this.state.showCompleted && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
-              <CompletedView showAll={this.state.showAll} />
+              <CompletedView showAll={this.state.showAll} flaskUrl={flaskUrl} />
             </Col>
           )}
           <ShowAllCheckboxes onClick={() => this.handleClick()} showAll={this.state.showAll} view={this.state.view} />

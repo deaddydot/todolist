@@ -12,7 +12,7 @@ export default class TaskViewDataDatabase extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://127.0.0.1:5000/tasks-by-categories/0')
+    axios.get(`${this.props.flaskUrl}/tasks-by-categories/0`)
       .then(response => {
         this.setState({ tasksByCategory: response.data });
       })
@@ -21,24 +21,24 @@ export default class TaskViewDataDatabase extends React.Component {
       });
   }
 
-  createTask = (title, description, deadline, category_id) => {
-    axios.post('http://127.0.0.1:5000/tasks', {
-      title: title,
-      description: description,
-      deadline: deadline,
-      user_id: 0,
-      category_id: category_id,
-    })
-    .then(response => {
-      const newTask = response.data;
-      const updatedTasksByCategory = {...this.state.tasksByCategory};
-      updatedTasksByCategory[newTask.category_name].push(newTask);
-      this.setState({ tasksByCategory: updatedTasksByCategory });
-    })
-    .catch(error => {
-      console.log(error);
-    });
-  }
+  // createTask = (title, description, deadline, category_id) => {
+  //   axios.post(`${this.props.flaskUrl}/tasks`, {
+  //     title: title,
+  //     description: description,
+  //     deadline: deadline,
+  //     user_id: 0,
+  //     category_id: category_id,
+  //   })
+  //   .then(response => {
+  //     const newTask = response.data;
+  //     const updatedTasksByCategory = {...this.state.tasksByCategory};
+  //     updatedTasksByCategory[newTask.category_name].push(newTask);
+  //     this.setState({ tasksByCategory: updatedTasksByCategory });
+  //   })
+  //   .catch(error => {
+  //     console.log(error);
+  //   });
+  // }
 
   render() {
     const { tasksByCategory } = this.state;
