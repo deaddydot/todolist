@@ -34,7 +34,7 @@ export default class JsonCheckbox extends React.Component {
       const taskId = this.props.taskId;
       const completed = newState;
       try {
-        await axios.put(`http://127.0.0.1:5000/tasks/${taskId}`, { completed });
+        await axios.put(`${this.props.flaskUrl}/tasks/${taskId}`, { completed });
       } catch (error) {
         console.error(error);
       }

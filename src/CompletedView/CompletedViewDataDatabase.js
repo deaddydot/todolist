@@ -49,7 +49,7 @@ export default class CompletedViewDataDatabase extends React.Component {
                   <h2>{category}</h2>
                   {filteredTasksByCategory[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
-                      <CompletedViewJsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} checked={true} showAll={this.props.showAll} />
+                      <CompletedViewJsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} checked={true} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
                     </React.Fragment>
                   ))}
                 </Card>

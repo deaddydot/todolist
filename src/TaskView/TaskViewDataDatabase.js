@@ -68,7 +68,7 @@ export default class TaskViewDataDatabase extends React.Component {
                   <h2>{category}</h2>
                   {filteredTasksByCategory[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
-                      <JsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} showAll={this.props.showAll} />
+                      <JsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
                     </React.Fragment>
                   ))}
                 </Card>

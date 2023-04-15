@@ -96,7 +96,7 @@ export default class CalendarViewDataDatabase extends React.Component {
               <Card key={`${index}-${category}`} style={{ backgroundColor: `var(--${category})`}}>
                 <h3>{category}</h3>
                 {itemsInCategory.map(item => (
-                  <JsonCheckbox key={item.id} label={item.title} deadline={item.deadline} taskId={item.id} showAll={this.props.showAll} />
+                  <JsonCheckbox key={item.id} label={item.title} deadline={item.deadline} taskId={item.id} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
                 ))}
               </Card>
             );
