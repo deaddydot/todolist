@@ -21,25 +21,6 @@ export default class TaskViewDataDatabase extends React.Component {
       });
   }
 
-  // createTask = (title, description, deadline, category_id) => {
-  //   axios.post(`${this.props.flaskUrl}/tasks`, {
-  //     title: title,
-  //     description: description,
-  //     deadline: deadline,
-  //     user_id: 0,
-  //     category_id: category_id,
-  //   })
-  //   .then(response => {
-  //     const newTask = response.data;
-  //     const updatedTasksByCategory = {...this.state.tasksByCategory};
-  //     updatedTasksByCategory[newTask.category_name].push(newTask);
-  //     this.setState({ tasksByCategory: updatedTasksByCategory });
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   });
-  // }
-
   render() {
     const { tasksByCategory } = this.state;
 
@@ -68,7 +49,7 @@ export default class TaskViewDataDatabase extends React.Component {
                   <h2>{category}</h2>
                   {filteredTasksByCategory[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
-                      <JsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
+                      <JsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} category={this.category} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
                     </React.Fragment>
                   ))}
                 </Card>

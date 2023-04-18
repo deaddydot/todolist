@@ -1,15 +1,24 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form'
 import axios from 'axios';
+import Button from 'react-bootstrap/Button';
+import Collapse from 'react-bootstrap/Collapse';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 export default class JsonCheckbox extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
       display: 'block',
-      checked: false
+      checked: false,
+      open: false
     };
     this.changeDisplay = this.changeDisplay.bind(this);
+    this.setOpen = this.setOpen.bind(this);
+  }
+
+  setOpen(value) {
+    this.setState({ open: value });
   }
 
   componentDidUpdate(prevProps) {
@@ -43,9 +52,25 @@ export default class JsonCheckbox extends React.Component {
 
   render() {
     return (
-      <div style={{display: this.state.display}} >
-        <Form.Check className='checkbox' type='checkbox' label={this.props.label} onClick={() => this.changeDisplay()} />
-        <p>Due: {this.props.deadline}</p>
+      <div style={{display: this.state.display}}>
+        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+          <ListGroup>
+            <div style={{textAlign: 'left', padding: '0', margin: '0'}} onClick={() => this.setOpen(!this.state.open)} aria-controls='collapse1' aria-expanded={this.state.open}>
+              <Form.Check className='checkbox' type='checkbox' label={this.props.label} onClick={() => this.changeDisplay()} />
+              <p>Due: {this.props.deadline}</p>
+            </div>
+            <Collapse in={this.state.open}>
+              <div id='collapse1' style={{padding: '0', margin: '0'}}>
+                <ListGroup.Item className='text-left' style={{border: 'none', backgroundColor: `var(--${this.props.category})`, padding: '0', margin: '0'}}>
+                  <p>{this.props.description}</p>
+                </ListGroup.Item>
+              </div>
+            </Collapse>
+          </ListGroup>
+          <div>
+            <Button size='sm' style={{backgroundColor: 'lightgrey', color: 'black', border: 'none'}}>Edit</Button>
+          </div>
+        </div>
       </div>
     );
   }
