@@ -20,7 +20,7 @@ const ModalContent = {
   margin: '15% auto', /* 15% from the top and centered */
   padding: '20px',
   border: '1px solid #888',
-  width: '80%' /* Could be more or less, depending on screen size */
+  width: '80%', /* Could be more or less, depending on screen size */
 }
 const Close = {
   color: '#aaa',
@@ -67,7 +67,15 @@ export default class AddTaskButton extends React.Component {
         <button id="myBtn" onClick={this.modalopen} style={{height: 100, width: "100%", backgroundColor: "var(--primary-color)", border: "none"}}><h2>Add a task</h2></button>
   
         {this.state.displayModal && (
-          <AddTaskForm flaskUrl={this.props.flaskUrl} />
+          <div className="myModal" style={ModalLooks} /*onClick={this.modalopen}*/>
+          <div /*className={styles.ModalContent}*/ style={ModalContent} className="modal-content">
+            <div className="modal-header">
+              <h2>Create Your Task</h2>
+              <span style={Close} className="close" onClick={this.modalopen}>&times;</span>
+            </div>
+            <AddTaskForm flaskUrl={this.props.flaskUrl} />
+          </div>
+        </div>
         )}
       </>
     );

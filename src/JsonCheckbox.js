@@ -4,6 +4,7 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 import ListGroup from 'react-bootstrap/ListGroup';
+import EditTaskButton from './EditTask/EditTaskButton';
 
 export default class JsonCheckbox extends React.Component {
   constructor(props) {
@@ -68,7 +69,7 @@ export default class JsonCheckbox extends React.Component {
             </Collapse>
           </ListGroup>
           <div>
-            <Button size='sm' style={{backgroundColor: 'lightgrey', color: 'black', border: 'none'}}>Edit</Button>
+            <EditTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId}/>
           </div>
         </div>
       </div>
