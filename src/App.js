@@ -7,6 +7,8 @@ import TaskView from './TaskView/TaskView';
 import CalendarView from './CalendarView/CalendarView';
 import CompletedView from './CompletedView/CompletedView';
 import ShowAllCheckboxes from './ShowAllCheckboxes';
+import LoginButton from './authentication/LoginButton';
+import LogoutButton from './authentication/LogoutButton';
 
 
 // dev flask url
@@ -51,6 +53,10 @@ export class App extends React.Component {
     return (
       <Container fluid='true'>
         <Row>
+          <h1>
+            <LoginButton/>
+            <LogoutButton/>
+          </h1>
           <Col style={{ paddingLeft: '0', paddingRight: '0' }} xs={2}><Sidebar onInput={this.changeView.bind(this)} flaskUrl={flaskUrl} /></Col>
           {this.state.showTask && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
