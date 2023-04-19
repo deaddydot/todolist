@@ -14,7 +14,7 @@ export default class AddTaskForm extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`${this.props.flaskUrl}/tasks/${this.props.taskId}`)
+    axios.get(`${this.props.flaskUrl}/task/${this.props.taskId}`)
       .then(response => {
         this.setState({ 
           task: response.data,
@@ -23,6 +23,10 @@ export default class AddTaskForm extends React.Component {
           deadline: response.data.deadline,
           category_id: response.data.category_id,
         });
+        console.log(this.state.title);
+        console.log(this.state.description);
+        console.log(this.state.deadline);
+        console.log(this.state.category_id);
       })
       .catch(error => {
         console.log(error);
@@ -57,7 +61,7 @@ export default class AddTaskForm extends React.Component {
   };
 
   render() {
-    const { title, description, deadline, category_id, task} = this.state;
+    const { task, title, description, deadline, category_id } = this.state;
     return (
       <form onSubmit={this.handleSubmit} style={{display: 'flex', flexDirection: 'column'}}>
         <label>

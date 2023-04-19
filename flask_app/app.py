@@ -70,6 +70,7 @@ def format_task(task, category):
             "created_at": task.created_at,
             "deadline": task.deadline,
             "completed": task.completed,
+            "category_id": task.category_id,
     }
 
 # Define a route that queries the database
@@ -127,12 +128,13 @@ def get_tasks(user_id):
     return jsonify(task_list)
 
 # Get single task
-@app.route("/tasks/<int:id>", methods=["GET"])
+@app.route("/task/<int:id>", methods=["GET"])
 def get_task(id):
     task = Task.query.filter_by(id=id).one_or_none()
     if task is None:
         return {"error": "Task not found"}, 404
-    formatted_task = format_task(task)
+    category = task.category
+    formatted_task = format_task(task, category)
     return formatted_task
 
 # Get all tasks by categories
