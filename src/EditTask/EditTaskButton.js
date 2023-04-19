@@ -51,7 +51,7 @@ export default class EditTaskButton extends React.Component {
             <div className="myModal" style={ModalLooks} /*onClick={this.modalopen}*/>
                 <div /*className={styles.ModalContent}*/ style={ModalContent} className="modal-content">
                     <div className="modal-header">
-                        <h2>Create Your Task</h2>
+                        <h2>Edit Task</h2>
                         <span style={Close} className="close" onClick={this.modalopen}>&times;</span>
                     </div>
                     <EditTaskForm flaskUrl={this.props.flaskUrl} taskId={this.props.taskId}/>
