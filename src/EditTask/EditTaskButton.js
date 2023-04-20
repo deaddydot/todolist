@@ -35,29 +35,30 @@ export default class EditTaskButton extends React.Component {
     
         this.state = {displayModal: false};
     
-        this.modalopen = this.modalopen.bind(this);
+        this.modalOpen = this.modalOpen.bind(this);
     
     }
     
-    modalopen() {
-    const temp = !this.state.displayModal;
-    this.setState({displayModal: temp})
+    modalOpen() {
+        const temp = !this.state.displayModal;
+        this.setState({displayModal: temp})
     }
+
     render(){
         return(
             <>
-            <Button size='sm' onClick={this.modalopen} style={{backgroundColor: 'lightgrey', color: 'black', border: 'none' }}>Edit</Button>
-            {this.state.displayModal && (
-            <div className="myModal" style={ModalLooks} /*onClick={this.modalopen}*/>
-                <div /*className={styles.ModalContent}*/ style={ModalContent} className="modal-content">
-                    <div className="modal-header">
-                        <h2>Edit Task</h2>
-                        <span style={Close} className="close" onClick={this.modalopen}>&times;</span>
+            <Button size='sm' onClick={this.modalOpen} style={{backgroundColor: 'lightgrey', color: 'black', border: 'none' }}>Edit</Button>
+                {this.state.displayModal && (
+                    <div className="myModal" style={ModalLooks} /*onClick={this.modalopen}*/>
+                        <div /*className={styles.ModalContent}*/ style={ModalContent} className="modal-content">
+                            <div className="modal-header">
+                                <h2>Edit Task</h2>
+                                <span style={Close} className="close" onClick={this.modalOpen}>&times;</span>
+                            </div>
+                            <EditTaskForm flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} modalOpen={this.modalOpen} />
+                        </div>
                     </div>
-                    <EditTaskForm flaskUrl={this.props.flaskUrl} taskId={this.props.taskId}/>
-                </div>
-            </div>
-        )}
+                )}
             </>
         );
     }

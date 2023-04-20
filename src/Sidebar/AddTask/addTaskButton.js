@@ -36,11 +36,11 @@ export default class AddTaskButton extends React.Component {
 
     this.state = {displayModal: false};
 
-    this.modalopen = this.modalopen.bind(this);
+    this.modalOpen = this.modalOpen.bind(this);
 
   }
 
-  modalopen() {
+  modalOpen() {
     const temp = !this.state.displayModal;
     this.setState({displayModal: temp})
 
@@ -64,16 +64,16 @@ export default class AddTaskButton extends React.Component {
   render() {
     return (
       <>
-        <button id="myBtn" onClick={this.modalopen} style={{height: 100, width: "100%", backgroundColor: "var(--primary-color)", border: "none"}}><h2>Add a task</h2></button>
+        <button id="myBtn" onClick={this.modalOpen} style={{height: 100, width: "100%", backgroundColor: "var(--primary-color)", border: "none"}}><h2>Add a task</h2></button>
   
         {this.state.displayModal && (
           <div className="myModal" style={ModalLooks} /*onClick={this.modalopen}*/>
           <div /*className={styles.ModalContent}*/ style={ModalContent} className="modal-content">
             <div className="modal-header">
               <h2>Create Your Task</h2>
-              <span style={Close} className="close" onClick={this.modalopen}>&times;</span>
+              <span style={Close} className="close" onClick={this.modalOpen}>&times;</span>
             </div>
-            <AddTaskForm flaskUrl={this.props.flaskUrl} />
+            <AddTaskForm flaskUrl={this.props.flaskUrl} modalOpen={this.modalOpen} />
           </div>
         </div>
         )}
