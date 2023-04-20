@@ -31,6 +31,8 @@ export default class AddTaskForm extends React.Component {
     } catch (error) {
       console.error(error);
     }
+
+    this.props.modalOpen();
   };
 
   handleChange = (e) => {

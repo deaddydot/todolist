@@ -23,10 +23,6 @@ export default class AddTaskForm extends React.Component {
           deadline: response.data.deadline,
           category_id: response.data.category_id,
         });
-        console.log(this.state.title);
-        console.log(this.state.description);
-        console.log(this.state.deadline);
-        console.log(this.state.category_id);
       })
       .catch(error => {
         console.log(error);
@@ -44,14 +40,16 @@ export default class AddTaskForm extends React.Component {
       category_id,
     };
     try {
-      const response = await axios.post(
-        `${this.props.flaskUrl}/tasks`,
+      const response = await axios.put(
+        `${this.props.flaskUrl}/tasks/${this.props.taskId}`,
         data
       );
       console.log(response.data);
     } catch (error) {
       console.error(error);
     }
+
+    this.props.modalOpen();
   };
 
   handleChange = (e) => {
