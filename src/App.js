@@ -53,10 +53,10 @@ export class App extends React.Component {
     return (
       <Container fluid='true'>
         <Row>
-          <h1>
+          <div style={{position: 'fixed', top: '1rem', left: '0.5rem'}}>
             <LoginButton/>
             <LogoutButton/>
-          </h1>
+          </div>
           <Col style={{ paddingLeft: '0', paddingRight: '0' }} xs={2}><Sidebar onInput={this.changeView.bind(this)} flaskUrl={flaskUrl} /></Col>
           {this.state.showTask && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>

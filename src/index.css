@@ -52,8 +52,8 @@
 }
 
 #show-all-div {
-  position: absolute;
-  bottom: 0;
-  padding-left: 2rem;
+  position: fixed;
+  bottom: 1rem;
+  left: 0.5rem;
   align-content: right;
 }
