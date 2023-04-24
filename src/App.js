@@ -15,7 +15,7 @@ import LogoutButton from './authentication/LogoutButton';
 const flaskUrl = "http://127.0.0.1:5000"
 
 // prod flask url
-// const flaskUrl = "http://tasktastic.link:5000"
+// const flaskUrl = "https://tasktastic.link:5001"
 
 export class App extends React.Component {
   constructor(props) {
