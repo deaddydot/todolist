@@ -51,6 +51,8 @@ export default class EditTaskForm extends React.Component {
     }
 
     this.props.modalOpen();
+
+    window.location.reload();
   };
 
   handleChange = (e) => {

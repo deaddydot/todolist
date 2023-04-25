@@ -23,7 +23,9 @@ const ModalLooks = {
   }
   const Close = {
     color: '#aaa',
-    float: 'left',
+    display: 'absolute',
+    right: '1rem',
+    top: '0',
     fontSize: '28px',
     fontWeight: 'bold',
     textAlign: 'center'
