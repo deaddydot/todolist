@@ -150,7 +150,7 @@ def get_tasks_by_categories(user_id):
     return jsonify(categories_dict)
 
 # Delete task
-@app.route("/tasks/<int:id>", methods=["DELETE"])
+@app.route("/task/<int:id>", methods=["DELETE"])
 def delete_task(id):
     task = Task.query.filter_by(id=id).first()
     if task:

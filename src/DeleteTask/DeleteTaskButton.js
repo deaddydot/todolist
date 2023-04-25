@@ -8,20 +8,31 @@ import "./../EditTask/EditTaskButton";
 export default class DeleteTaskButton extends React.Component {
   constructor(props) {
     super(props);
-    
-    this.state = {displayModal: false};
 
-    // this.modalopen = this.modalopen.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
   }
 
-  modalopen() {
+  deleteTask() {
+    axios.delete(`${this.props.flaskUrl}/task/${this.props.taskId}`)
+
+    .then(response => {
+      console.log(response.data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+
+    this.props.modalOpen();
+  }
+
+  modalOpen() {
     const temp = !this.state.displayModal;
     this.setState({displayModal: temp})
   }
 
   render() {
     return(
-      <button style={{paddingBottom: 7, paddingTop: 7}} type="submit" onClick={this.modalopen}>Delete</button>
+      <button style={{paddingBottom: 7, paddingTop: 7}} type="submit" onClick={this.deleteTask}>Delete</button>
     )
   }
 }
