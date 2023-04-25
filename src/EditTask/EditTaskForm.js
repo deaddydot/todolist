@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import DeleteTaskButton from './../DeleteTask/DeleteTaskButton';
 
 export default class AddTaskForm extends React.Component {
   constructor(props) {
@@ -102,7 +103,8 @@ export default class AddTaskForm extends React.Component {
             onChange={this.handleChange}
           />
         </label>
-        <button type="submit">Submit</button>
+        <button style={{paddingBottom: 7, paddingTop: 7}} type="submit">Submit</button>
+        <DeleteTaskButton/>
       </form>
     );
   }
