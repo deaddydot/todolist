@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import DeleteTaskButton from './../DeleteTask/DeleteTaskButton';
 
-export default class AddTaskForm extends React.Component {
+export default class EditTaskForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -62,7 +62,7 @@ export default class AddTaskForm extends React.Component {
   render() {
     const { task, title, description, deadline, category_id } = this.state;
     return (
-      <form onSubmit={this.handleSubmit} style={{display: 'flex', flexDirection: 'column'}}>
+      <><form onSubmit={this.handleSubmit} style={{display: 'flex', flexDirection: 'column'}}>
         <label>
           Title:
           <input
@@ -104,8 +104,8 @@ export default class AddTaskForm extends React.Component {
           />
         </label>
         <button style={{paddingBottom: 7, paddingTop: 7}} type="submit">Submit</button>
-        <DeleteTaskButton/>
       </form>
+      <DeleteTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} modalOpen={this.props.modalOpen}/></>
     );
   }
 }
