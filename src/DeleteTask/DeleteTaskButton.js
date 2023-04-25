@@ -23,6 +23,8 @@ export default class DeleteTaskButton extends React.Component {
     });
 
     this.props.modalOpen();
+
+    window.location.reload();
   }
 
   modalOpen() {
@@ -32,7 +34,7 @@ export default class DeleteTaskButton extends React.Component {
 
   render() {
     return(
-      <button style={{paddingBottom: 7, paddingTop: 7}} type="submit" onClick={this.deleteTask}>Delete</button>
+      <Button type="submit" onClick={this.deleteTask} style={{backgroundColor:'red', border:'none'}}>Delete</Button>
     )
   }
 }

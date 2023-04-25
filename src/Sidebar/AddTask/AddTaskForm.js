@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Button from 'react-bootstrap/Button';
 
 export default class AddTaskForm extends React.Component {
   constructor(props) {
@@ -83,7 +84,7 @@ export default class AddTaskForm extends React.Component {
             onChange={this.handleChange}
           />
         </label>
-        <button type="submit">Submit</button>
+        <Button style={{backgroundColor: 'blue', border: 'none'}} type="submit">Submit</Button>
       </form>
     );
   }

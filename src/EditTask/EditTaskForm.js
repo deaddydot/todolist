@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import DeleteTaskButton from './../DeleteTask/DeleteTaskButton';
+import Button from 'react-bootstrap/Button';
 
 export default class EditTaskForm extends React.Component {
   constructor(props) {
@@ -105,7 +106,7 @@ export default class EditTaskForm extends React.Component {
             onChange={this.handleChange}
           />
         </label>
-        <button style={{paddingBottom: 7, paddingTop: 7}} type="submit">Submit</button>
+        <Button style={{backgroundColor: 'blue', border: 'none'}} type="submit">Submit</Button>
       </form>
       <DeleteTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} modalOpen={this.props.modalOpen}/></>
     );
