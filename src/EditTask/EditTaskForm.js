@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import DeleteTaskButton from './../DeleteTask/DeleteTaskButton';
 import Button from 'react-bootstrap/Button';
-import UserCategories from '../Sidebar/AddTask/UserCategories';
+import UserCategories from '../UserCategories';
 
 export default class EditTaskForm extends React.Component {
   constructor(props) {
@@ -43,7 +43,7 @@ export default class EditTaskForm extends React.Component {
       category_id,
     };
     try {
-      const response = await axios.post(`${this.props.flaskUrl}/tasks/${this.props.taskId}`, data);
+      const response = await axios.put(`${this.props.flaskUrl}/tasks-edit/${this.props.taskId}`, data);
     } catch (error) {
       console.error(error);
     }
