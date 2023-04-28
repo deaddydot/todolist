@@ -38,6 +38,12 @@ class Category(db.Model):
         if default_category:
             return default_category
         return Category(name='Default', user_id=self.user_id)
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
 
 # Task class
 class Task(db.Model):
@@ -78,6 +84,17 @@ def format_task(task, category):
 def hello():
     return "Hello"
 
+# Handle Options requests
+@app.route('/tasks', methods=['OPTIONS'])
+def handle_options_request():
+    # add any necessary headers here
+    headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+        'Access-Control-Allow-Headers': 'Content-Type'
+    }
+    return ('', 204, headers)
+
 # Create a database when a new row is added to user table
 @event.listens_for(User, 'after_insert')
 def create_default_category(mapper, connection, target):
@@ -89,13 +106,12 @@ def create_default_category(mapper, connection, target):
     db.session.commit()
 
 # Create task
-@app.route("/tasks", methods=["POST"])
-def create_task():
+@app.route("/tasks/<int:user_id>", methods=["POST"])
+def create_task(user_id):
     # Extract the data from the request
     title = request.json["title"]
     description = request.json["description"]
     deadline = request.json["deadline"]
-    user_id = request.json["user_id"]
     category_id = request.json["category_id"]
 
     # Find the category for the given ID
@@ -161,7 +177,7 @@ def delete_task(id):
         return f"Task {id} not found", 404
     
 # Edit task
-@app.route("/tasks/<id>", methods=["PUT"])
+@app.route("/tasks/<int:id>", methods=["PUT"])
 def update_task(id):
     # Find the task in the database
     task = Task.query.filter_by(id=id).one()
@@ -188,6 +204,13 @@ def update_task(id):
 
     # Return the updated task as a response
     return format_task(task, task.category)
+
+# Get all categories for a user
+@app.route("/categories/<int:user_id>", methods=["GET"])
+def get_categories(user_id):
+    categories = Category.query.filter_by(user_id=user_id).all()
+    return jsonify([category.serialize() for category in categories])
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
