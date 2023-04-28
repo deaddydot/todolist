@@ -1,7 +1,7 @@
 {
   "name": "todolist_react",
   "version": "0.1.0",
-  "homepage": "https://deaddydot.github.io/todolist",
+  "homepage": "tasktastic.link",
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^2.0.1",

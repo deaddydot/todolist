@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import DeleteTaskButton from './../DeleteTask/DeleteTaskButton';
 import Button from 'react-bootstrap/Button';
+import UserCategories from '../Sidebar/AddTask/UserCategories';
 
 export default class EditTaskForm extends React.Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export default class EditTaskForm extends React.Component {
       description: "",
       deadline: "",
       category_id: "",
+      user_id : 0,
     };
   }
 
@@ -38,15 +40,10 @@ export default class EditTaskForm extends React.Component {
       title,
       description,
       deadline,
-      user_id: 0, // replace with the user ID of the currently logged-in user
       category_id,
     };
     try {
-      const response = await axios.put(
-        `${this.props.flaskUrl}/tasks/${this.props.taskId}`,
-        data
-      );
-      console.log(response.data);
+      const response = await axios.post(`${this.props.flaskUrl}/tasks/${this.props.taskId}`, data);
     } catch (error) {
       console.error(error);
     }
@@ -60,6 +57,10 @@ export default class EditTaskForm extends React.Component {
     this.setState({
       [e.target.name]: e.target.value,
     });
+  };
+
+  handleCategoryChange = (categoryId) => {
+    this.setState({ category_id: categoryId });
   };
 
   render() {
@@ -96,16 +97,7 @@ export default class EditTaskForm extends React.Component {
             onChange={this.handleChange}
           />
         </label>
-        <label>
-          Category ID:
-          <input
-            type="text"
-            name="category_id"
-            key="category_id"
-            value={category_id}
-            onChange={this.handleChange}
-          />
-        </label>
+        <UserCategories flaskUrl={this.props.flaskUrl} userId={this.state.user_id} onCategoryChange={this.handleCategoryChange} />
         <Button style={{backgroundColor: 'blue', border: 'none'}} type="submit">Submit</Button>
       </form>
       <DeleteTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} modalOpen={this.props.modalOpen}/></>
