@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
-import UserCategories from './UserCategories';
+import UserCategories from '../../UserCategories';
 
 export default class AddTaskForm extends React.Component {
   constructor(props) {

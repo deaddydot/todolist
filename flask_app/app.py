@@ -177,7 +177,7 @@ def delete_task(id):
         return f"Task {id} not found", 404
     
 # Edit task
-@app.route("/tasks/<int:id>", methods=["PUT"])
+@app.route("/tasks-edit/<int:id>", methods=["PUT"])
 def update_task(id):
     # Find the task in the database
     task = Task.query.filter_by(id=id).one()
