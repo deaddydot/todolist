@@ -6,7 +6,6 @@ export default class UserCategories extends React.Component {
     super(props);
     this.state = {
       categories: [],
-      selectedCategoryId: "",
     };
 
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
@@ -25,25 +24,39 @@ export default class UserCategories extends React.Component {
 
   handleCategoryChange(event) {
     const categoryId = event.target.value;
-    this.setState({ selectedCategoryId: categoryId });
     this.props.onCategoryChange(categoryId);
   }
 
   render() {
-    const categoryOptions = this.state.categories.map(category => (
-      <option key={category.id} value={category.id}>{category.name}</option>
-    ));
-
+    const { categories } = this.state;
+    const { selectedCategoryId } = this.props;
+    console.log(selectedCategoryId);
+    const currentCategory = categories.find(category => category.id === selectedCategoryId);
+    const categoryOptions = categories.map(category => {
+      if (category.id !== selectedCategoryId) {
+        return(
+          <option key={category.id} value={category.id}>{category.name}</option>
+        );
+      }
+      else {
+        return null;
+      }
+    });
+  
     return (
       <>
         <label>
           Category:
-          <select key="category-select" value={this.state.selectedCategoryId} onChange={this.handleCategoryChange}>
-            <option value="">Select a category...</option>
+          <select key="category-select" value={selectedCategoryId} onChange={this.handleCategoryChange}>
+            {currentCategory && (
+              <option key={currentCategory.id} value={currentCategory.id}>
+                {currentCategory.name}
+              </option>
+            )}
             {categoryOptions}
           </select>
         </label>
       </>
     );
-  }
+  }  
 }

@@ -18,10 +18,14 @@ export default class AddTaskForm extends React.Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const { title, description, deadline, category_id } = this.state;
+    
+    const datetimeObject = new Date(deadline);
+    const formattedDatetime = `${datetimeObject.getMonth()+1}-${datetimeObject.getDate()}-${datetimeObject.getFullYear()} ${datetimeObject.getHours()}:${datetimeObject.getMinutes()}:${datetimeObject.getSeconds()}`;
+
     const data = {
       title,
       description,
-      deadline,
+      formattedDatetime,
       category_id,
     };
     try {
@@ -73,7 +77,8 @@ export default class AddTaskForm extends React.Component {
         <label>
           Deadline:
           <input
-            type="text"
+            type="datetime-local"
+            id="datetime"
             name="deadline"
             value={deadline}
             onChange={this.handleChange}
