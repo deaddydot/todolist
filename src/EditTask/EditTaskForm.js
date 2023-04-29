@@ -20,18 +20,22 @@ export default class EditTaskForm extends React.Component {
   componentDidMount() {
     axios.get(`${this.props.flaskUrl}/task/${this.props.taskId}`)
       .then(response => {
-        this.setState({ 
-          task: response.data,
-          title: response.data.title,
-          description: response.data.description,
-          deadline: response.data.deadline,
-          category_id: response.data.category_id,
+        const task = response.data;
+        const deadlineDate = new Date(task.deadline);
+        const formattedDeadline = deadlineDate.toISOString().substring(0, 16);
+        this.setState({
+          task,
+          title: task.title,
+          description: task.description,
+          deadline: formattedDeadline,
+          category_id: task.category_id,
         });
       })
       .catch(error => {
         console.log(error);
       });
   }
+  
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,14 +94,14 @@ export default class EditTaskForm extends React.Component {
         <label>
           Deadline:
           <input
-            type="text"
+            type="datetime-local"
+            id="datetime"
             name="deadline"
-            key="deadline"
             value={deadline}
             onChange={this.handleChange}
           />
         </label>
-        <UserCategories flaskUrl={this.props.flaskUrl} userId={this.state.user_id} onCategoryChange={this.handleCategoryChange} />
+        <UserCategories flaskUrl={this.props.flaskUrl} userId={this.state.user_id} onCategoryChange={this.handleCategoryChange} selectedCategoryId={category_id} />
         <Button style={{backgroundColor: 'blue', border: 'none'}} type="submit">Submit</Button>
       </form>
       <DeleteTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} modalOpen={this.props.modalOpen}/></>

@@ -111,7 +111,7 @@ def create_task(user_id):
     # Extract the data from the request
     title = request.json["title"]
     description = request.json["description"]
-    deadline = request.json["deadline"]
+    deadline = request.json["formattedDatetime"]
     category_id = request.json["category_id"]
 
     # Find the category for the given ID
