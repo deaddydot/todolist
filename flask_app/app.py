@@ -8,10 +8,10 @@ app = Flask(__name__)
 CORS(app)
 
 with open('database.txt', 'r') as file:
-    text = file.read()
+    text = file.readline().replace('\n', '').replace('\r', '').strip()
 
 # prod server
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ubuntu:{text}@localhost/test1'
+# app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://ubuntu:{text}@localhost/test1'
 
 # local host
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ubuntu:ubuntu@localhost/test1'
