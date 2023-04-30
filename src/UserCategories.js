@@ -30,7 +30,6 @@ export default class UserCategories extends React.Component {
   render() {
     const { categories } = this.state;
     const { selectedCategoryId } = this.props;
-    console.log(selectedCategoryId);
     const currentCategory = categories.find(category => category.id === selectedCategoryId);
     const categoryOptions = categories.map(category => {
       if (category.id !== selectedCategoryId) {

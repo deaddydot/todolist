@@ -55,6 +55,9 @@ export default class CalendarViewData extends React.Component {
             break;
           case 'Sat':
             dayOfWeek = 6;
+            break;
+          default:
+            dayOfWeek = 0;
         }
 
         return {...item, dayOfWeek, category};

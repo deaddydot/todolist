@@ -14,9 +14,7 @@ export default class TaskView extends React.Component {
 
   render() {
     return (
-      <Row>
-        <TaskViewDataDatabase showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
-      </Row>
+      <TaskViewDataDatabase showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
     );
   }
 }

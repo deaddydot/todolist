@@ -111,7 +111,7 @@ export default class CalendarViewDataDatabase extends React.Component {
   
   render() {
     return (
-      <Row style={{backgroundColor: 'var(--secondary-color)', height: '100vh'}}>
+      <Row style={{backgroundColor: 'var(--secondary-color)', minHeight: '100vh'}}>
         {this.generateColumns()}
       </Row>
     );
