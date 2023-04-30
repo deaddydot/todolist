@@ -7,7 +7,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-with open('database.txt', 'r') as file:
+with open('/database.txt', 'r') as file:
     text = file.readline().replace('\n', '').replace('\r', '').strip()
 
 # prod server
