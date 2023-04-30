@@ -49,7 +49,7 @@ function Sidebar(props) {
           </Collapse>
         </ListGroup>
       </Row>
-      <Row>
+      {/* <Row>
         <ListGroup>
           <Button style={{width: '100%', backgroundColor: 'var(--primary-color)', border: 'none', color: 'black'}} onClick={() => setOpen2(!open2)} aria-controls='collapse2' aria-expanded={open2}>
             <h2>Filter by Categories</h2>
@@ -60,8 +60,8 @@ function Sidebar(props) {
             </div>
           </Collapse>
         </ListGroup>
-      </Row>
-      <Row>
+      </Row> */}
+      {/* <Row>
         <ListGroup>
           <Button style={{width: '100%', backgroundColor: 'var(--primary-color)', border: 'none', color: 'black'}} onClick={() => setOpen3(!open3)} aria-controls='collapse3' aria-expanded={open3}>
             <h2>Filter by Timeframe</h2>
@@ -72,13 +72,13 @@ function Sidebar(props) {
             </div>
           </Collapse>
         </ListGroup>
-      </Row>
+      </Row> */}
       <Row>
         <AddTaskButton flaskUrl={props.flaskUrl} />
       </Row>
-      <Row>
+      {/* <Row>
         <h2 className='text-center'>Settings</h2>
-      </Row>
+      </Row> */}
     </div>
   )
 }
