@@ -2,7 +2,6 @@
 ![image](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![image](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
 ![image](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![image](https://img.shields.io/badge/Amazon_AWS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
 
 Tasktastic is a simple task management application built with React, Flask, and Postgres. The app allows users to create, read, update, and delete tasks, as well as assign tasks to categories. 
 
@@ -93,5 +92,5 @@ Please make sure to update tests as appropriate.
 ## Team members
 - Jack Carver: Team lead, Front-end developer
 - Drew Nguyen: Back-end developer, database specialist
-- Long Ta: Back End developer, authentication specialist
+- Long Ta: Back-end developer, authentication specialist
 - Hudson Bailey: Front-end developer
