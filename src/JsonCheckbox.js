@@ -78,7 +78,7 @@ export default class JsonCheckbox extends React.Component {
             </Collapse>
           </ListGroup>
           {this.state.showEdit && 
-            <EditTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} />
+            <EditTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} hideEditButton={this.handleMouseLeave} />
           }
         </div>
       </div>

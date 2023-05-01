@@ -38,12 +38,18 @@ export default class EditTaskButton extends React.Component {
         this.state = {displayModal: false};
     
         this.modalOpen = this.modalOpen.bind(this);
-    
+        this.modalClose = this.modalClose.bind(this);
     }
     
     modalOpen() {
         const temp = !this.state.displayModal;
         this.setState({displayModal: temp});
+    }
+
+    modalClose() {
+        const temp = !this.state.displayModal;
+        this.setState({displayModal: temp});
+        this.props.hideEditButton();
     }
 
     render(){
@@ -55,7 +61,7 @@ export default class EditTaskButton extends React.Component {
                         <div /*className={styles.ModalContent}*/ style={ModalContent} className="modal-content">
                             <div className="modal-header">
                                 <h2>Edit Task</h2>
-                                <span style={Close} className="close" onClick={this.modalOpen}>&times;</span>
+                                <span style={Close} className="close" onClick={this.modalClose}>&times;</span>
                             </div>
                             <EditTaskForm flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} modalOpen={this.modalOpen} />
                         </div>

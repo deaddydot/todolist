@@ -51,7 +51,7 @@ export default class CompletedViewJsonCheckbox extends React.Component {
             <p>Due: {this.props.deadline}</p>
           </div>
           {this.state.showEdit && 
-            <EditTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId}/>
+            <EditTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} hideEditButton={this.handleMouseLeave} />
           }
         </div>
       </div>
