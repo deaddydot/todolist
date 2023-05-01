@@ -46,7 +46,7 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
-    document.title = 'Tasktastic';
+    document.title = 'TaskTastic';
   }
 
   render() { 

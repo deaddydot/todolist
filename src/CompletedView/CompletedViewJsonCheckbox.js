@@ -7,7 +7,8 @@ export default class CompletedViewJsonCheckbox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      checked: this.props.checked
+      checked: this.props.checked,
+      showEdit: false,
     };
     this.changeDisplay = this.changeDisplay.bind(this);
   }
@@ -26,10 +27,18 @@ export default class CompletedViewJsonCheckbox extends React.Component {
     }
   }
 
+  handleHover = () => {
+    this.setState({showEdit: true});
+  };
+
+  handleMouseLeave = () => {
+    this.setState({showEdit: false});
+  };
+
   render() {
     const display = this.props.showAll || this.state.checked ? 'block' : 'none';
     return (
-      <div style={{ display }}>
+      <div style={{ display }} onMouseEnter={this.handleHover} onMouseLeave={this.handleMouseLeave}>
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
           <div>
             <Form.Check
@@ -41,9 +50,9 @@ export default class CompletedViewJsonCheckbox extends React.Component {
             />
             <p>Due: {this.props.deadline}</p>
           </div>
-          <div>
+          {this.state.showEdit && 
             <EditTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId}/>
-          </div>
+          }
         </div>
       </div>
     );

@@ -43,13 +43,13 @@ export default class EditTaskButton extends React.Component {
     
     modalOpen() {
         const temp = !this.state.displayModal;
-        this.setState({displayModal: temp})
+        this.setState({displayModal: temp});
     }
 
     render(){
         return(
             <>
-            <Button size='sm' onClick={this.modalOpen} style={{backgroundColor: 'lightgrey', color: 'black', border: 'none' }}>Edit</Button>
+            <Button size='sm' onClick={this.modalOpen} style={{backgroundColor: 'lightgrey', color: 'black', border: 'none', height: '2rem' }}>Edit</Button>
                 {this.state.displayModal && (
                     <div className="myModal" style={ModalLooks} /*onClick={this.modalopen}*/>
                         <div /*className={styles.ModalContent}*/ style={ModalContent} className="modal-content">

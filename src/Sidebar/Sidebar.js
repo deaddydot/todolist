@@ -20,8 +20,8 @@ function Sidebar(props) {
 
   return (
     <div className='sidebar' style={{padding: '20px'}}>
-      <Row style={{height: '10%', alignContent: 'center'}}>
-        <h1 className='text-center'>Tasktastic</h1>
+      <Row style={{height: '10%', paddingTop: '2rem'}}>
+        <h1 className='text-center'>TaskTastic</h1>
       </Row>
       <Row>
         <ListGroup>

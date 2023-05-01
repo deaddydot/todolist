@@ -12,7 +12,8 @@ export default class JsonCheckbox extends React.Component {
     this.state = { 
       display: 'block',
       checked: false,
-      open: false
+      open: false,
+      showEdit: false
     };
     this.changeDisplay = this.changeDisplay.bind(this);
     this.setOpen = this.setOpen.bind(this);
@@ -51,9 +52,17 @@ export default class JsonCheckbox extends React.Component {
     }
   }
 
+  handleHover = () => {
+    this.setState({showEdit: true});
+  };
+
+  handleMouseLeave = () => {
+    this.setState({showEdit: false});
+  };
+
   render() {
     return (
-      <div style={{display: this.state.display}}>
+      <div style={{display: this.state.display}} onMouseEnter={this.handleHover} onMouseLeave={this.handleMouseLeave}>
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
           <ListGroup>
             <div style={{textAlign: 'left', padding: '0', margin: '0'}} onClick={() => this.setOpen(!this.state.open)} aria-controls='collapse1' aria-expanded={this.state.open}>
@@ -68,9 +77,9 @@ export default class JsonCheckbox extends React.Component {
               </div>
             </Collapse>
           </ListGroup>
-          <div>
-            <EditTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId}/>
-          </div>
+          {this.state.showEdit && 
+            <EditTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} />
+          }
         </div>
       </div>
     );
