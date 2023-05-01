@@ -11,14 +11,14 @@ export default class ShowAllCheckboxes extends React.Component {
     const showAllButton = document.getElementById('show-all');
 
     if (this.props.showAll) {
-      showAllButton.textContent = "Show all checkboxes";
+      showAllButton.textContent = "Show all tasks";
     }
     else {
       if (this.props.view === 'completed') {
-        showAllButton.textContent = "Hide unchecked checkboxes";
+        showAllButton.textContent = "Hide unchecked tasks";
       }
       else {
-        showAllButton.textContent = "Hide checked checkboxes";
+        showAllButton.textContent = "Hide checked tasks";
       }
     }
 
@@ -31,14 +31,14 @@ export default class ShowAllCheckboxes extends React.Component {
 
       if (this.props.showAll) {
         if (this.props.view === 'completed') {
-          showAllButton.textContent = "Hide unchecked checkboxes";
+          showAllButton.textContent = "Hide unchecked tasks";
         }
         else {
-          showAllButton.textContent = "Hide checked checkboxes";
+          showAllButton.textContent = "Hide checked tasks";
         }
       }
       else {
-        showAllButton.textContent = "Show all checkboxes";
+        showAllButton.textContent = "Show all tasks";
       }
     }
   }
@@ -46,7 +46,7 @@ export default class ShowAllCheckboxes extends React.Component {
   render() {
     return (
       <div id='show-all-div'>
-        <Button id='show-all' onClick={() => this.handleChange()}>Show all checkboxes</Button>
+        <Button id='show-all' onClick={() => this.handleChange()}>Show all tasks</Button>
       </div>
     );
   }
