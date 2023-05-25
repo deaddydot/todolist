@@ -8,6 +8,7 @@ import Timeframes from './Timeframes';
 import './Sidebar.css';
 import './../index.css';
 import AddTaskButton from './AddTask/addTaskButton';
+import AddCategoryButton from './AddCategory/addCategoryButton';
 
 function Sidebar(props) {
   function changeView(view) {
@@ -75,6 +76,7 @@ function Sidebar(props) {
       </Row> */}
       <Row>
         <AddTaskButton flaskUrl={props.flaskUrl} />
+        <AddCategoryButton flaskUrl={props.flaskUrl} />
       </Row>
       {/* <Row>
         <h2 className='text-center'>Settings</h2>

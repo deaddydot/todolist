@@ -1,8 +1,7 @@
 import React from "react";
-import "./styles.css";
-import AddTaskForm from "./AddTaskForm";
+//import "./styles.css";
+import AddCategoryForm from "./AddCategoryForm";
 import Button from 'react-bootstrap/Button';
-//import styles from "./styles.css";
 
 const ModalLooks = {
   //display: "block", /* Hidden by default */
@@ -40,7 +39,7 @@ const Close = {
   // }
 }
 
-export default class AddTaskButton extends React.Component {
+export default class AddCategoryButton extends React.Component {
   constructor(props){
     super(props);
 
@@ -74,16 +73,16 @@ export default class AddTaskButton extends React.Component {
   render() {
     return (
       <>
-        <button id="myBtn" onClick={this.modalOpen} style={{height: 100, width: "100%", backgroundColor: "var(--primary-color)", border: "none"}}><h2>Add a task</h2></button>
+        <button id="myBtn" onClick={this.modalOpen} style={{height: 100, width: "100%", backgroundColor: "var(--primary-color)", border: "none"}}><h2>Add a Category</h2></button>
   
         {this.state.displayModal && (
           <div className="myModal" style={ModalLooks} /*onClick={this.modalopen}*/>
           <div /*className={styles.ModalContent}*/ style={ModalContent} className="modal-content">
             <div className="modal-header">
-              <h2>Create Your Task</h2>
+              <h2>Create Your Category</h2>
               <span style={Close} className="close" onClick={this.modalOpen}>&times;</span>
             </div>
-            <AddTaskForm flaskUrl={this.props.flaskUrl} modalOpen={this.modalOpen} />
+            <AddCategoryForm flaskUrl={this.props.flaskUrl} modalOpen={this.modalOpen} />
           </div>
         </div>
         )}
