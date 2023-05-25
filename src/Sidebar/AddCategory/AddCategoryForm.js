@@ -3,6 +3,7 @@ import { SketchPicker } from 'react-color';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import UserCategories from '../../UserCategories';
+import CirclePicker from 'react-color';
 
 export default class AddCategoryForm extends React.Component {
   constructor(props) {
@@ -68,8 +69,12 @@ export default class AddCategoryForm extends React.Component {
             onChange={this.handleChange}
           />
         </label>
-        <SketchPicker />
-        <UserCategories flaskUrl={this.props.flaskUrl} userId={this.state.user_id} onCategoryChange={this.handleCategoryChange} />
+        <SketchPicker
+          color={this.state.color}
+          onChangeComplete={(color) => {
+            this.setState({ color: color.hex });
+          }}
+        />
         <Button style={{backgroundColor: 'blue', border: 'none'}} type="submit">Submit</Button>
       </form>
     );
