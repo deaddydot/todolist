@@ -47,7 +47,6 @@ export default class TaskViewDataDatabase extends React.Component {
             {column.map((category, index) => (
               <React.Fragment key={`category-${index}`}>
                 <Card style={{backgroundColor: `var(--${category})`, border: 'none', padding: '1rem'}}>
-                  <AddTaskButton style={{display: 'relative', right: '0', top: '0'}}/>
                   <h2>{category}</h2>
                   {filteredTasksByCategory[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
