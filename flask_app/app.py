@@ -213,6 +213,22 @@ def get_categories(user_id):
     categories = Category.query.filter_by(user_id=user_id).all()
     return jsonify([category.serialize() for category in categories])
 
+# Create category
+@app.route("/categories/<int:user_id>", methods=["POST"])
+def create_category(user_id):
+    # Extract the data from the request
+    name = request.json["name"]
+
+    # Create a new category object
+    category = Category(name=name, user_id=user_id)
+
+    # Add the category to the database
+    db.session.add(category)
+    db.session.commit()
+
+    # Return the created category as a response
+    return jsonify(category.serialize()), 201
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
