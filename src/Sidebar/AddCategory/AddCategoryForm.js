@@ -9,7 +9,7 @@ export default class AddCategoryForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: "",
+      name: "",
       color: "",
       user_id: 0,    // pass this down by props
     };
@@ -17,16 +17,16 @@ export default class AddCategoryForm extends React.Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const { title, color } = this.state;
+    const { name, color } = this.state;
 
     const data = {
-      title,
+      name,
       color,
     };
     try {
-      const response = await axios.post(`${this.props.flaskUrl}/tasks/${this.state.user_id}`, data);
+      const response = await axios.post(`${this.props.flaskUrl}/categories/${this.state.user_id}`, data);
 
-      this.props.onTaskAdded(response.data.category_id);
+      this.props.onCategoryAdded(response.data.category_id);
     } catch (error) {
       console.error(error);
     }
@@ -47,16 +47,16 @@ export default class AddCategoryForm extends React.Component {
   };
 
   render() {
-    const { title, color } = this.state;
+    const { name, color } = this.state;
 
     return (
       <form onSubmit={this.handleSubmit} style={{display: 'flex', flexDirection: 'column'}}>
         <label>
-          Title:
+          Name:
           <input
             type="text"
-            name="title"
-            value={title}
+            name="name"
+            value={name}
             onChange={this.handleChange}
           />
         </label>
