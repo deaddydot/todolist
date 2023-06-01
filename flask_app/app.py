@@ -29,11 +29,12 @@ class User(db.Model):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
+    color = db.Column(db.String(255), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     tasks = db.relationship('Task', backref='category', lazy=True)
 
     def __repr__(self):
-        return f"Category(name={self.name}, user_id={self.user_id})"
+        return f"Category(name={self.name}, color={self.color} user_id={self.user_id})"
 
     def get_default_category(self):
         default_category = Category.query.filter_by(name='Default', user_id=self.user_id).first()
@@ -44,7 +45,8 @@ class Category(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            "color": self.color
         }
 
 # Task class
@@ -218,9 +220,10 @@ def get_categories(user_id):
 def create_category(user_id):
     # Extract the data from the request
     name = request.json["name"]
+    color = request.json["color"]
 
     # Create a new category object
-    category = Category(name=name, user_id=user_id)
+    category = Category(name=name, user_id=user_id, color=color)
 
     # Add the category to the database
     db.session.add(category)
