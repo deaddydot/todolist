@@ -49,26 +49,30 @@ export default class AddCategoryButton extends React.Component {
 
   }
 
-  modalOpen() {
-    const temp = !this.state.displayModal;
-    this.setState({displayModal: temp})
-
-    // const modal = document.querySelectorAll("myModal");
-    // if (modal.style.display === 'none') {
-    //   modal.style.display = 'block';
-    // } else {
-    //   modal.style.display = 'none';
-    // }
+  componentDidMount() {
+    document.addEventListener("click", this.handleOutsideClick, true);
   }
+  
+  componentWillUnmount() {
+    document.removeEventListener("click", this.handleOutsideClick, true);
+  }
+  
 
+  handleOutsideClick = (event) => {
+    const modalContent = document.querySelector(".modal-content");
+    if (modalContent && !modalContent.contains(event.target)) {
+      this.modalClose();
+    }
+  };
+  
 
-// When the user clicks on <span> (x), close the modal
-// spanclose() {
-//   const modal = document.querySelectorAll("myModal");
-//   modal.style.display = "none";
-// }
+  modalOpen = () => {
+    this.setState({ displayModal: true });
+  };
 
-
+  modalClose = () => {
+    this.setState({ displayModal: false });
+  };
 
   render() {
     return (
@@ -76,11 +80,11 @@ export default class AddCategoryButton extends React.Component {
         <button id="myBtn" onClick={this.modalOpen} style={{height: 100, width: "100%", backgroundColor: "var(--primary-color)", border: "none"}}><h2>Add a Category</h2></button>
   
         {this.state.displayModal && (
-          <div className="myModal" style={ModalLooks} /*onClick={this.modalopen}*/>
-          <div /*className={styles.ModalContent}*/ style={ModalContent} className="modal-content">
+          <div className="myModal" style={ModalLooks} ref={(ref) => (this.modalRef = ref)}>
+          <div style={ModalContent} className="modal-content">
             <div className="modal-header">
               <h2>Create Your Category</h2>
-              <span style={Close} className="close" onClick={this.modalOpen}>&times;</span>
+              <span style={Close} className="close" onClick={this.modalClose}>&times;</span>
             </div>
             <AddCategoryForm flaskUrl={this.props.flaskUrl} modalOpen={this.modalOpen} />
           </div>
@@ -88,6 +92,5 @@ export default class AddCategoryButton extends React.Component {
         )}
       </>
     );
-    
   }
 }
