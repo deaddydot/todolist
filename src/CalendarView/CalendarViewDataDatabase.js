@@ -8,7 +8,8 @@ export default class CalendarViewDataDatabase extends React.Component {
     super(props);
 
     this.state = { 
-      data: []
+      data: [],
+      categories: {},
     };
   }
 
@@ -17,9 +18,17 @@ export default class CalendarViewDataDatabase extends React.Component {
   }
 
   fetchData = async () => {
-    axios.get(`${this.props.flaskUrl}/tasks-by-categories/0`)
-      .then(response => {
-      const data = response.data;
+    axios.all([
+      axios.get(`${this.props.flaskUrl}/tasks-by-categories/0`),
+      axios.get(`${this.props.flaskUrl}/categories/0`)
+    ])
+    .then(axios.spread((tasksResponse, categoriesResponse) => {
+      const categories = categoriesResponse.data.reduce((acc, category) => {
+        acc[category.name] = category.color;
+        return acc;
+      }, {});
+
+      const data = tasksResponse.data;
       const filteredData = {};
       Object.keys(data).forEach(category => {
         const tasks = data[category].filter(task => !task.completed);
@@ -27,11 +36,12 @@ export default class CalendarViewDataDatabase extends React.Component {
           filteredData[category] = tasks;
         }
       });
-      this.setState({ data: this.parseDeadlines(filteredData) });
-      })
-      .catch(error => {
-        console.log(error);
-      });
+
+      this.setState({ data: this.parseDeadlines(filteredData), categories });
+    }))
+    .catch(error => {
+      console.log(error);
+    });
   }
 
 
@@ -93,7 +103,7 @@ export default class CalendarViewDataDatabase extends React.Component {
           const itemsInCategory = columnItems.filter(item => item.category === category);
           if (itemsInCategory.length > 0) {
             return (
-              <Card key={`${index}-${category}`} style={{ backgroundColor: `var(--${category})`}}>
+              <Card key={`${index}-${category}`} style={{ backgroundColor: this.state.categories[category] || 'var(--tertiary-color)'}}>
                 <h3>{category}</h3>
                 {itemsInCategory.map(item => (
                   <JsonCheckbox key={item.id} label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
