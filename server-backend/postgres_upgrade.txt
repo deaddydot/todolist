@@ -1,0 +1,22 @@
+-- add colors to categories
+ALTER TABLE category
+ADD COLUMN IF NOT EXISTS color VARCHAR(255);
+
+UPDATE category
+SET color = '#ffa500'
+WHERE name = 'life';
+UPDATE category
+SET color = '#adff2f'
+WHERE name = 'work';
+UPDATE category
+SET color = '#f08080'
+WHERE name = 'senior-design';
+UPDATE category
+SET color = '#deb887'
+WHERE name = 'intro-to-computer-architecture';
+UPDATE category
+SET color = '#ee82ee'
+WHERE name = 'innovation-and-design';
+UPDATE category
+SET color = '#7fffd4'
+WHERE name = 'intro-to-cybersecurity';
