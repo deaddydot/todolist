@@ -1,13 +1,13 @@
 :root {
-  --primary-color: rgb(157, 206, 252);
-  --secondary-color: rgb(211, 211, 211);
-  --tertiary-color: rgb(248, 192, 70);
-  --life: orange;
-  --work: greenyellow;
-  --senior-design: lightcoral;
-  --intro-to-computer-architecture: burlywood;
-  --innovation-and-design: violet;
-  --intro-to-cybersecurity: aquamarine;
+  --primary-color: #9dcefc;
+  --secondary-color: #d3d3d3;
+  --tertiary-color: #f8c046;
+  --life: #ffa500;
+  --work: #adff2f;
+  --senior-design: #f08080;
+  --intro-to-computer-architecture: #deb887;
+  --innovation-and-design: #ee82ee;
+  --intro-to-cybersecurity: #7fffd4;
 }
 
 .card {

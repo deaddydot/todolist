@@ -9,18 +9,29 @@ export default class TaskViewDataDatabase extends React.Component {
     super(props);
     this.state = {
       tasksByCategory: [],
+      categories: {},
     };
   }
 
   componentDidMount() {
-    axios.get(`${this.props.flaskUrl}/tasks-by-categories/0`)
-      .then(response => {
-        this.setState({ tasksByCategory: response.data });
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    axios.all([
+      axios.get(`${this.props.flaskUrl}/tasks-by-categories/0`),
+      axios.get(`${this.props.flaskUrl}/categories/0`)
+    ])
+    .then(axios.spread((tasksResponse, categoriesResponse) => {
+      const tasksByCategory = tasksResponse.data;
+      const categories = categoriesResponse.data.reduce((acc, category) => {
+          acc[category.name] = category.color;
+          return acc;
+      }, {});
+
+      this.setState({ tasksByCategory, categories });
+    }))
+    .catch(error => {
+      console.log(error);
+    });
   }
+
 
   render() {
     const { tasksByCategory } = this.state;
@@ -46,7 +57,7 @@ export default class TaskViewDataDatabase extends React.Component {
           <Col key={`column-${colIndex}`}>
             {column.map((category, index) => (
               <React.Fragment key={`category-${index}`}>
-                <Card style={{backgroundColor: `var(--${category})`, border: 'none', padding: '1rem'}}>
+                <Card style={{backgroundColor: this.state.categories[category] || 'var(--tertiary-color)', border: 'none', padding: '1rem'}}>
                   <h2>{category}</h2>
                   {filteredTasksByCategory[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
