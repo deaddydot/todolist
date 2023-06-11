@@ -2,12 +2,6 @@
   --primary-color: #9dcefc;
   --secondary-color: #d3d3d3;
   --tertiary-color: #f8c046;
-  --life: #ffa500;
-  --work: #adff2f;
-  --senior-design: #f08080;
-  --intro-to-computer-architecture: #deb887;
-  --innovation-and-design: #ee82ee;
-  --intro-to-cybersecurity: #7fffd4;
 }
 
 .card {
@@ -16,31 +10,6 @@
 
 .card, .list-group-item, .card-header {
   border: none;
-}
-
-/* user-defined categories */
-.life {
-  background-color: orange;
-}
-
-.work {
-  background-color: greenyellow;
-}
-
-.senior-design {
-  background-color: lightcoral;
-}
-
-.intro-to-computer-architecture {
-  background-color: burlywood;
-}
-
-.innovation-and-design {
-  background-color: violet;
-}
-
-.intro-to-cybersecurity {
-  background-color: aquamarine;
 }
 
 #show-all {
