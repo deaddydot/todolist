@@ -41,24 +41,38 @@ export default class EditTaskButton extends React.Component {
         this.modalClose = this.modalClose.bind(this);
     }
     
-    modalOpen() {
-        const temp = !this.state.displayModal;
-        this.setState({displayModal: temp});
+    componentDidMount() {
+        document.addEventListener("click", this.handleOutsideClick, true);
+      }
+      
+    componentWillUnmount() {
+        document.removeEventListener("click", this.handleOutsideClick, true);
     }
+    
 
-    modalClose() {
-        const temp = !this.state.displayModal;
-        this.setState({displayModal: temp});
-        this.props.hideEditButton();
-    }
+    handleOutsideClick = (event) => {
+        const modalContent = document.querySelector(".modal-content");
+        if (modalContent && !modalContent.contains(event.target)) {
+            this.modalClose();
+        }
+    };
+    
+
+    modalOpen = () => {
+        this.setState({ displayModal: true });
+    };
+
+    modalClose = () => {
+        this.setState({ displayModal: false });
+    };
 
     render(){
         return(
             <>
             <Button size='sm' onClick={this.modalOpen} style={{backgroundColor: 'lightgrey', color: 'black', border: 'none', height: '2rem' }}>Edit</Button>
                 {this.state.displayModal && (
-                    <div className="myModal" style={ModalLooks} /*onClick={this.modalopen}*/>
-                        <div /*className={styles.ModalContent}*/ style={ModalContent} className="modal-content">
+                    <div className="myModal" style={ModalLooks} ref={(ref) => (this.modalRef = ref)}>
+                        <div style={ModalContent} className="modal-content">
                             <div className="modal-header">
                                 <h2>Edit Task</h2>
                                 <span style={Close} className="close" onClick={this.modalClose}>&times;</span>
