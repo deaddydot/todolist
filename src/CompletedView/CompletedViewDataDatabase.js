@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import CompletedViewJsonCheckbox from './CompletedViewJsonCheckbox';
 import {Col, Row, Card} from 'react-bootstrap';
+import AddTaskButtonByCategory from '../Sidebar/AddTask/AddTaskButtonByCategory';
 
 export default class CompletedViewDataDatabase extends React.Component {
   constructor(props) {
@@ -57,6 +58,7 @@ export default class CompletedViewDataDatabase extends React.Component {
               <React.Fragment key={`category-${index}`}>
                 <Card style={{backgroundColor: this.state.categories[category] || 'var(--tertiary-color)', border: 'none', padding: '1rem'}}>
                   <h2>{category}</h2>
+                  <AddTaskButtonByCategory style={{ position: 'absolute', top: '0', right: '0' }} category={category} flaskUrl={this.props.flaskUrl} />
                   {filteredTasksByCategory[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
                       <CompletedViewJsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} checked={true} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />

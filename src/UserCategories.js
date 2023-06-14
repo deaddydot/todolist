@@ -15,7 +15,6 @@ export default class UserCategories extends React.Component {
     // fetch categories from Flask API when component mounts
     axios.get(`${this.props.flaskUrl}/categories/${this.props.userId}`)
       .then(response => {
-        console.log(response.data);
         this.setState({ categories: response.data });
       })
       .catch(error => {
