@@ -16,30 +16,28 @@ export default class EditCategoryForm extends React.Component {
   }
   
   componentDidMount() {
-    console.log(this.props.category);
     axios.get(`${this.props.flaskUrl}/categories/${this.state.user_id}`)
-    .then(response => {
-      const categories = response.data;
-      const currentCategory = categories.find(category => category.name === this.props.category);
-      console.log(currentCategory.id);
-      this.setState({ category_id: currentCategory.id });
-    })
-    .catch(error => {
-      console.log(error);
-    });
-    console.log(this.state.category_id);
-    axios.get(`${this.props.flaskUrl}/category/${this.state.category_id}`)
       .then(response => {
-        const category = response.data;
-        this.setState({
-          category,
-          name: category.name,
-          color: category.color,
-        });
+        const categories = response.data;
+        const currentCategory = categories.find(category => category.name === this.props.category);
+        this.setState({ category_id: currentCategory.id });
+        axios.get(`${this.props.flaskUrl}/category/${currentCategory.id}`)
+          .then(response => {
+            const category = response.data;
+            this.setState({
+              category,
+              name: category.name,
+              color: category.color,
+            });
+          })
+          .catch(error => {
+            console.log(error);
+          });
       })
       .catch(error => {
         console.log(error);
       });
+
   }
   
   handleSubmit = async (e) => {
@@ -51,7 +49,7 @@ export default class EditCategoryForm extends React.Component {
       color,
     };
     try {
-      const response = await axios.post(`${this.props.flaskUrl}/categories/${this.state.user_id}`, data);
+      const response = await axios.put(`${this.props.flaskUrl}/categories/${this.state.category_id}`, data);
 
       this.props.onCategoryAdded(response.data.category_id);
     } catch (error) {
@@ -100,7 +98,7 @@ export default class EditCategoryForm extends React.Component {
         />
         <Button style={{ backgroundColor: 'blue', border: 'none' }} type="submit">Submit</Button>
       </form>
-      <DeleteCategoryButton flaskUrl={this.props.flaskUrl} categoryId={this.props.categoryId} modalOpen={this.props.modalOpen}/></>
+      <DeleteCategoryButton flaskUrl={this.props.flaskUrl} categoryId={this.state.category_id} modalOpen={this.props.modalOpen}/></>
     );
   }
 }
