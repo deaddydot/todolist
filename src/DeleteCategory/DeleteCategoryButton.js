@@ -13,7 +13,7 @@ export default class DeleteCategoryButton extends React.Component {
   }
 
   deleteCategory() {
-    axios.delete(`${this.props.flaskUrl}/category/${this.props.categoryId}`) //Check this as well
+    axios.delete(`${this.props.flaskUrl}/categories/${this.props.categoryId}`) //Check this as well
 
     .then(response => {
       console.log(response.data);

@@ -232,6 +232,15 @@ def create_category(user_id):
     # Return the created category as a response
     return jsonify(category.serialize()), 201
 
+# Get one category
+@app.route("/category/<int:category_id>", methods=["GET"])
+def get_category(category_id):
+    category = Category.query.filter_by( id=category_id).first()
+    if category:
+        return jsonify(category.serialize())
+    else:
+        return jsonify({"error": "Category not found"}), 404
+
 # Delete category
 @app.route("/categories/<int:category_id>", methods=["DELETE"])
 def delete_category(category_id):

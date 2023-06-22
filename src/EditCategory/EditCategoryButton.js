@@ -69,7 +69,7 @@ export default class EditCategoryButton extends React.Component {
     render(){
         return(
             <>
-            <Button size='sm' onClick={this.modalOpen} style={{backgroundColor: 'lightgrey', color: 'black', border: 'none', height: '2rem' }}>Edit Category</Button>
+            <Button size='sm' onClick={this.modalOpen} style={{backgroundColor: 'lightgrey', color: 'black', border: 'none', height: '2rem' }}>Edit</Button>
                 {this.state.displayModal && (
                     <div className="myModal" style={ModalLooks} ref={(ref) => (this.modalRef = ref)}>
                         <div style={ModalContent} className="modal-content">
@@ -77,7 +77,7 @@ export default class EditCategoryButton extends React.Component {
                                 <h2>Edit Category</h2>
                                 <span style={Close} className="close" onClick={this.modalClose}>&times;</span>
                             </div>
-                            <EditCategoryForm flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} modalOpen={this.modalOpen} />
+                            <EditCategoryForm flaskUrl={this.props.flaskUrl} category={this.props.category} modalOpen={this.modalOpen} />
                         </div>
                     </div>
                 )}

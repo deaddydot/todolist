@@ -8,6 +8,7 @@ export default class EditCategoryForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      category_id: "",
       name: "",
       color: "",
       user_id: 0,    // pass this down by props
@@ -15,7 +16,19 @@ export default class EditCategoryForm extends React.Component {
   }
   
   componentDidMount() {
-    axios.get(`${this.props.flaskUrl}/category/${this.props.categoryId}`)
+    console.log(this.props.category);
+    axios.get(`${this.props.flaskUrl}/categories/${this.state.user_id}`)
+    .then(response => {
+      const categories = response.data;
+      const currentCategory = categories.find(category => category.name === this.props.category);
+      console.log(currentCategory.id);
+      this.setState({ category_id: currentCategory.id });
+    })
+    .catch(error => {
+      console.log(error);
+    });
+    console.log(this.state.category_id);
+    axios.get(`${this.props.flaskUrl}/category/${this.state.category_id}`)
       .then(response => {
         const category = response.data;
         this.setState({
