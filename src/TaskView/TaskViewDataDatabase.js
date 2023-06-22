@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import JsonCheckbox from '../JsonCheckbox';
 import {Col, Row, Card} from 'react-bootstrap';
-import AddTaskButton from '../Sidebar/AddTask/addTaskButton';
+import AddTaskButtonByCategory from '../Sidebar/AddTask/AddTaskButtonByCategory';
 
 export default class TaskViewDataDatabase extends React.Component {
   constructor(props) {
@@ -57,8 +57,9 @@ export default class TaskViewDataDatabase extends React.Component {
           <Col key={`column-${colIndex}`}>
             {column.map((category, index) => (
               <React.Fragment key={`category-${index}`}>
-                <Card style={{backgroundColor: this.state.categories[category] || 'var(--tertiary-color)', border: 'none', padding: '1rem'}}>
+                <Card style={{backgroundColor: this.state.categories[category] || 'var(--tertiary-color)', border: 'none', padding: '1rem', position: 'relative'}}>
                   <h2>{category}</h2>
+                  <AddTaskButtonByCategory style={{ position: 'absolute', top: '0', right: '0' }} category={category} flaskUrl={this.props.flaskUrl} />
                   {filteredTasksByCategory[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
                       <JsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} category={this.category} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />

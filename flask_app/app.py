@@ -232,6 +232,60 @@ def create_category(user_id):
     # Return the created category as a response
     return jsonify(category.serialize()), 201
 
+# Delete category
+@app.route("/categories/<int:category_id>", methods=["DELETE"])
+def delete_category(category_id):
+    # Find the category in the database
+    category = Category.query.get(category_id)
+
+    if category:
+        # Delete the category
+        db.session.delete(category)
+        db.session.commit()
+
+        return jsonify({"message": "Category deleted successfully"}), 200
+    else:
+        return jsonify({"error": "Category not found"}), 404
+
+# Update category
+@app.route("/categories/<int:category_id>", methods=["PUT"])
+def update_category(category_id):
+    # Find the category in the database
+    category = Category.query.get(category_id)
+
+    if category:
+        # Extract the data from the request
+        name = request.json.get("name")
+        color = request.json.get("color")
+
+        # Update the category attributes
+        if name:
+            category.name = name
+        if color:
+            category.color = color
+
+        db.session.commit()
+
+        return jsonify({"message": "Category updated successfully"}), 200
+    else:
+        return jsonify({"error": "Category not found"}), 404
+
+
+# Filter category
+@app.route("/filter-category/<int:category_id>", methods=["POST"])
+def filter_category(category_id):
+    # Find the category in the database
+    category = Category.query.get(category_id)
+
+    if category:
+        # Toggle the visibility status
+        category.visible = not category.visible
+        db.session.commit()
+
+        return jsonify({"message": "Category visibility toggled successfully"}), 200
+    else:
+        return jsonify({"error": "Category not found"}), 404
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
