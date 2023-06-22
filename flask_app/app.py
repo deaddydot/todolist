@@ -239,13 +239,21 @@ def delete_category(category_id):
     category = Category.query.get(category_id)
 
     if category:
+        # Check if the category has any tasks
+        has_tasks = db.session.query(Task.query.filter_by(category_id=category_id).exists()).scalar()
+
+        if has_tasks:
+            # Delete all tasks associated with the category
+            Task.query.filter_by(category_id=category_id).delete()
+
         # Delete the category
         db.session.delete(category)
         db.session.commit()
 
-        return jsonify({"message": "Category deleted successfully"}), 200
+        return jsonify({"message": "Category and associated tasks deleted successfully"}), 200
     else:
         return jsonify({"error": "Category not found"}), 404
+
 
 # Update category
 @app.route("/categories/<int:category_id>", methods=["PUT"])
