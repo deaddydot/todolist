@@ -2,6 +2,7 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import EditTaskButton from '../EditTask/EditTaskButton';
+import EditCategoryButton from '../EditCategory/EditCategoryButton';
 import { ListGroup, Collapse } from 'react-bootstrap';
 
 export default class CompletedViewJsonCheckbox extends React.Component {
@@ -73,3 +74,4 @@ export default class CompletedViewJsonCheckbox extends React.Component {
     );
   }
 }
+

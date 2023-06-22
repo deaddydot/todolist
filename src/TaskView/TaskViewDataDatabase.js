@@ -3,6 +3,7 @@ import axios from 'axios';
 import JsonCheckbox from '../JsonCheckbox';
 import {Col, Row, Card} from 'react-bootstrap';
 import AddTaskButtonByCategory from '../Sidebar/AddTask/AddTaskButtonByCategory';
+import EditCategoryButton from '../EditCategory/EditCategoryButton';
 
 export default class TaskViewDataDatabase extends React.Component {
   constructor(props) {
@@ -59,6 +60,7 @@ export default class TaskViewDataDatabase extends React.Component {
               <React.Fragment key={`category-${index}`}>
                 <Card style={{backgroundColor: this.state.categories[category] || 'var(--tertiary-color)', border: 'none', padding: '1rem', position: 'relative'}}>
                   <h2>{category}</h2>
+                  <EditCategoryButton style={{ position: 'absolute', top: '0', right: '0' }} category={category} flaskUrl={this.props.flaskUrl} />
                   <AddTaskButtonByCategory style={{ position: 'absolute', top: '0', right: '0' }} category={category} flaskUrl={this.props.flaskUrl} />
                   {filteredTasksByCategory[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
