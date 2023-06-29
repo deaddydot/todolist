@@ -21,7 +21,14 @@ export class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { showAll: false, showTask: true, showCalendar: false, showCompleted: false, view: 'task' };
+    this.state = { 
+      showAll: false, 
+      showTask: true, 
+      showCalendar: false, 
+      showCompleted: false, 
+      view: 'task',
+      userId: 0
+    };
 
     this.handleClick = this.handleClick.bind(this);
     this.changeView = this.changeView.bind(this);
@@ -57,7 +64,9 @@ export class App extends React.Component {
             <LoginButton/>
             <LogoutButton/>
           </div>
-          <Col style={{ paddingLeft: '0', paddingRight: '0' }} xs={2}><Sidebar onInput={this.changeView.bind(this)} flaskUrl={flaskUrl} /></Col>
+          <Col style={{ paddingLeft: '0', paddingRight: '0' }} xs={2}>
+            <Sidebar onInput={this.changeView.bind(this)} flaskUrl={flaskUrl} userId={this.state.userId} />
+          </Col>
           {this.state.showTask && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
               <div id='TaskView'><TaskView showAll={this.state.showAll} flaskUrl={flaskUrl} /></div>
