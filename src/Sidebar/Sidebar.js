@@ -57,7 +57,7 @@ function Sidebar(props) {
           </Button>
           <Collapse in={open2}>
             <div id='collapse2' style={{margin: '10px', borderRadius: '10px'}}>
-              <Categories />
+              <Categories flaskUrl={props.flaskUrl} userId={props.userId} />
             </div>
           </Collapse>
         </ListGroup>

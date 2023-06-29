@@ -11,9 +11,33 @@ export default class CompletedViewJsonCheckbox extends React.Component {
     this.state = {
       checked: this.props.checked,
       showEdit: false,
+      formattedDeadline: ''
     };
     this.changeDisplay = this.changeDisplay.bind(this);
     this.setOpen = this.setOpen.bind(this);
+  }
+
+  componentDidMount() {
+    const date = new Date(this.props.deadline);
+
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    const day = days[date.getUTCDay()];
+    const num = date.getUTCDate();
+    const month = months[date.getUTCMonth()];
+
+    var hour = date.getUTCHours();
+    const period = hour >= 12 ? 'pm' : 'am';
+    hour = hour % 12;
+    hour = hour ? hour : 12;
+
+    var minutes = date.getUTCMinutes();
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+
+    const formattedDeadline = `${day}, ${num} ${month} ${hour}:${minutes}${period}`;
+
+    this.setState({formattedDeadline: formattedDeadline})
   }
 
   setOpen(value) {
@@ -56,7 +80,7 @@ export default class CompletedViewJsonCheckbox extends React.Component {
                 defaultChecked={this.props.checked}
                 onChange={(event) => this.changeDisplay(event)}
               />
-              <p>Due: {this.props.deadline}</p>
+              <p>Due: {this.state.formattedDeadline}</p>
             </div>
             <Collapse in={this.state.open}>
               <div id='collapse1' style={{padding: '0', margin: '0'}}>
