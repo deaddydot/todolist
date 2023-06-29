@@ -66,7 +66,7 @@ export class App extends React.Component {
           </div>
           <Col style={{ paddingLeft: '0', paddingRight: '0' }} xs={2}>
             <Sidebar onInput={this.changeView.bind(this)} flaskUrl={flaskUrl} userId={this.state.userId} />
-            </Col>
+          </Col>
           {this.state.showTask && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
               <div id='TaskView'><TaskView showAll={this.state.showAll} flaskUrl={flaskUrl} /></div>
