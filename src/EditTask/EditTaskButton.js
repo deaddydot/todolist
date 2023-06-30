@@ -69,7 +69,7 @@ export default class EditTaskButton extends React.Component {
     render(){
         return(
             <>
-            <Button size='sm' onClick={this.modalOpen} style={{backgroundColor: 'lightgrey', color: 'black', border: 'none', height: '2rem' }}>Edit</Button>
+            <Button size='sm' onClick={this.modalOpen} style={{backgroundColor: 'lightgrey', color: 'black', border: 'none', height: '2rem' }}>✎</Button>
                 {this.state.displayModal && (
                     <div className="myModal" style={ModalLooks} ref={(ref) => (this.modalRef = ref)}>
                         <div style={ModalContent} className="modal-content">
