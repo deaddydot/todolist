@@ -102,9 +102,12 @@ export default class EditTaskForm extends React.Component {
           />
         </label>
         <UserCategories flaskUrl={this.props.flaskUrl} userId={this.state.user_id} onCategoryChange={this.handleCategoryChange} selectedCategoryId={category_id} />
-        <Button style={{backgroundColor: 'blue', border: 'none'}} type="submit">Submit</Button>
-      </form>
-      <DeleteTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} modalOpen={this.props.modalOpen}/></>
+        <div><Button style={{backgroundColor: 'blue', border: 'none', width: 200, margin: 20}} type="submit">Submit</Button>
+        <DeleteTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} modalOpen={this.props.modalOpen}/>
+        </div>
+        
+      </form></>
+      
     );
   }
 }

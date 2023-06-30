@@ -60,8 +60,18 @@ export default class TaskViewDataDatabase extends React.Component {
               <React.Fragment key={`category-${index}`}>
                 <Card style={{backgroundColor: this.state.categories[category] || 'var(--tertiary-color)', border: 'none', padding: '1rem', position: 'relative'}}>
                   <h2>{category}</h2>
-                  <EditCategoryButton style={{ position: 'absolute', top: '0', right: '0' }} category={category} flaskUrl={this.props.flaskUrl} />
-                  <AddTaskButtonByCategory style={{ position: 'absolute', top: '0', right: '0' }} category={category} flaskUrl={this.props.flaskUrl} />
+                  <div style={{position: 'absolute', right: 20, top: -35}}>
+                    <div style={{position: 'relative', left: 20, top: 38, marginBottom: '-0.5rem' }}>
+                      <AddTaskButtonByCategory
+                        category={category}
+                        flaskUrl={this.props.flaskUrl}
+                      />
+                    </div>
+                    <EditCategoryButton
+                      category={category}
+                      flaskUrl={this.props.flaskUrl}
+                    />
+                  </div>
                   {filteredTasksByCategory[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
                       <JsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} category={this.category} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
