@@ -34,7 +34,7 @@ export default class DeleteTaskButton extends React.Component {
 
   render() {
     return(
-      <Button type="submit" onClick={this.deleteTask} style={{backgroundColor:'red', border:'none'}}>Delete</Button>
+      <Button type="submit" onClick={this.deleteTask} style={{backgroundColor:'red', border:'none', width: 200, margin: 20}}>Delete</Button>
     )
   }
 }

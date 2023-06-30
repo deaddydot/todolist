@@ -96,9 +96,11 @@ export default class EditCategoryForm extends React.Component {
             this.setState({ color: color.hex });
           } } 
         />
-        <Button style={{ backgroundColor: 'blue', border: 'none' }} type="submit">Submit</Button>
-      </form>
-      <DeleteCategoryButton flaskUrl={this.props.flaskUrl} categoryId={this.state.category_id} modalOpen={this.props.modalOpen}/></>
+        <div><Button style={{backgroundColor: 'blue', border: 'none', width: 200, margin: 20}} type="submit">Submit</Button>
+        <DeleteCategoryButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} modalOpen={this.props.modalOpen}/>
+        </div>
+        
+      </form></>
     );
   }
 }
