@@ -66,22 +66,7 @@ export default class AddTaskButtonByCategory extends React.Component {
   render() {
     return (
       <>
-        <button
-          id="myBtn"
-          onClick={this.modalOpen}
-          style={{
-            ...this.props.style,
-            backgroundColor: "var(--secondary-color)",
-            border: "none",
-            margin: '1rem',
-            borderRadius: '0.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <p style={{ margin: '0.1rem' }}>+</p>
-        </button>
+        <Button size='sm' onClick={this.modalOpen} style={{backgroundColor: 'lightgrey', color: 'black', border: 'none', height: '2rem' }}>+</Button>
   
         {this.state.displayModal && (
           <div className="myModal" style={ModalLooks} ref={(ref) => (this.modalRef = ref)}>

@@ -2,8 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import JsonCheckbox from '../JsonCheckbox';
 import {Col, Row, Card} from 'react-bootstrap';
-import AddTaskButtonByCategory from '../Sidebar/AddTask/AddTaskButtonByCategory';
-import EditCategoryButton from '../EditCategory/EditCategoryButton';
+import TaskViewCategories from './TaskViewCategories';
 
 export default class TaskViewDataDatabase extends React.Component {
   constructor(props) {
@@ -11,6 +10,7 @@ export default class TaskViewDataDatabase extends React.Component {
     this.state = {
       tasksByCategory: [],
       categories: {},
+      showEdit: false,
     };
   }
 
@@ -33,6 +33,13 @@ export default class TaskViewDataDatabase extends React.Component {
     });
   }
 
+  handleHover = () => {
+    this.setState({showEdit: true});
+  };
+
+  handleMouseLeave = () => {
+    this.setState({showEdit: false});
+  };
 
   render() {
     const { tasksByCategory } = this.state;
@@ -58,26 +65,7 @@ export default class TaskViewDataDatabase extends React.Component {
           <Col key={`column-${colIndex}`}>
             {column.map((category, index) => (
               <React.Fragment key={`category-${index}`}>
-                <Card style={{backgroundColor: this.state.categories[category] || 'var(--tertiary-color)', border: 'none', padding: '1rem', position: 'relative'}}>
-                  <h2>{category}</h2>
-                  <div style={{position: 'absolute', right: 20, top: -35}}>
-                    <div style={{position: 'relative', left: 20, top: 38, marginBottom: '-0.5rem' }}>
-                      <AddTaskButtonByCategory
-                        category={category}
-                        flaskUrl={this.props.flaskUrl}
-                      />
-                    </div>
-                    <EditCategoryButton
-                      category={category}
-                      flaskUrl={this.props.flaskUrl}
-                    />
-                  </div>
-                  {filteredTasksByCategory[category].map((item, itemIndex) => (
-                    <React.Fragment key={item.id}>
-                      <JsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} category={this.category} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
-                    </React.Fragment>
-                  ))}
-                </Card>
+                <TaskViewCategories tasksByCategory={this.state.filteredTasksByCategory} category={category} userId={this.props.userId} categories={this.state.categories}/>
               </React.Fragment>
             ))}
           </Col>
