@@ -65,7 +65,7 @@ export default class TaskViewDataDatabase extends React.Component {
           <Col key={`column-${colIndex}`}>
             {column.map((category, index) => (
               <React.Fragment key={`category-${index}`}>
-                <TaskViewCategories tasksByCategory={this.state.filteredTasksByCategory} category={category} userId={this.props.userId} categories={this.state.categories}/>
+                <TaskViewCategories tasksByCategory={filteredTasksByCategory} category={category} userId={this.props.userId} categories={this.state.categories}/>
               </React.Fragment>
             ))}
           </Col>
