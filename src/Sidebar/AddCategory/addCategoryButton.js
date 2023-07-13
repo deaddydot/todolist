@@ -86,7 +86,7 @@ export default class AddCategoryButton extends React.Component {
               <h2>Create Your Category</h2>
               <span style={Close} className="close" onClick={this.modalClose}>&times;</span>
             </div>
-            <AddCategoryForm flaskUrl={this.props.flaskUrl} modalOpen={this.modalOpen} />
+            <AddCategoryForm flaskUrl={this.props.flaskUrl} modalOpen={this.modalOpen} userId={this.props.userId} />
           </div>
         </div>
         )}

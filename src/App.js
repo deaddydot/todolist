@@ -69,17 +69,17 @@ export class App extends React.Component {
           </Col>
           {this.state.showTask && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
-              <div id='TaskView'><TaskView showAll={this.state.showAll} flaskUrl={flaskUrl} /></div>
+              <div id='TaskView'><TaskView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} /></div>
             </Col>
           )}
           {this.state.showCalendar && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
-              <CalendarView showAll={this.state.showAll} flaskUrl={flaskUrl} />
+              <CalendarView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.props.userId} />
             </Col>
           )}
           {this.state.showCompleted && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
-              <CompletedView showAll={this.state.showAll} flaskUrl={flaskUrl} />
+              <CompletedView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.props.userId} />
             </Col>
           )}
           <ShowAllCheckboxes onClick={() => this.handleClick()} showAll={this.state.showAll} view={this.state.view} />

@@ -10,13 +10,12 @@ export default class EditCategoryForm extends React.Component {
     this.state = {
       category_id: "",
       name: "",
-      color: "",
-      user_id: 0,    // pass this down by props
+      color: ""
     };
   }
   
   componentDidMount() {
-    axios.get(`${this.props.flaskUrl}/categories/${this.state.user_id}`)
+    axios.get(`${this.props.flaskUrl}/categories/${this.props.userId}`)
       .then(response => {
         const categories = response.data;
         const currentCategory = categories.find(category => category.name === this.props.category);
@@ -96,8 +95,9 @@ export default class EditCategoryForm extends React.Component {
             this.setState({ color: color.hex });
           } } 
         />
-        <div><Button style={{ backgroundColor: 'blue', border: 'none', width: 200, margin: 20}} type="submit">Submit</Button>
-        <DeleteCategoryButton flaskUrl={this.props.flaskUrl} categoryId={this.state.category_id} modalOpen={this.props.modalOpen}/>
+        <div>
+          <Button style={{ backgroundColor: 'blue', border: 'none', width: 200, margin: 20}} type="submit">Submit</Button>
+          <DeleteCategoryButton flaskUrl={this.props.flaskUrl} categoryId={this.state.category_id} modalOpen={this.props.modalOpen} />
         </div>
       </form>
       </>

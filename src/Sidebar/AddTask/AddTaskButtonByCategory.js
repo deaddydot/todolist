@@ -96,6 +96,7 @@ export default class AddTaskButtonByCategory extends React.Component {
                 flaskUrl={this.props.flaskUrl}
                 modalOpen={this.modalOpen}
                 category={this.props.category}
+                userId={this.props.userId}
               />
             </div>
           </div>
