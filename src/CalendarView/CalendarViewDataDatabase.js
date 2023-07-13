@@ -19,8 +19,8 @@ export default class CalendarViewDataDatabase extends React.Component {
 
   fetchData = async () => {
     axios.all([
-      axios.get(`${this.props.flaskUrl}/tasks-by-categories/0`),
-      axios.get(`${this.props.flaskUrl}/categories/0`)
+      axios.get(`${this.props.flaskUrl}/tasks-by-categories/${this.props.userId}`),
+      axios.get(`${this.props.flaskUrl}/categories/${this.props.userId}`)
     ])
     .then(axios.spread((tasksResponse, categoriesResponse) => {
       const categories = categoriesResponse.data.reduce((acc, category) => {
@@ -106,7 +106,7 @@ export default class CalendarViewDataDatabase extends React.Component {
               <Card key={`${index}-${category}`} style={{ backgroundColor: this.state.categories[category] || 'var(--tertiary-color)'}}>
                 <h3>{category}</h3>
                 {itemsInCategory.map(item => (
-                  <JsonCheckbox key={item.id} label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
+                  <JsonCheckbox key={item.id} label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} userId={this.props.userId} />
                 ))}
               </Card>
             );

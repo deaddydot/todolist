@@ -91,6 +91,7 @@ export default class AddTaskButton extends React.Component {
               <AddTaskForm
                 flaskUrl={this.props.flaskUrl}
                 modalOpen={this.modalOpen}
+                userId={this.props.userId}
               />
             </div>
           </div>

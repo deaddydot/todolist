@@ -12,8 +12,7 @@ export default class EditTaskForm extends React.Component {
       title: "",
       description: "",
       deadline: "",
-      category_id: "",
-      user_id : 0,
+      category_id: ""
     };
   }
 
@@ -101,7 +100,7 @@ export default class EditTaskForm extends React.Component {
             onChange={this.handleChange}
           />
         </label>
-        <UserCategories flaskUrl={this.props.flaskUrl} userId={this.state.user_id} onCategoryChange={this.handleCategoryChange} selectedCategoryId={category_id} />
+        <UserCategories flaskUrl={this.props.flaskUrl} userId={this.props.userId} onCategoryChange={this.handleCategoryChange} selectedCategoryId={category_id} />
         <div><Button style={{backgroundColor: 'blue', border: 'none', width: 200, margin: 20}} type="submit">Submit</Button>
         <DeleteTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} modalOpen={this.props.modalOpen}/>
         </div>

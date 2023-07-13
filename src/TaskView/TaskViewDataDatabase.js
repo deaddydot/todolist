@@ -16,8 +16,8 @@ export default class TaskViewDataDatabase extends React.Component {
 
   componentDidMount() {
     axios.all([
-      axios.get(`${this.props.flaskUrl}/tasks-by-categories/0`),
-      axios.get(`${this.props.flaskUrl}/categories/0`)
+      axios.get(`${this.props.flaskUrl}/tasks-by-categories/${this.props.userId}`),
+      axios.get(`${this.props.flaskUrl}/categories/${this.props.userId}`)
     ])
     .then(axios.spread((tasksResponse, categoriesResponse) => {
       const tasksByCategory = tasksResponse.data;
