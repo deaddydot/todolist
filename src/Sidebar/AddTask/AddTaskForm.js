@@ -10,8 +10,7 @@ export default class AddTaskForm extends React.Component {
       title: "",
       description: "",
       deadline: "",
-      category_id: "",
-      user_id: 0,    // pass this down by props
+      category_id: ""   // pass this down by props
     };
   }
 
@@ -29,7 +28,7 @@ export default class AddTaskForm extends React.Component {
       category_id,
     };
     try {
-      const response = await axios.post(`${this.props.flaskUrl}/tasks/${this.state.user_id}`, data);
+      const response = await axios.post(`${this.props.flaskUrl}/tasks/${this.props.user_id}`, data);
 
       this.props.onTaskAdded(response.data.category_id);
     } catch (error) {
@@ -84,7 +83,7 @@ export default class AddTaskForm extends React.Component {
             onChange={this.handleChange}
           />
         </label>
-        <UserCategories flaskUrl={this.props.flaskUrl} userId={this.state.user_id} onCategoryChange={this.handleCategoryChange} />
+        <UserCategories flaskUrl={this.props.flaskUrl} userId={this.props.userId} onCategoryChange={this.handleCategoryChange} />
         <Button style={{backgroundColor: 'blue', border: 'none'}} type="submit">Submit</Button>
       </form>
     );

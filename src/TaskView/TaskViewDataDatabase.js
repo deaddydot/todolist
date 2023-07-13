@@ -16,8 +16,8 @@ export default class TaskViewDataDatabase extends React.Component {
 
   componentDidMount() {
     axios.all([
-      axios.get(`${this.props.flaskUrl}/tasks-by-categories/0`),
-      axios.get(`${this.props.flaskUrl}/categories/0`)
+      axios.get(`${this.props.flaskUrl}/tasks-by-categories/${this.props.userId}`),
+      axios.get(`${this.props.flaskUrl}/categories/${this.props.userId}`)
     ])
     .then(axios.spread((tasksResponse, categoriesResponse) => {
       const tasksByCategory = tasksResponse.data;
@@ -63,6 +63,7 @@ export default class TaskViewDataDatabase extends React.Component {
                   <div style={{position: 'absolute', right: 20, top: -35}}>
                     <div style={{position: 'relative', left: 20, top: 38, marginBottom: '-0.5rem' }}>
                       <AddTaskButtonByCategory
+                        userId={this.props.userId}
                         category={category}
                         flaskUrl={this.props.flaskUrl}
                       />
@@ -70,11 +71,12 @@ export default class TaskViewDataDatabase extends React.Component {
                     <EditCategoryButton
                       category={category}
                       flaskUrl={this.props.flaskUrl}
+                      userId={this.props.userId}
                     />
                   </div>
                   {filteredTasksByCategory[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
-                      <JsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} category={this.category} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
+                      <JsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} category={this.category} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} userId={this.props.userId} />
                     </React.Fragment>
                   ))}
                 </Card>

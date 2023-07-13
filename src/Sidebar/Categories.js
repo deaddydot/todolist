@@ -26,7 +26,7 @@ export default class Categories extends React.Component {
   render() {
     const categoryOptions = this.state.categories.map((category, index) => {
       return(
-        <ListGroup.Item className='text-center' style={{border: 'none', backgroundColor: `${category.color}` || 'var(--tertiary-color)'}}>
+        <ListGroup.Item key={index} className='text-center' style={{border: 'none', backgroundColor: `${category.color}` || 'var(--tertiary-color)'}}>
           <h4>{category.name}</h4>
         </ListGroup.Item>
       );

@@ -15,8 +15,8 @@ export default class CompletedViewDataDatabase extends React.Component {
 
   componentDidMount() {
     axios.all([
-      axios.get(`${this.props.flaskUrl}/tasks-by-categories/0`),
-      axios.get(`${this.props.flaskUrl}/categories/0`)
+      axios.get(`${this.props.flaskUrl}/tasks-by-categories/${this.props.userId}`),
+      axios.get(`${this.props.flaskUrl}/categories/${this.props.userId}`)
     ])
     .then(axios.spread((tasksResponse, categoriesResponse) => {
       const tasksByCategory = tasksResponse.data;
@@ -58,10 +58,10 @@ export default class CompletedViewDataDatabase extends React.Component {
               <React.Fragment key={`category-${index}`}>
                 <Card style={{backgroundColor: this.state.categories[category] || 'var(--tertiary-color)', border: 'none', padding: '1rem'}}>
                   <h2>{category}</h2>
-                  <AddTaskButtonByCategory style={{ position: 'absolute', top: '0', right: '0' }} category={category} flaskUrl={this.props.flaskUrl} />
+                  <AddTaskButtonByCategory style={{ position: 'absolute', top: '0', right: '0' }} category={category} flaskUrl={this.props.flaskUrl} userId={this.props.userId} />
                   {filteredTasksByCategory[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
-                      <CompletedViewJsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} checked={true} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} />
+                      <CompletedViewJsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} checked={true} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} userId={this.props.userId} />
                     </React.Fragment>
                   ))}
                 </Card>

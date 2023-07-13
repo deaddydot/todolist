@@ -10,8 +10,7 @@ export default class AddCategoryForm extends React.Component {
     super(props);
     this.state = {
       name: "",
-      color: "",
-      user_id: 0,    // pass this down by props
+      color: ""
     };
   }
 
@@ -24,7 +23,7 @@ export default class AddCategoryForm extends React.Component {
       color,
     };
     try {
-      const response = await axios.post(`${this.props.flaskUrl}/categories/${this.state.user_id}`, data);
+      const response = await axios.post(`${this.props.flaskUrl}/categories/${this.props.userId}`, data);
 
       this.props.onCategoryAdded(response.data.category_id);
     } catch (error) {

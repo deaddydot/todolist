@@ -10,14 +10,13 @@ export default class AddTaskFormByCategory extends React.Component {
       title: "",
       description: "",
       deadline: "",
-      category_id: "",
-      user_id: 0,    // pass this down by props
+      category_id: ""
     };
   }
 
   componentDidMount() {
     // fetch categories from Flask API when component mounts
-    axios.get(`${this.props.flaskUrl}/categories/${this.state.user_id}`)
+    axios.get(`${this.props.flaskUrl}/categories/${this.props.userId}`)
       .then(response => {
         const categories = response.data;
         const currentCategory = categories.find(category => category.name === this.props.category);
@@ -42,7 +41,7 @@ export default class AddTaskFormByCategory extends React.Component {
       category_id,
     };
     try {
-      const response = await axios.post(`${this.props.flaskUrl}/tasks/${this.state.user_id}`, data);
+      const response = await axios.post(`${this.props.flaskUrl}/tasks/${this.props.userId}`, data);
 
       this.props.onTaskAdded(response.data.category_id);
     } catch (error) {

@@ -77,7 +77,7 @@ export default class EditCategoryButton extends React.Component {
                                 <h2>Edit Category</h2>
                                 <span style={Close} className="close" onClick={this.modalClose}>&times;</span>
                             </div>
-                            <EditCategoryForm flaskUrl={this.props.flaskUrl} category={this.props.category} modalOpen={this.modalOpen} />
+                            <EditCategoryForm flaskUrl={this.props.flaskUrl} category={this.props.category} modalOpen={this.modalOpen} userId={this.props.userId} />
                         </div>
                     </div>
                 )}
