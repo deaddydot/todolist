@@ -84,6 +84,43 @@ export default class EditCategoryButton extends React.Component {
             </>
         );
     }
+    // render() {
+    //     return (
+    //       <>
+    //         <button
+    //           id="myBtn"
+    //           onClick={this.modalOpen}
+    //           style={{
+    //             ...this.props.style,
+    //             backgroundColor: "var(--secondary-color)",
+    //             border: "none",
+    //             margin: '1rem',
+    //             borderRadius: '0.5rem',
+    //             display: 'flex',
+    //             alignItems: 'center',
+    //             justifyContent: 'center'
+    //           }}
+              
+    //         >
+    //           <p style={{ margin: '0.1rem' }}>✎</p>
+    //         </button>
+      
+    //         {this.state.displayModal && (
+    //           <div className="myModal" style={ModalLooks} ref={(ref) => (this.modalRef = ref)}>
+    //             <div style={ModalContent} className="modal-content">
+    //               <div className="modal-header">
+    //                 <h2>Create Your Task</h2>
+    //                 <span style={Close} className="close" onClick={this.modalClose}>
+    //                   &times;
+    //                 </span>
+    //               </div>
+    //               <EditCategoryForm flaskUrl={this.props.flaskUrl} category={this.props.category} modalOpen={this.modalOpen} />
+    //             </div>
+    //           </div>
+    //         )}
+    //       </>
+    //     );
+    //   }
 }
 
 
