@@ -61,7 +61,6 @@ export class App extends React.Component {
       <Container fluid='true'>
         <Row>
           <div style={{position: 'fixed', top: '1rem', left: '0.5rem'}}>
-            <LoginButton/>
             <LogoutButton/>
           </div>
           <Col style={{ paddingLeft: '0', paddingRight: '0' }} xs={2}>

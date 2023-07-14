@@ -1,14 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { App } from './App';
+import LoginButton from './authentication/LoginButton';
 
 // These could be different components for your different pages
 const Title = () => (
   <div>
     <h1>Tasktastic</h1>
-    <nav>
-      <Link to="/app">Test Environment</Link>
-    </nav>
+    <LoginButton />
   </div>
 );
 
