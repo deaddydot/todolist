@@ -27,3 +27,5 @@ yarn-error.log*
 *.eslintcache
 
 /client/node_modules
+flask_app/__pycache__
+venv

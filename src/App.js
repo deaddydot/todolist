@@ -9,6 +9,7 @@ import CompletedView from './CompletedView/CompletedView';
 import ShowAllCheckboxes from './ShowAllCheckboxes';
 import LoginButton from './authentication/LoginButton';
 import LogoutButton from './authentication/LogoutButton';
+import Cookies from 'js-cookie';
 
 
 // dev flask url
@@ -21,13 +22,15 @@ export class App extends React.Component {
   constructor(props) {
     super(props);
 
+    const userIdCookie = Cookies.get('userId');
+
     this.state = { 
       showAll: false, 
       showTask: true, 
       showCalendar: false, 
       showCompleted: false, 
       view: 'task',
-      userId: 0
+      userId: userIdCookie
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -74,12 +77,12 @@ export class App extends React.Component {
           )}
           {this.state.showCalendar && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
-              <CalendarView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.props.userId} />
+              <CalendarView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} />
             </Col>
           )}
           {this.state.showCompleted && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
-              <CompletedView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.props.userId} />
+              <CompletedView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} />
             </Col>
           )}
           <ShowAllCheckboxes onClick={() => this.handleClick()} showAll={this.state.showAll} view={this.state.view} />
