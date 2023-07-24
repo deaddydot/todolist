@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { App } from './App';
+import Cookies from 'js-cookie';
 
 // These could be different components for your different pages
 const Title = () => (
@@ -12,7 +13,11 @@ const Title = () => (
   </div>
 );
 
-function RouterPage() {
+export default function RouterPage() {
+  useEffect(() => {
+    Cookies.set('userId', '0', { expires: 7 });
+  }, []);
+
   return (
     <Router>
       <Routes>
@@ -22,5 +27,3 @@ function RouterPage() {
     </Router>
   );
 }
-
-export default RouterPage;
