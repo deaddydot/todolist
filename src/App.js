@@ -74,12 +74,12 @@ export class App extends React.Component {
           )}
           {this.state.showCalendar && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
-              <CalendarView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.props.userId} />
+              <CalendarView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} />
             </Col>
           )}
           {this.state.showCompleted && (
             <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
-              <CompletedView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.props.userId} />
+              <CompletedView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} />
             </Col>
           )}
           <ShowAllCheckboxes onClick={() => this.handleClick()} showAll={this.state.showAll} view={this.state.view} />
