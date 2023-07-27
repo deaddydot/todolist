@@ -28,7 +28,7 @@ export default class AddTaskForm extends React.Component {
       category_id,
     };
     try {
-      const response = await axios.post(`${this.props.flaskUrl}/tasks/${this.props.user_id}`, data);
+      const response = await axios.post(`${this.props.flaskUrl}/tasks/${this.props.userId}`, data);
 
       this.props.onTaskAdded(response.data.category_id);
     } catch (error) {
