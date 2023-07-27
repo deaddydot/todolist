@@ -18,6 +18,8 @@ export default class CalendarViewDataDatabase extends React.Component {
   }
 
   fetchData = async () => {
+    const weekDateRange = this.getCurrentWeekDateRange();
+  
     axios.all([
       axios.get(`${this.props.flaskUrl}/tasks-by-categories/${this.props.userId}`),
       axios.get(`${this.props.flaskUrl}/categories/${this.props.userId}`)
@@ -27,23 +29,40 @@ export default class CalendarViewDataDatabase extends React.Component {
         acc[category.name] = category.color;
         return acc;
       }, {});
-
+  
       const data = tasksResponse.data;
       const filteredData = {};
       Object.keys(data).forEach(category => {
-        const tasks = data[category].filter(task => !task.completed);
+        const tasks = data[category].filter(task => {
+          const taskDate = new Date(task.deadline);
+          return taskDate >= weekDateRange.start && taskDate <= weekDateRange.end && !task.completed;
+        });
         if (tasks.length > 0) {
           filteredData[category] = tasks;
         }
       });
-
+  
       this.setState({ data: this.parseDeadlines(filteredData), categories });
     }))
     .catch(error => {
       console.log(error);
     });
-  }
+  }  
 
+  getCurrentWeekDateRange = () => {
+    const now = new Date();
+    const currentDayOfWeek = now.getDay();
+    const lessDays = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1; 
+  
+    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - lessDays);
+    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (6 - lessDays));
+  
+    // We set the time to ensure the whole day is included
+    start.setHours(0, 0, 0, 0);
+    end.setHours(23, 59, 59, 999);
+  
+    return { start, end };
+  }  
 
   parseDeadlines(data) {
     const parsedData = {};
