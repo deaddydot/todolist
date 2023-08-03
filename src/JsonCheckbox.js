@@ -95,9 +95,7 @@ export default class JsonCheckbox extends React.Component {
             </div>
             <Collapse in={this.state.open}>
               <div id='collapse1' style={{padding: '0', margin: '0'}}>
-                <ListGroup.Item className='text-left' style={{border: 'none', backgroundColor: `var(--${this.props.category})`, padding: '0', margin: '0'}}>
-                  <p>{this.props.description}</p>
-                </ListGroup.Item>
+                <p>{this.props.description}</p>
               </div>
             </Collapse>
           </ListGroup>
