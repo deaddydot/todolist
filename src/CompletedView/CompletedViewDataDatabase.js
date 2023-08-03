@@ -3,6 +3,7 @@ import axios from 'axios';
 import CompletedViewJsonCheckbox from './CompletedViewJsonCheckbox';
 import {Col, Row, Card} from 'react-bootstrap';
 import AddTaskButtonByCategory from '../Sidebar/AddTask/AddTaskButtonByCategory';
+import CompletedViewCategories from './CompletedViewCategories';
 
 export default class CompletedViewDataDatabase extends React.Component {
   constructor(props) {
@@ -10,6 +11,7 @@ export default class CompletedViewDataDatabase extends React.Component {
     this.state = {
       tasksByCategory: [],
       categories: {},
+      showEdit: false,
     };
   }
 
@@ -31,6 +33,14 @@ export default class CompletedViewDataDatabase extends React.Component {
       console.log(error);
     });
   }
+
+  handleHover = () => {
+    this.setState({showEdit: true});
+  };
+
+  handleMouseLeave = () => {
+    this.setState({showEdit: false});
+  };
 
   render() {
     const { tasksByCategory } = this.state;
@@ -56,15 +66,7 @@ export default class CompletedViewDataDatabase extends React.Component {
           <Col key={`column-${colIndex}`}>
             {column.map((category, index) => (
               <React.Fragment key={`category-${index}`}>
-                <Card style={{backgroundColor: this.state.categories[category] || 'var(--tertiary-color)', border: 'none', padding: '1rem'}}>
-                  <h2>{category}</h2>
-                  <AddTaskButtonByCategory style={{ position: 'absolute', top: '0', right: '0' }} category={category} flaskUrl={this.props.flaskUrl} userId={this.props.userId} />
-                  {filteredTasksByCategory[category].map((item, itemIndex) => (
-                    <React.Fragment key={item.id}>
-                      <CompletedViewJsonCheckbox label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} checked={true} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} userId={this.props.userId} />
-                    </React.Fragment>
-                  ))}
-                </Card>
+                <CompletedViewCategories tasksByCategory={filteredTasksByCategory} category={category} userId={this.props.userId} categories={this.state.categories} flaskUrl={this.props.flaskUrl}/>
               </React.Fragment>
             ))}
           </Col>
