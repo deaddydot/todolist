@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import JsonCheckbox from '../JsonCheckbox';
-import {Col, Row, Card} from 'react-bootstrap';
+import {Col, Row, Card, Button} from 'react-bootstrap';
 
 export default class CalendarViewDataDatabase extends React.Component {
   constructor(props) {
@@ -10,15 +10,20 @@ export default class CalendarViewDataDatabase extends React.Component {
     this.state = { 
       data: [],
       categories: {},
+      currentDate: new Date(),
     };
+
+    this.forwardWeek = this.forwardWeek.bind(this);
+    this.backwardsWeek = this.backwardsWeek.bind(this);
   }
 
   componentDidMount() {
+    this.getCurrentWeekDateRange();
     this.fetchData();
   }
 
   fetchData = async () => {
-    const weekDateRange = this.getCurrentWeekDateRange();
+    const weekDateRange = this.getWeekDateRangeFromDate(this.state.currentDate);
   
     axios.all([
       axios.get(`${this.props.flaskUrl}/tasks-by-categories/${this.props.userId}`),
@@ -47,22 +52,39 @@ export default class CalendarViewDataDatabase extends React.Component {
     .catch(error => {
       console.log(error);
     });
-  }  
+  }
 
-  getCurrentWeekDateRange = () => {
-    const now = new Date();
-    const currentDayOfWeek = now.getDay();
+  getWeekDateRangeFromDate = (date) => {
+    const currentDayOfWeek = date.getDay();
     const lessDays = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1; 
-  
-    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - lessDays);
-    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (6 - lessDays));
-  
+
+    const start = new Date(date.getFullYear(), date.getMonth(), date.getDate() - lessDays);
+    const end = new Date(date.getFullYear(), date.getMonth(), date.getDate() + (6 - lessDays));
+
     // We set the time to ensure the whole day is included
     start.setHours(0, 0, 0, 0);
     end.setHours(23, 59, 59, 999);
-  
+
     return { start, end };
+  }
+
+  getCurrentWeekDateRange = () => {
+    const now = new Date();
+    this.setState({ currentDate: now });
+    return this.getWeekDateRangeFromDate(now);
   }  
+
+  forwardWeek() {
+    const currentDate = new Date(this.state.currentDate);
+    currentDate.setDate(currentDate.getDate() + 7);
+    this.setState({ currentDate }, this.fetchData);
+  }
+
+  backwardsWeek() {
+    const currentDate = new Date(this.state.currentDate);
+    currentDate.setDate(currentDate.getDate() - 7);
+    this.setState({ currentDate }, this.fetchData);
+  }
 
   parseDeadlines(data) {
     const parsedData = {};
@@ -140,8 +162,10 @@ export default class CalendarViewDataDatabase extends React.Component {
   
   render() {
     return (
-      <Row style={{backgroundColor: 'var(--secondary-color)', minHeight: '100vh'}}>
+      <Row style={{backgroundColor: 'var(--secondary-color)', minHeight: '100vh', position: 'relative'}}>
         {this.generateColumns()}
+        <Button onClick={() => this.backwardsWeek()} style={{zIndex: '10', width: 'auto', bottom: '2rem', left: '2rem', position: 'absolute'}}>&lt;</Button>
+        <Button onClick={() => this.forwardWeek()} style={{zIndex: '10', width: 'auto', bottom: '2rem', right: '2rem', position: 'absolute'}}>&gt;</Button>
       </Row>
     );
   }
