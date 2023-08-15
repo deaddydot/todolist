@@ -56,7 +56,7 @@ export default class CalendarViewDataDatabase extends React.Component {
 
   getWeekDateRangeFromDate = (date) => {
     const currentDayOfWeek = date.getDay();
-    const lessDays = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1; 
+    const lessDays = currentDayOfWeek === 0 ? 6 : currentDayOfWeek; 
 
     const start = new Date(date.getFullYear(), date.getMonth(), date.getDate() - lessDays);
     const end = new Date(date.getFullYear(), date.getMonth(), date.getDate() + (6 - lessDays));
@@ -129,7 +129,7 @@ export default class CalendarViewDataDatabase extends React.Component {
   generateColumns() {
     const { data } = this.state;
     const columns = Array.from({ length: 7 }, () => []);
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
     Object.keys(data).forEach((category) => {
       data[category].forEach((item) => {
