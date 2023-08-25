@@ -289,20 +289,37 @@ def update_category(category_id):
         return jsonify({"error": "Category not found"}), 404
 
 
-# Filter category
-@app.route("/filter-category/<int:category_id>", methods=["POST"])
-def filter_category(category_id):
+# Update category toggle status
+@app.route("/category/toggle/<int:category_id>", methods=["POST"])
+def toggle_category(category_id):
     # Find the category in the database
     category = Category.query.get(category_id)
 
     if category:
-        # Toggle the visibility status
-        category.visible = not category.visible
+        # Toggle the category's status
+        category.is_toggled = not category.is_toggled
         db.session.commit()
 
-        return jsonify({"message": "Category visibility toggled successfully"}), 200
+        # Return the updated category status
+        return jsonify({"message": "Category toggled successfully", "is_toggled": category.is_toggled}), 200
     else:
         return jsonify({"error": "Category not found"}), 404
+
+# Get tasks with category filtering
+@app.route("/tasks-by-filter/<int:user_id>", methods=["POST"])
+def get_tasks_by_filter(user_id):
+    # Retrieve all tasks for a specific user, filtered by toggled categories
+    toggled_categories = Category.query.filter_by(user_id=user_id, is_toggled=True).all()
+    toggled_category_ids = [category.id for category in toggled_categories]
+
+    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id, Category.id.in_(toggled_category_ids)).order_by(Task.id.asc()).all()
+
+    task_list = []
+    for task, category in tasks:
+        task_list.append(format_task(task, category))
+    
+    return jsonify(task_list)
+
 
 
 if __name__ == "__main__":
