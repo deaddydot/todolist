@@ -3,9 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from datetime import datetime
 from flask_cors import CORS
+from sqlalchemy import asc, desc
+from bcrypt import hashpw, gensalt
 
-app = Flask(__name__)
-CORS(app)
+# Auth0
+from auth0 import GetToken, Auth0
+
+auth0 = Auth0(...)
+get_token = GetToken(...)
 
 # prod server
 # with open('/database.txt', 'r') as file:
@@ -13,9 +18,9 @@ CORS(app)
 # app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://ubuntu:{text}@localhost/test1'
 
 # local host
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ubuntu:ubuntu@localhost/test1'
-
-
+app = Flask(__name__)
+CORS(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://jzvonwjl:HwIve-zPsfT6muGr0-xSwJIQuwv1qnqP@batyr.db.elephantsql.com/jzvonwjl'
 db = SQLAlchemy(app)
 
 app.app_context().push()
@@ -23,6 +28,7 @@ app.app_context().push()
 # User class
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=True)
     categories = db.relationship('Category', backref='user', lazy=True)
 
 # Category class
@@ -59,6 +65,7 @@ class Task(db.Model):
     completed = db.Column(db.Boolean, default=False)
     priority = db.Column(db.Integer, default=3)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    is_toggled = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return f"Task: {self.title}"
@@ -81,6 +88,7 @@ def format_task(task, category):
             "deadline": task.deadline,
             "completed": task.completed,
             "category_id": task.category_id,
+            "is_toggled": task.is_toggled,
     }
 
 # Define a route that queries the database
@@ -140,11 +148,13 @@ def create_task(user_id):
 # Get all tasks
 @app.route("/tasks/<int:user_id>", methods=["GET"])
 def get_tasks(user_id):
-    # Retrieve all tasks for a specific user
-    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id).order_by(Task.id.asc()).all()
+    # Retrieve all tasks for a specific user, sorted by closest deadline first
+    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id).order_by(asc(Task.deadline), desc(Task.id)).all()
+
     task_list = []
     for task, category in tasks:
         task_list.append(format_task(task, category))
+    
     return jsonify(task_list)
 
 # Get single task
@@ -320,7 +330,45 @@ def get_tasks_by_filter(user_id):
     
     return jsonify(task_list)
 
+# Create User
+@app.route("/create-user", methods=["POST"])
+def create_user():
+    data = request.json
+    email = data["email"]
+    password = data["password"]
 
+    hashed_password = hashpw(password.encode("utf-8"), gensalt())
+    
+    new_user = User(email=email, password=hashed_password.decode("utf-8"))
+    db.session.add(new_user)
+    db.session.commit()
+
+    return "User created successfully"
+    
+# Auth0 Callback
+@app.route("/auth0-callback")
+def auth0_callback():
+    # Parse the Auth0 callback parameters
+    auth_code = request.args.get("code")
+    # Use the auth_code to get the user's information from Auth0
+    user_info = get_token.authorization_code(auth_code)
+    
+    # Extract necessary user information
+    user_id = user_info["user_id"]
+    email = user_info["email"]
+    
+    # Check if the user already exists in the database
+    existing_user = User.query.get(user_id)
+    if existing_user:
+        return "User already exists"
+    
+    # Create a new user in your database
+    new_user = User(id=user_id, email=email)
+    db.session.add(new_user)
+    db.session.commit()
+    
+    # Redirect or return a response as needed
+    return "User created successfully"
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
