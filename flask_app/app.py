@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from datetime import datetime
 from flask_cors import CORS
+from sqlalchemy import asc, desc
 
 app = Flask(__name__)
 CORS(app)
@@ -308,19 +309,22 @@ def toggle_category(category_id):
         return jsonify({"error": "Category not found"}), 404
 
 # Get tasks with category filtering
-@app.route("/tasks-by-filter/<int:user_id>", methods=["POST"])
+@app.route("/tasks-by-filter/<int:user_id>", methods=["GET"])
 def get_tasks_by_filter(user_id):
     # Retrieve all tasks for a specific user, filtered by toggled categories
     toggled_categories = Category.query.filter_by(user_id=user_id, is_toggled=True).all()
     toggled_category_ids = [category.id for category in toggled_categories]
 
-    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id, Category.id.in_(toggled_category_ids)).order_by(Task.id.asc()).all()
+    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id, Category.id.in_(toggled_category_ids)).order_by(asc(Task.deadline), desc(Task.id)).all()
 
-    task_list = []
+    tasks_dict = {}
     for task, category in tasks:
-        task_list.append(format_task(task, category))
+        category_name = category.name
+        if category_name not in tasks_dict:
+            tasks_dict[category_name] = []
+        tasks_dict[category_name].append(format_task(task, category))
     
-    return jsonify(task_list)
+    return jsonify(tasks_dict)
 
 
 
