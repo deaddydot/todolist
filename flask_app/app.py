@@ -322,13 +322,17 @@ def get_tasks_by_filter(user_id):
     toggled_categories = Category.query.filter_by(user_id=user_id, is_toggled=True).all()
     toggled_category_ids = [category.id for category in toggled_categories]
 
-    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id, Category.id.in_(toggled_category_ids)).order_by(Task.id.asc()).all()
+    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id, Category.id.in_(toggled_category_ids)).order_by(asc(Task.deadline), desc(Task.id)).all()
 
-    task_list = []
+    tasks_dict = {}  # Dictionary to hold tasks grouped by category
+
     for task, category in tasks:
-        task_list.append(format_task(task, category))
+        category_name = category.name
+        if category_name not in tasks_dict:
+            tasks_dict[category_name] = []
+        tasks_dict[category_name].append(format_task(task, category))
     
-    return jsonify(task_list)
+    return jsonify(tasks_dict)
 
 # Create User
 @app.route("/create-user", methods=["POST"])
