@@ -20,7 +20,7 @@ get_token = GetToken(...)
 # local host
 app = Flask(__name__)
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://jzvonwjl:HwIve-zPsfT6muGr0-xSwJIQuwv1qnqP@batyr.db.elephantsql.com/jzvonwjl'
+app.config['SQLALCHEMY_DATABASE_URI'] = ''
 db = SQLAlchemy(app)
 
 app.app_context().push()
