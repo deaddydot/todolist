@@ -31,6 +31,7 @@ class Category(db.Model):
     name = db.Column(db.String(255), nullable=False)
     color = db.Column(db.String(255), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    is_toggled = db.Column(db.Boolean, nullable=False)
     tasks = db.relationship('Task', backref='category', lazy=True)
 
     def __repr__(self):
@@ -46,7 +47,8 @@ class Category(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "color": self.color
+            "color": self.color,
+            "is_toggled": self.is_toggled
         }
 
 # Task class
