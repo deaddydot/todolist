@@ -74,6 +74,3 @@ export default class TaskViewDataDatabase extends React.Component {
     );
   }
 }
-
-
-test
