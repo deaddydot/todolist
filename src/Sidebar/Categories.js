@@ -1,7 +1,7 @@
 import React from 'react';
-import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios';
 import './Sidebar';
+import ToggleCategory from './ToggleCategory';
 
 export default class Categories extends React.Component {
   constructor(props) {
@@ -26,9 +26,7 @@ export default class Categories extends React.Component {
   render() {
     const categoryOptions = this.state.categories.map((category, index) => {
       return(
-        <ListGroup.Item key={index} className='text-center' style={{border: 'none', backgroundColor: `${category.color}` || 'var(--tertiary-color)'}}>
-          <h4>{category.name}</h4>
-        </ListGroup.Item>
+        <ToggleCategory flaskUrl={this.props.flaskUrl} color={category.color} id={category.id} name={category.name} toggled={category.is_toggled} key={index} />
       );
     });
 
