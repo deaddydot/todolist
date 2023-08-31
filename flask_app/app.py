@@ -226,7 +226,7 @@ def create_category(user_id):
     color = request.json["color"]
 
     # Create a new category object
-    category = Category(name=name, user_id=user_id, color=color)
+    category = Category(name=name, user_id=user_id, color=color, is_toggled=True)
 
     # Add the category to the database
     db.session.add(category)
