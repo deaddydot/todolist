@@ -1,16 +1,15 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, url_for, render_template, session, redirect
+import json, requests
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from datetime import datetime
 from flask_cors import CORS
 from sqlalchemy import asc, desc
 from bcrypt import hashpw, gensalt
+from os import environ as env
+from urllib.parse import quote_plus, urlencode
+from dotenv import find_dotenv, load_dotenv
 
-# Auth0
-from auth0 import GetToken, Auth0
-
-auth0 = Auth0(...)
-get_token = GetToken(...)
 
 # prod server
 # with open('/database.txt', 'r') as file:
@@ -20,10 +19,18 @@ get_token = GetToken(...)
 # local host
 app = Flask(__name__)
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = ''
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://jzvonwjl:HwIve-zPsfT6muGr0-xSwJIQuwv1qnqP@batyr.db.elephantsql.com/jzvonwjl'
 db = SQLAlchemy(app)
 
 app.app_context().push()
+
+# Implement Auth0
+from authlib.integrations.flask_client import OAuth
+oauth = OAuth(app)
+
+ENV_FILE = find_dotenv()
+if ENV_FILE:
+    load_dotenv(ENV_FILE)
 
 # User class
 class User(db.Model):
@@ -348,31 +355,66 @@ def create_user():
     db.session.commit()
 
     return "User created successfully"
+
+oauth.register(
+    "auth0",
+    client_id=env.get("AUTH0_CLIENT_ID"),
+    client_secret=env.get("AUTH0_CLIENT_SECRET"),
+    client_kwargs={
+        "scope": "openid profile email",
+    },
+    server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration'
+)
+
+# Auth0 login
+@app.route("/login")
+def login():
+    return oauth.auth0.authorize_redirect(
+        redirect_uri=url_for("http://localhost:3000/auth0-callback", _external=True)
+    )
+
+@app.route("/auth0-callback", methods=["GET", "POST"])
+def callback():
+    token = oauth.auth0.authorize_access_token()
+    session["user"] = token
     
-# Auth0 Callback
-@app.route("/auth0-callback")
-def auth0_callback():
-    # Parse the Auth0 callback parameters
-    auth_code = request.args.get("code")
-    # Use the auth_code to get the user's information from Auth0
-    user_info = get_token.authorization_code(auth_code)
-    
-    # Extract necessary user information
-    user_id = user_info["user_id"]
-    email = user_info["email"]
-    
-    # Check if the user already exists in the database
-    existing_user = User.query.get(user_id)
-    if existing_user:
-        return "User already exists"
-    
-    # Create a new user in your database
-    new_user = User(id=user_id, email=email)
-    db.session.add(new_user)
-    db.session.commit()
-    
-    # Redirect or return a response as needed
-    return "User created successfully"
+    # Get user's email from the token
+    user_email = token.get("email")
+    print("User Info:", user_email)
+
+    # Check if the user already exists in your database
+    existing_user = User.query.filter_by(email=user_email).first()
+    if not existing_user:
+        # Create the user in your database
+        create_user_data = {
+            "email": user_email,
+            "password": ""  # You might need to generate a password or set a placeholder here
+        }
+        create_user_response = requests.post("http://localhost:5000/create-user", json=create_user_data)
+        if create_user_response.status_code == 200:
+            print("User created successfully")
+
+    return redirect("/app")
+
+# Auth0 Logout
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(
+        "https://" + env.get("AUTH0_DOMAIN")
+        + "/v2/logout?"
+        + urlencode(
+            {
+                "returnTo": url_for("home", _external=True),
+                "client_id": env.get("AUTH0_CLIENT_ID"),
+            },
+            quote_via=quote_plus,
+        )
+    )
+
+@app.route("/")
+def home():
+    return render_template("home.html", session=session.get('user'), pretty=json.dumps(session.get('user'), indent=4))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
