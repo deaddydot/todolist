@@ -13,8 +13,6 @@ const Title = () => (
   </div>
 );
 
-const userId = new URLSearchParams(window.location.search).get("user_id");
-
 export default function RouterPage() {
   useEffect(() => {
     Cookies.set('userId', userId, { expires: 7 });

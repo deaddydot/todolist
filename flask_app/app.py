@@ -1,27 +1,20 @@
-from flask import Flask, jsonify, request, url_for, render_template, session, redirect
-import json, requests
+from flask import Flask, jsonify, request, url_for, render_template, session, redirect, make_response, g
+from functools import wraps
+from jose import jwt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from datetime import datetime
 from flask_cors import CORS
 from sqlalchemy import asc, desc
-from bcrypt import hashpw, gensalt
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
 from dotenv import find_dotenv, load_dotenv
+import json
 
-
-# prod server
-# with open('/database.txt', 'r') as file:
-#     text = file.readline().replace('\n', '').replace('\r', '').strip()
-# app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://ubuntu:{text}@localhost/test1'
-
-# local host
+# Initialize Flask and other components
 app = Flask(__name__)
-CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:s0r8Jh7Qv4&m@localhost/todo'
 db = SQLAlchemy(app)
-
 app.app_context().push()
 
 # Implement Auth0
@@ -32,11 +25,33 @@ ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
 
+# Custom decorator for requiring authentication
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = session.get("user_token")
+        if not token:
+            return jsonify({"error": "Authorization required"}), 401
+        try:
+            payload = jwt.decode(token, env.get("AUTH0_CLIENT_SECRET"), algorithms=["RS256"])
+        except jwt.ExpiredSignatureError:
+            return jsonify({"error": "Token has expired"}), 401
+        except jwt.JWTError:
+            return jsonify({"error": "Invalid token"}), 401
+        g.user = payload["email"]
+        return f(*args, **kwargs)
+    return decorated
+
+# Secure your endpoints
+@app.route("/secure")
+@requires_auth
+def secure():
+    return f"This is a secure endpoint. Welcome, {g.user}!"
+
 # User class
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True, nullable=True)
-    auth0_id = db.Column(db.String(255), unique=True, nullable=True)  # Add this field
     categories = db.relationship('Category', backref='user', lazy=True)
 
 
@@ -98,7 +113,6 @@ def format_task(task, category):
             "deadline": task.deadline,
             "completed": task.completed,
             "category_id": task.category_id,
-            "is_toggled": task.is_toggled,
     }
 
 # Define a route that queries the database
@@ -138,6 +152,9 @@ def create_task(user_id):
 
     # Find the category for the given ID
     category = Category.query.get(category_id)
+    
+    if category is None:
+        return jsonify({"error": "Category not found"}), 404
 
     # Create a new task object and add it to the database with the specified category
     task = Task(title=title, description=description, deadline=deadline, priority=3, category_id=category_id)
@@ -165,20 +182,20 @@ def get_tasks():
         # Handle the case where the user is not logged in or user_id is not in the session
         return jsonify({"error": "User not logged in"}), 401
 
-    # Retrieve all tasks for the specified user_id
-    tasks = Task.query.filter_by(user_id=user_id).all()
+    # Retrieve all tasks for the specified user_id by joining with the Category table
+    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id).all()
 
     # Create a list to hold the formatted task data
     task_list = []
 
     # Loop through the tasks and format each task
-    for task in tasks:
-        category = task.category  # Get the category associated with the task
+    for task, category in tasks:
         formatted_task = format_task(task, category)  # Use your format_task function to format the task
         task_list.append(formatted_task)
 
     # Return the list of formatted tasks as JSON
     return jsonify(task_list)
+
 
 # Get single task
 @app.route("/task/<int:id>", methods=["GET"])
@@ -358,12 +375,12 @@ def get_tasks_by_filter(user_id):
     return jsonify(tasks_dict)
 
 # Create User
-def create_user(email, auth0_user_id):
+def create_user(email):
     # Check if the user already exists in your database based on Auth0 user ID
-    existing_user = User.query.filter_by(auth0_id=auth0_user_id).first()
+    existing_user = User.query.filter_by(email=email).first()
     if not existing_user:
         # Create the user in your database
-        new_user = User(email=email, auth0_id=auth0_user_id)
+        new_user = User(email=email)
         db.session.add(new_user)
         db.session.commit()
         return new_user
@@ -393,22 +410,27 @@ from flask import session
 @app.route("/auth0-callback", methods=["GET", "POST"])
 def callback():
     token = oauth.auth0.authorize_access_token()
-    session["user"] = token
+    session["user_token"] = token["access_token"]
 
     # Get user's email and Auth0 user ID from the token
-    user_email = token.get("email")
-    auth0_user_id = token.get("sub")  # This is the Auth0 user ID
+    payload = jwt.decode(token["access_token"], env.get("AUTH0_CLIENT_SECRET"), algorithms=["RS256"])
+    user_email = payload.get("email")
 
     # Create or retrieve the user in your database based on Auth0 user ID
-    user = create_user(user_email, auth0_user_id)
+    user = create_user(user_email)
     
     user_id = user.id  # This will give you the user's ID
 
     # Set the user ID in the session
     session["user_id"] = user_id
 
-    # Redirect the user to the main application page with the user_id in the query parameter
-    return redirect(url_for("main_page", user_id=user_id))
+    # Create a response
+    response = make_response(redirect(url_for("main_page", user_id=user_id)))
+
+    # Set the user_id as a cookie with a 7-day expiration
+    response.set_cookie('userId', str(user_id), max_age=604800)  # 604800 seconds = 7 days
+
+    return response
 
     
 
@@ -444,6 +466,8 @@ def main_page():
 
     # Return a response with the user ID
     return jsonify({"user_id": user_id})
+
+CORS(app, origins=["http://localhost:3000"])
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
