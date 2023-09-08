@@ -19,7 +19,7 @@ from dotenv import find_dotenv, load_dotenv
 # local host
 app = Flask(__name__)
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://jzvonwjl:HwIve-zPsfT6muGr0-xSwJIQuwv1qnqP@batyr.db.elephantsql.com/jzvonwjl'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:s0r8Jh7Qv4&m@localhost/todo'
 db = SQLAlchemy(app)
 
 app.app_context().push()
@@ -36,7 +36,9 @@ if ENV_FILE:
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True, nullable=True)
+    auth0_id = db.Column(db.String(255), unique=True, nullable=True)  # Add this field
     categories = db.relationship('Category', backref='user', lazy=True)
+
 
 # Category class
 class Category(db.Model):
@@ -45,6 +47,7 @@ class Category(db.Model):
     color = db.Column(db.String(255), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     tasks = db.relationship('Task', backref='category', lazy=True)
+    is_toggled = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return f"Category(name={self.name}, color={self.color} user_id={self.user_id})"
@@ -72,7 +75,7 @@ class Task(db.Model):
     completed = db.Column(db.Boolean, default=False)
     priority = db.Column(db.Integer, default=3)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
-    is_toggled = db.Column(db.Boolean, default=True)
+    
 
     def __repr__(self):
         return f"Task: {self.title}"
@@ -153,15 +156,28 @@ def create_task(user_id):
     return jsonify(tasksByCategory)
     
 # Get all tasks
-@app.route("/tasks/<int:user_id>", methods=["GET"])
-def get_tasks(user_id):
-    # Retrieve all tasks for a specific user, sorted by closest deadline first
-    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id).order_by(asc(Task.deadline), desc(Task.id)).all()
+@app.route("/tasks", methods=["GET"])
+def get_tasks():
+    # Retrieve the user_id from the session
+    user_id = session.get("user_id")
 
+    if user_id is None:
+        # Handle the case where the user is not logged in or user_id is not in the session
+        return jsonify({"error": "User not logged in"}), 401
+
+    # Retrieve all tasks for the specified user_id
+    tasks = Task.query.filter_by(user_id=user_id).all()
+
+    # Create a list to hold the formatted task data
     task_list = []
-    for task, category in tasks:
-        task_list.append(format_task(task, category))
-    
+
+    # Loop through the tasks and format each task
+    for task in tasks:
+        category = task.category  # Get the category associated with the task
+        formatted_task = format_task(task, category)  # Use your format_task function to format the task
+        task_list.append(formatted_task)
+
+    # Return the list of formatted tasks as JSON
     return jsonify(task_list)
 
 # Get single task
@@ -240,7 +256,7 @@ def create_category(user_id):
     color = request.json["color"]
 
     # Create a new category object
-    category = Category(name=name, user_id=user_id, color=color)
+    category = Category(name=name, user_id=user_id, color=color, is_toggled = True)
 
     # Add the category to the database
     db.session.add(category)
@@ -342,19 +358,17 @@ def get_tasks_by_filter(user_id):
     return jsonify(tasks_dict)
 
 # Create User
-@app.route("/create-user", methods=["POST"])
-def create_user():
-    data = request.json
-    email = data["email"]
-    password = data["password"]
-
-    hashed_password = hashpw(password.encode("utf-8"), gensalt())
-    
-    new_user = User(email=email, password=hashed_password.decode("utf-8"))
-    db.session.add(new_user)
-    db.session.commit()
-
-    return "User created successfully"
+def create_user(email, auth0_user_id):
+    # Check if the user already exists in your database based on Auth0 user ID
+    existing_user = User.query.filter_by(auth0_id=auth0_user_id).first()
+    if not existing_user:
+        # Create the user in your database
+        new_user = User(email=email, auth0_id=auth0_user_id)
+        db.session.add(new_user)
+        db.session.commit()
+        return new_user
+    else:
+        return existing_user
 
 oauth.register(
     "auth0",
@@ -373,28 +387,30 @@ def login():
         redirect_uri=url_for("http://localhost:3000/auth0-callback", _external=True)
     )
 
+# Import the session object at the top of your script
+from flask import session
+
 @app.route("/auth0-callback", methods=["GET", "POST"])
 def callback():
     token = oauth.auth0.authorize_access_token()
     session["user"] = token
-    
-    # Get user's email from the token
+
+    # Get user's email and Auth0 user ID from the token
     user_email = token.get("email")
-    print("User Info:", user_email)
+    auth0_user_id = token.get("sub")  # This is the Auth0 user ID
 
-    # Check if the user already exists in your database
-    existing_user = User.query.filter_by(email=user_email).first()
-    if not existing_user:
-        # Create the user in your database
-        create_user_data = {
-            "email": user_email,
-            "password": ""  # You might need to generate a password or set a placeholder here
-        }
-        create_user_response = requests.post("http://localhost:5000/create-user", json=create_user_data)
-        if create_user_response.status_code == 200:
-            print("User created successfully")
+    # Create or retrieve the user in your database based on Auth0 user ID
+    user = create_user(user_email, auth0_user_id)
+    
+    user_id = user.id  # This will give you the user's ID
 
-    return redirect("/app")
+    # Set the user ID in the session
+    session["user_id"] = user_id
+
+    # Redirect the user to the main application page with the user_id in the query parameter
+    return redirect(url_for("main_page", user_id=user_id))
+
+    
 
 # Auth0 Logout
 @app.route("/logout")
@@ -415,6 +431,19 @@ def logout():
 @app.route("/")
 def home():
     return render_template("home.html", session=session.get('user'), pretty=json.dumps(session.get('user'), indent=4))
+
+@app.route("/app")
+def main_page():
+    # Retrieve the user ID from the query parameters
+    user_id = request.args.get("user_id")
+
+    # You can also access the user ID from the session if needed
+    user_id_from_session = session.get("user_id")
+
+    # Do any additional processing here
+
+    # Return a response with the user ID
+    return jsonify({"user_id": user_id})
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
