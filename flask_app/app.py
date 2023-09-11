@@ -16,6 +16,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:s0r8Jh7Qv4&m@localhost/todo'
 db = SQLAlchemy(app)
 app.app_context().push()
+app.secret_key = 'a18230ac162cd97951b1ee3945154fc1'
 
 # Implement Auth0
 from authlib.integrations.flask_client import OAuth
@@ -33,7 +34,7 @@ def requires_auth(f):
         if not token:
             return jsonify({"error": "Authorization required"}), 401
         try:
-            payload = jwt.decode(token, env.get("AUTH0_CLIENT_SECRET"), algorithms=["RS256"])
+            payload = jwt.decode(token["access_token"], env.get("AUTH0_CLIENT_SECRET"), algorithms=["RS256"])
         except jwt.ExpiredSignatureError:
             return jsonify({"error": "Token has expired"}), 401
         except jwt.JWTError:
@@ -139,7 +140,7 @@ def create_default_category(mapper, connection, target):
     # add the category to the session
     db.session.add(default_category)
     # commit the transaction
-    db.session.commit()
+    # db.session.commit()
 
 # Create task
 @app.route("/tasks/<int:user_id>", methods=["POST"])
@@ -159,7 +160,11 @@ def create_task(user_id):
     # Create a new task object and add it to the database with the specified category
     task = Task(title=title, description=description, deadline=deadline, priority=3, category_id=category_id)
     db.session.add(task)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error: {e}")
 
     # Retrieve all tasks for the user, grouped by categories
     categories = Category.query.filter_by(user_id=user_id).all()
@@ -225,7 +230,11 @@ def delete_task(id):
     task = Task.query.filter_by(id=id).first()
     if task:
         db.session.delete(task)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
         return f"Task {id} deleted"
     else:
         return f"Task {id} not found", 404
@@ -254,7 +263,11 @@ def update_task(id):
             task.category = category
 
     # Commit the changes to the database
-    db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
 
     # Return the updated task as a response
     return format_task(task, task.category)
@@ -277,7 +290,11 @@ def create_category(user_id):
 
     # Add the category to the database
     db.session.add(category)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error: {e}")
 
     # Return the created category as a response
     return jsonify(category.serialize()), 201
@@ -307,7 +324,11 @@ def delete_category(category_id):
 
         # Delete the category
         db.session.delete(category)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
 
         return jsonify({"message": "Category and associated tasks deleted successfully"}), 200
     else:
@@ -332,7 +353,11 @@ def update_category(category_id):
         if color:
             category.color = color
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
 
         return jsonify({"message": "Category updated successfully"}), 200
     else:
@@ -348,7 +373,11 @@ def toggle_category(category_id):
     if category:
         # Toggle the category's status
         category.is_toggled = not category.is_toggled
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
 
         # Return the updated category status
         return jsonify({"message": "Category toggled successfully", "is_toggled": category.is_toggled}), 200
@@ -382,7 +411,11 @@ def create_user(email):
         # Create the user in your database
         new_user = User(email=email)
         db.session.add(new_user)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
         return new_user
     else:
         return existing_user
@@ -397,58 +430,79 @@ oauth.register(
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration'
 )
 
-# Auth0 login
 @app.route("/login")
 def login():
     return oauth.auth0.authorize_redirect(
-        redirect_uri=url_for("http://localhost:3000/auth0-callback", _external=True)
+        redirect_uri=url_for("callback", _external=True)
     )
 
 # Import the session object at the top of your script
 from flask import session
 
-@app.route("/auth0-callback", methods=["GET", "POST"])
+@app.route("/callback", methods=["GET", "POST"])
 def callback():
     token = oauth.auth0.authorize_access_token()
-    session["user_token"] = token["access_token"]
+    session["user"] = token
 
-    # Get user's email and Auth0 user ID from the token
-    payload = jwt.decode(token["access_token"], env.get("AUTH0_CLIENT_SECRET"), algorithms=["RS256"])
-    user_email = payload.get("email")
+    # Decode the JWT to get the user's email
+    try:
+        email = token['userinfo']['email']
+    except Exception as e:
+        print(f"Error decoding JWT: {e}")
+        print("Received token:", token)
+        return jsonify({"error": "Invalid token"}), 401 
 
-    # Create or retrieve the user in your database based on Auth0 user ID
-    user = create_user(user_email)
-    
-    user_id = user.id  # This will give you the user's ID
+    # Check if the user already exists in the database
+    existing_user = User.query.filter_by(email=email).first()
 
-    # Set the user ID in the session
-    session["user_id"] = user_id
+    if existing_user:
+        user_id = existing_user.id
+    else:
+        # Create a new user
+        new_user = User(email=email)
+        db.session.add(new_user)
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
+        user_id = new_user.id
 
-    # Create a response
-    response = make_response(redirect(url_for("main_page", user_id=user_id)))
+    # Create a response object
+    response = make_response(redirect("http://localhost:3000/app"))
 
-    # Set the user_id as a cookie with a 7-day expiration
+
+    # Set the 'userId' cookie to the user's ID with a 7-day expiration
     response.set_cookie('userId', str(user_id), max_age=604800)  # 604800 seconds = 7 days
 
     return response
 
-    
-
 # Auth0 Logout
 @app.route("/logout")
 def logout():
+    # Clear Flask session
     session.clear()
-    return redirect(
-        "https://" + env.get("AUTH0_DOMAIN")
-        + "/v2/logout?"
+
+    # Redirect to Auth0 for logout
+    auth0_domain = env.get("AUTH0_DOMAIN")
+    client_id = env.get("AUTH0_CLIENT_ID")
+    return_to_url = "http://localhost:3000/app"  # This URL will handle React session clearing
+
+    logout_url = (
+        f"https://{auth0_domain}/v2/logout?"
         + urlencode(
-            {
-                "returnTo": url_for("home", _external=True),
-                "client_id": env.get("AUTH0_CLIENT_ID"),
-            },
+            {"returnTo": return_to_url, "client_id": client_id},
             quote_via=quote_plus,
         )
     )
+
+    # Create a response object for the redirect
+    response = make_response(redirect(logout_url))
+
+    # Set userId cookie to 0
+    response.set_cookie('userId', '0')
+
+    return response
 
 @app.route("/")
 def home():
@@ -459,15 +513,18 @@ def main_page():
     # Retrieve the user ID from the query parameters
     user_id = request.args.get("user_id")
 
-    # You can also access the user ID from the session if needed
-    user_id_from_session = session.get("user_id")
-
-    # Do any additional processing here
-
     # Return a response with the user ID
     return jsonify({"user_id": user_id})
 
-CORS(app, origins=["http://localhost:3000"])
+CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
+
+@app.route("/is_authenticated", methods=["GET"])
+def is_authenticated():
+    token = session.get("user")
+    if token:
+        return jsonify({"isAuthenticated": True}), 200
+    else:
+        return jsonify({"isAuthenticated": False}), 401
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host="0.0.0.0", port=env.get("PORT", 5000))

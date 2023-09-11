@@ -10,13 +10,13 @@ import ShowAllCheckboxes from './ShowAllCheckboxes';
 import LoginButton from './authentication/LoginButton';
 import LogoutButton from './authentication/LogoutButton';
 import Cookies from 'js-cookie';
-
+import axios from 'axios';
 
 // dev flask url
-const flaskUrl = "http://127.0.0.1:5000"
+const flaskUrl = "http://127.0.0.1:5000";
 
 // prod flask url
-// const flaskUrl = "https://tasktastic.link:5001"
+// const flaskUrl = "https://tasktastic.link:5001";
 
 export class App extends React.Component {
   constructor(props) {
@@ -30,11 +30,32 @@ export class App extends React.Component {
       showCalendar: false, 
       showCompleted: false, 
       view: 'task',
-      userId: userIdCookie
+      userId: userIdCookie,
+      isAuthenticated: false  // Added this line
     };
 
     this.handleClick = this.handleClick.bind(this);
     this.changeView = this.changeView.bind(this);
+  }
+
+  async componentDidMount() {
+    document.title = 'TaskTastic';
+    await this.checkAuthentication();  // Added this line
+  }
+
+  // Added this method
+  async checkAuthentication() {
+    try {
+      const response = await axios.get('http://localhost:5000/is_authenticated', { withCredentials: true });
+      if (response.data.isAuthenticated) {
+        this.setState({ isAuthenticated: true });
+      } else {
+        this.setState({ isAuthenticated: false });
+      }
+    } catch (error) {
+      console.error('An error occurred while checking authentication:', error);
+      this.setState({ isAuthenticated: false });
+    }
   }
 
   handleClick() {
@@ -55,17 +76,13 @@ export class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-    document.title = 'TaskTastic';
-  }
-
   render() { 
     return (
       <Container fluid='true'>
         <Row>
           <div style={{position: 'fixed', top: '1rem', left: '0.5rem'}}>
-            <LoginButton/>
-            <LogoutButton/>
+            <LoginButton isAuthenticated={this.state.isAuthenticated} />
+            <LogoutButton isAuthenticated={this.state.isAuthenticated} />
           </div>
           <Col style={{ paddingLeft: '0', paddingRight: '0' }} xs={2}>
             <Sidebar onInput={this.changeView.bind(this)} flaskUrl={flaskUrl} userId={this.state.userId} />
