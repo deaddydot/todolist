@@ -136,7 +136,7 @@ def handle_options_request():
 @event.listens_for(User, 'after_insert')
 def create_default_category(mapper, connection, target):
     # create a new category with default values
-    default_category = Category(name='Default', user_id=target.id)
+    default_category = Category(name='Default', user_id=target.id, color="#ff0000")
     # add the category to the session
     db.session.add(default_category)
     # commit the transaction
@@ -215,13 +215,27 @@ def get_task(id):
 # Get all tasks by categories
 @app.route("/tasks-by-categories/<int:user_id>", methods=["GET"])
 def get_tasks_by_categories(user_id):
-    # Retrieve all tasks for a specific user, grouped by categories
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    # Convert string dates to datetime objects
+    if start_date:
+        start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+    if end_date:
+        end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
     categories = db.session.query(Category).filter_by(user_id=user_id).all()
     categories_dict = {}
+    
     for category in categories:
-        tasks = category.tasks
+        if start_date and end_date:
+            tasks = [task for task in category.tasks if task.deadline.date() >= start_date and task.deadline.date() <= end_date]
+        else:
+            tasks = category.tasks
+
         formatted_tasks = [format_task(task, category) for task in tasks]
         categories_dict[category.name] = formatted_tasks
+
     return jsonify(categories_dict)
 
 # Delete task
@@ -263,11 +277,11 @@ def update_task(id):
             task.category = category
 
     # Commit the changes to the database
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            print(f"Error: {e}")
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error: {e}")
 
     # Return the updated task as a response
     return format_task(task, task.category)
@@ -275,7 +289,8 @@ def update_task(id):
 # Get all categories for a user
 @app.route("/categories/<int:user_id>", methods=["GET"])
 def get_categories(user_id):
-    categories = Category.query.filter_by(user_id=user_id).all()
+    categories = Category.query.filter_by(user_id=user_id, is_toggled=True).all()
+    serialized_categories = [{"id": category.id, "name": category.name, "color": category.color, "is_toggled": category.is_toggled} for category in categories]
     return jsonify([category.serialize() for category in categories])
 
 # Create category
@@ -383,25 +398,6 @@ def toggle_category(category_id):
         return jsonify({"message": "Category toggled successfully", "is_toggled": category.is_toggled}), 200
     else:
         return jsonify({"error": "Category not found"}), 404
-
-# Get tasks with category filtering
-@app.route("/tasks-by-filter/<int:user_id>", methods=["POST"])
-def get_tasks_by_filter(user_id):
-    # Retrieve all tasks for a specific user, filtered by toggled categories
-    toggled_categories = Category.query.filter_by(user_id=user_id, is_toggled=True).all()
-    toggled_category_ids = [category.id for category in toggled_categories]
-
-    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id, Category.id.in_(toggled_category_ids)).order_by(asc(Task.deadline), desc(Task.id)).all()
-
-    tasks_dict = {}  # Dictionary to hold tasks grouped by category
-
-    for task, category in tasks:
-        category_name = category.name
-        if category_name not in tasks_dict:
-            tasks_dict[category_name] = []
-        tasks_dict[category_name].append(format_task(task, category))
-    
-    return jsonify(tasks_dict)
 
 # Create User
 def create_user(email):

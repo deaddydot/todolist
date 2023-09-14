@@ -1,5 +1,5 @@
 import React from 'react';
-import Form from 'react-bootstrap/Form'
+import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
@@ -71,6 +71,8 @@ export default class JsonCheckbox extends React.Component {
     const completed = newState;
     try {
       await axios.put(`${this.props.flaskUrl}/tasks-edit/${taskId}`, { completed });
+      // Invoke the callback function to update the parent's state
+      this.props.onTaskCompletion(taskId, completed);
     } catch (error) {
       console.error(error);
     }
