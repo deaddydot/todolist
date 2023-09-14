@@ -99,7 +99,10 @@ export default class TaskViewCategories extends React.Component {
 
   render() {
     return (
-      <Card style={{ backgroundColor: this.props.categories[this.props.category] || 'var(--tertiary-color)', border: 'none', padding: '1rem', position: 'relative' }}>
+      <Card   
+      style={{ backgroundColor: this.props.categories[this.props.category] || 'var(--tertiary-color)', border: 'none', padding: '1rem', position: 'relative' }}
+      onMouseEnter={this.handleHover}
+      onMouseLeave={this.handleMouseLeave}>
         <h2>{this.props.category}</h2>
         <Button variant="primary" onClick={this.toggleSortOrder}>
           Sort by Deadline ({this.state.sortOrder.toUpperCase()})
