@@ -11,7 +11,7 @@ export default class CompletedView extends React.Component {
     return (
       <Row>
         <CompletedViewDataDatabase showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} userId={this.props.userId} />
-      </Row>
+      </Row> 
     );
   }
 }

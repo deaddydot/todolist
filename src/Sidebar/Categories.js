@@ -1,7 +1,7 @@
 import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios';
-import './Sidebar';
+import './Sidebar.css';  // Assuming you have a Sidebar.css file
 
 export default class Categories extends React.Component {
   constructor(props) {
@@ -10,7 +10,7 @@ export default class Categories extends React.Component {
     this.state = {
       categories: [],
       tasks: {},
-    }
+    };
   }
 
   componentDidMount() {
@@ -57,19 +57,16 @@ export default class Categories extends React.Component {
   render() {
     
     const categoryOptions = this.state.categories.map((category, index) => {
-      if (category.is_toggled) { // Only render if is_toggled is true
-        return (
-          <ListGroup.Item
-            key={index}
-            className='text-center'
-            style={{ border: 'none', backgroundColor: `${category.color}` || 'var(--tertiary-color)' }}
-            onClick={() => this.toggleCategory(category.id)} // Add the click event handler here
-          >
-            <h4>{category.name}</h4>
-          </ListGroup.Item>
-        );
-      }
-      return null; // Return null if is_toggled is false
+      return (
+        <ListGroup.Item
+          key={index}
+          className='text-center'
+          style={{ border: 'none', backgroundColor: `${category.is_toggled ? category.color : 'grey'}` }}
+          onClick={() => this.toggleCategory(category.id)}
+        >
+          <h4>{category.name}</h4>
+        </ListGroup.Item>
+      );
     });
 
     const taskLists = Object.keys(this.state.tasks).map((categoryName, index) => {

@@ -11,7 +11,8 @@ export default class CompletedViewJsonCheckbox extends React.Component {
     this.state = {
       checked: this.props.checked,
       showEdit: false,
-      formattedDeadline: ''
+      formattedDeadline: '',
+      isVisible: true  // Initialize isVisible here
     };
     this.changeDisplay = this.changeDisplay.bind(this);
     this.setOpen = this.setOpen.bind(this);
@@ -46,17 +47,28 @@ export default class CompletedViewJsonCheckbox extends React.Component {
 
   async changeDisplay(event) {
     const newState = event.target.checked;
-    this.setState({ checked: newState });
+    this.setState({ checked: newState, isVisible: newState });  // Add isVisible here
 
     // Make an API request to toggle the completed status of the task
     const taskId = this.props.taskId;
     const completed = newState;
     try {
       await axios.put(`${this.props.flaskUrl}/tasks-edit/${taskId}`, { completed });
+
+      // Notify the parent component to update the Categories View
+      if (this.props.onTaskStatusChange) {
+        this.props.onTaskStatusChange(taskId, completed);
+      }
+
+      // Hide the task if it's unchecked
+      if (!newState) {
+        this.setState({ open: false });
+      }
     } catch (error) {
       console.error(error);
     }
   }
+  
 
   handleHover = () => {
     this.setState({showEdit: true});
@@ -67,7 +79,7 @@ export default class CompletedViewJsonCheckbox extends React.Component {
   };
 
   render() {
-    const display = this.props.showAll || this.state.checked ? 'block' : 'none';
+    const display = this.state.isVisible ? 'block' : 'none';  // Use isVisible state here
     return (
       <div style={{ display }} onMouseEnter={this.handleHover} onMouseLeave={this.handleMouseLeave}>
         <div style={{display: 'flex', justifyContent: 'space-between'}}>

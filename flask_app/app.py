@@ -292,6 +292,7 @@ def get_categories(user_id):
     categories = Category.query.filter_by(user_id=user_id).all()
     serialized_categories = [{"id": category.id, "name": category.name, "color": category.color, "is_toggled": category.is_toggled} for category in categories]
     print(serialized_categories)
+    
     return jsonify([category.serialize() for category in categories])
 
 # Create category

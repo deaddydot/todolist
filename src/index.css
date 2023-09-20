@@ -1,28 +1,78 @@
+/* Define color variables */
 :root {
-  --primary-color: #9dcefc;
-  --secondary-color: #d3d3d3;
+  --primary-color: #fce79d;
+  --secondary-color: #ffffff;
   --tertiary-color: #f8c046;
+  --text-color: #333;
+  --border-color: #ccc;
 }
 
+/* Style cards */
 .card {
   margin-bottom: 1em;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+  transition: transform .2s ease-in-out; /* Add transition for hover effect */
 }
 
+.card:hover {
+  transform: scale(1.02); /* Slightly enlarge the card on hover */
+}
+
+/* Remove borders */
 .card, .list-group-item, .card-header {
   border: none;
 }
 
+/* Style the "Show All" button */
 #show-all {
   background-color: var(--secondary-color);
-  color: black;
-  border: none;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
   padding: 1em;
   border-radius: 1em;
+  transition: background-color .2s ease-in-out; /* Add transition for hover effect */
 }
 
+#show-all:hover {
+  background-color: var(--tertiary-color); /* Change background on hover */
+}
+
+/* Position the "Show All" button */
 #show-all-div {
   position: fixed;
   bottom: 1rem;
   left: 0.5rem;
   align-content: right;
+  z-index: 1000; /* Make sure it appears above other elements */
+}
+
+/* Additional styling for text */
+body, h1, h2, h3, p {
+  color: var(--text-color);
+  font-family: 'Arial', sans-serif; /* Use a more readable font */
+}
+
+/* Add some spacing and alignment */
+.container, .row, .col {
+  margin: 1em;
+  padding: 1em;
+}
+
+/* Style login and logout buttons (if you have specific IDs or classes, replace these) */
+button {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  cursor: pointer;
+  transition: background-color .2s ease-in-out;
+}
+
+button:hover {
+  background-color: var(--tertiary-color);
+}
+
+body {
+  overflow-y: hidden;
 }

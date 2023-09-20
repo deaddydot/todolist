@@ -1,16 +1,16 @@
 import React from 'react';
+import "./AddCategoryForm.css";
 import { SketchPicker } from 'react-color';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
-import UserCategories from '../../UserCategories';
-import CirclePicker from 'react-color';
 
 export default class AddCategoryForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       name: "",
-      color: ""
+      color: "",
+      isFormValid: false
     };
   }
 
@@ -22,60 +22,78 @@ export default class AddCategoryForm extends React.Component {
       name,
       color,
     };
+
     try {
       const response = await axios.post(`${this.props.flaskUrl}/categories/${this.props.userId}`, data);
-
       this.props.onCategoryAdded(response.data.category_id);
     } catch (error) {
       console.error(error);
     }
 
     this.props.modalOpen();
-
     window.location.reload();
   };
 
   handleChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    this.setState({ [name]: value }, this.validateForm);
   };
 
-  handleCategoryChange = (categoryId) => {
-    this.setState({ category_id: categoryId });
-  };
-
-  render() {
+  validateForm = () => {
     const { name, color } = this.state;
+    const isFormValid = name && color;
+    this.setState({ isFormValid });
+  };
 
+  handleColorChange = (event) => {
+    this.setState({ color: event.target.value }, this.validateForm);
+  };
+
+  modalClose = () => {
+    this.setState({ displayModal: false });
+    document.body.style.overflow = 'hidden';
+  };
+  
+  render() {
+    const { name, color, isFormValid } = this.state;
+  
+    const closeButtonStyle = {
+      color: '#aaa',
+      position: 'absolute',
+      right: '1rem',
+      top: '1rem',
+      fontSize: '28px',
+      fontWeight: 'bold',
+      cursor: 'pointer'
+    };
+  
     return (
-      <form onSubmit={this.handleSubmit} style={{display: 'flex', flexDirection: 'column'}}>
-        <label>
-          Name:
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={this.handleChange}
-          />
-        </label>
-        <label>
-          Color:
-          <input
-            type="text"
-            name="color"
-            value={color}
-            onChange={this.handleChange}
-          />
-        </label>
-        <SketchPicker
-          color={this.state.color}
-          onChangeComplete={(color) => {
-            this.setState({ color: color.hex });
-          }}
-        />
-        <Button style={{backgroundColor: 'blue', border: 'none'}} type="submit">Submit</Button>
-      </form>
+      <div style={{ position: 'relative' }}>
+        <span style={closeButtonStyle} onClick={this.props.modalClose}>X</span>
+        <form onSubmit={this.handleSubmit} className="add-category-form">
+          <label>
+            Name:{" "}
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={this.handleChange}
+            />
+          </label>
+          <label>
+            Color:{" "}
+            <input
+              type="color"
+              name="color"
+              value={color}
+              onChange={this.handleColorChange}
+            />
+          </label>
+          <Button className="submit-button" type="submit" disabled={!isFormValid}>
+            Submit
+          </Button>
+        </form>
+      </div>
     );
   }
 }

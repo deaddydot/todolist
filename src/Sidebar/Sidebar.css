@@ -1,41 +1,49 @@
+/* Sidebar Styles */
 .sidebar {
   background-color: var(--primary-color);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+  padding: 1em; /* Add some padding */
 }
 
+/* Style sidebar links */
 a {
   text-decoration: none;
   color: black;
+  padding: 0.5em; /* Add some padding */
+  transition: background-color .2s ease-in-out; /* Add transition for hover effect */
 }
 
+a:hover {
+  background-color: var(--tertiary-color); /* Change background on hover */
+}
+
+/* Style sidebar header */
 .sidebar h2 {
   margin-top: 1em;
+  margin-bottom: 1em; /* Add some bottom margin */
 }
 
-.button{
+/* Style sidebar buttons */
+.button {
   text-decoration: none;
-  color: black;
-  background-color: var(--primary-color);
-  /* font-size: 35px; */
-  font: bolder;
-  width: 100%
+  color: var(--primary-color);
+  background-color: #b9cfde;
+  font-weight: bold; /* Make the text bold */
+  width: 100%;
+  padding: 0.5em; /* Add some padding */
+  text-align: center; /* Center the text */
+  border-radius: 0.5em; /* Add rounded corners */
+  transition: background-color .2s ease-in-out; /* Add transition for hover effect */
 }
 
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+.button:hover {
+  background-color: var(--tertiary-color); /* Change background on hover */
 }
 
+/* Modal styles */
 /* Modal Content/Box */
 .modal-content {
   background-color: #fefefe;
@@ -43,19 +51,37 @@ a {
   padding: 20px;
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
-}
+} 
 
-/* The Close Button */
+/* Style the close button */
 .close {
   color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
+  cursor: pointer; /* Make it obvious it's clickable */
 }
 
 .close:hover,
 .close:focus {
   color: black;
   text-decoration: none;
-  cursor: pointer;
+}
+
+/* Sidebar.css */
+.buttonStyle {
+  width: 100%;
+  border: none;
+  color: black;
+}
+
+.listGroupItemStyle {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.collapseDivStyle {
+  margin: 10px;
+  border-radius: 10px;
 }

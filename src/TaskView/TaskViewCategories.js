@@ -94,6 +94,7 @@ export default class TaskViewCategories extends React.Component {
       }
       return task;
     });
+    
     this.setState({ tasks: updatedTasks });
   };
 

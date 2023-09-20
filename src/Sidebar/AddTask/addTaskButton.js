@@ -57,10 +57,12 @@ export default class AddTaskButton extends React.Component {
 
   modalOpen = () => {
     this.setState({ displayModal: true });
+    document.body.style.overflow = 'hidden';
   };
 
   modalClose = () => {
     this.setState({ displayModal: false });
+    document.body.style.overflow = 'hidden';
   };
 
   render() {
@@ -80,23 +82,14 @@ export default class AddTaskButton extends React.Component {
         </button>
   
         {this.state.displayModal && (
-          <div className="myModal" style={ModalLooks} ref={(ref) => (this.modalRef = ref)}>
-            <div style={ModalContent} className="modal-content">
-              <div className="modal-header">
-                <h2>Create Your Task</h2>
-                <span style={Close} className="close" onClick={this.modalClose}>
-                  &times;
-                </span>
-              </div>
-              <AddTaskForm
-                flaskUrl={this.props.flaskUrl}
-                modalOpen={this.modalOpen}
-                userId={this.props.userId}
-              />
-            </div>
-          </div>
+          <AddTaskForm
+            flaskUrl={this.props.flaskUrl}
+            modalClose={this.modalClose}  // Pass modalClose instead of modalOpen
+            userId={this.props.userId}
+          />
         )}
       </>
     );
   }
+  
 }

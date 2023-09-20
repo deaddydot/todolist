@@ -1,36 +1,52 @@
 import React from 'react';
-import Form from 'react-bootstrap/Form'
+import Form from 'react-bootstrap/Form';
 
 export default class Checkbox extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = { 
-        display: 'block',
-        checked: false
-      };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      display: 'block',
+      checked: false,
+    };
+  }
 
-    UNSAFE_componentWillReceiveProps () {
+  componentDidUpdate(prevProps) {
+    if (this.props.showAll !== prevProps.showAll) {
       if (!this.props.showAll) {
         this.setState({ display: 'block' });
       } else if (this.props.showAll && this.state.checked) {
         this.setState({ display: 'none' });
       }
     }
+  }
 
-    changeDisplay() {
-      const newState = !this.state.checked;
-      this.setState({ checked: newState });
-      if (!this.props.showAll && !this.state.checked) {
-        const newDisplay = this.state.display === 'block' ? 'none' : 'block';
-        this.setState({ display: newDisplay });
+  changeDisplay = () => {
+    this.setState((prevState) => {
+      const newState = !prevState.checked;
+      let newDisplay = prevState.display;
+
+      if (!this.props.showAll && newState) {
+        newDisplay = 'none';
+      } else {
+        newDisplay = 'block';
       }
-    }
 
-    render() {
-      return (
-        // <label><input type='checkbox' className='checkbox' value='value' />{this.props.task}</label>
-        <Form.Check className='checkbox' type='checkbox' label={this.props.task} onClick={() => this.changeDisplay()} style={{display: this.state.display}}/>
-      );
-    }
+      return {
+        checked: newState,
+        display: newDisplay,
+      };
+    });
+  };
+
+  render() {
+    return (
+      <Form.Check
+        className="checkbox"
+        type="checkbox"
+        label={this.props.task}
+        onClick={this.changeDisplay}
+        style={{ display: this.state.display }}
+      />
+    );
+  }
 }
