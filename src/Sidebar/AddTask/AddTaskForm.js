@@ -57,21 +57,16 @@ export default class AddTaskForm extends Component {
 
     const datetimeObject = new Date(deadline);
     const formattedDatetime = `${datetimeObject.getMonth() + 1}-${datetimeObject.getDate()}-${datetimeObject.getFullYear()} ${datetimeObject.getHours()}:${datetimeObject.getMinutes()}:${datetimeObject.getSeconds()}`;
+    const response = await axios.post(`${flaskUrl}/tasks/${userId}`, {
+      title,
+      description,
+      formattedDatetime,
+      category_id
+    });
+    // onTaskAdded(response.data.category_id);
+    modalClose();
+    window.location.reload();
 
-    try {
-      const response = await axios.post(`${flaskUrl}/tasks/${userId}`, {
-        title,
-        description,
-        formattedDatetime,
-        category_id
-      });
-      onTaskAdded(response.data.category_id);
-      modalClose();
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-      this.setState({ error: "An error occurred while adding the task." });
-    }
   };
 
   handleChange = (e) => {
@@ -132,7 +127,6 @@ export default class AddTaskForm extends Component {
           <Button className="submit-button" type="submit" disabled={!title || !deadline}>
             Submit
           </Button>
-          {error && <div className="error-message">{error}</div>}
         </form>
       </div>
     );
