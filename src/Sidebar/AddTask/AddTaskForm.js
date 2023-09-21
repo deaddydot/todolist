@@ -43,11 +43,11 @@ export default class AddTaskForm extends Component {
   };
 
   componentDidMount() {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'auto';
   }
 
   componentWillUnmount() {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'auto';
   }
 
   handleSubmit = async (e) => {
@@ -124,9 +124,11 @@ export default class AddTaskForm extends Component {
             <input type="datetime-local" name="deadline" value={deadline} onChange={this.handleChange} />
           </label>
           <UserCategories flaskUrl={flaskUrl} userId={userId} onCategoryChange={this.handleCategoryChange} />
-          <Button className="submit-button" type="submit" disabled={!title || !deadline}>
-            Submit
-          </Button>
+          <div className="submit-button-container">
+            <Button className="submit-button" type="submit" disabled={!title || !deadline}>
+              Submit
+            </Button>
+          </div>
         </form>
       </div>
     );

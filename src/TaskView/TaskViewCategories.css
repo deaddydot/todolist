@@ -1,0 +1,14 @@
+.task-item {
+    padding: 12px; /* Padding for spacing */
+    border-radius: 8px; /* Rounded corners */
+    margin-bottom: 8px; /* Space between tasks */
+    background-color: rgba(255, 255, 255, 0.1); /* Default background color */
+}
+
+.task-item:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.1); /* Adjust color as needed */
+}
+
+.task-item:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.1); /* Adjust color as needed */
+}

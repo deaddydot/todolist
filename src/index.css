@@ -5,6 +5,9 @@
   --tertiary-color: #f8c046;
   --text-color: #333;
   --border-color: #ccc;
+  --night-background-color: #000;
+  --night-text-color: #fff;
+  --night-border-color: #555;
 }
 
 /* Style cards */
@@ -25,7 +28,7 @@
 
 /* Style the "Show All" button */
 #show-all {
-  background-color: var(--secondary-color);
+  background-color: #000;
   color: var(--text-color);
   border: 1px solid var(--border-color);
   padding: 1em;
@@ -73,6 +76,19 @@ button:hover {
   background-color: var(--tertiary-color);
 }
 
-body {
+/* body {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
   overflow-y: auto;
 }
+
+body.night-mode {
+  background-color: var(--night-background-color);
+  color: var(--night-text-color);
+}
+
+body.night-mode #show-all {
+  background-color: var(--night-background-color);
+  color: var(--night-text-color);
+  border-color: var(--night-border-color);
+} */

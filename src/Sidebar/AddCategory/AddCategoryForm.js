@@ -51,7 +51,7 @@ export default class AddCategoryForm extends React.Component {
 
   modalClose = () => {
     this.setState({ displayModal: false });
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'auto';
   };
   
   render() {
@@ -89,9 +89,11 @@ export default class AddCategoryForm extends React.Component {
               onChange={this.handleColorChange}
             />
           </label>
+          <div className="submit-button-container">
           <Button className="submit-button" type="submit" disabled={!isFormValid}>
             Submit
           </Button>
+          </div>
         </form>
       </div>
     );

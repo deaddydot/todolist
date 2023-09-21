@@ -33,6 +33,12 @@
     cursor: pointer;
   }
   
+  .submit-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
   .submit-button:disabled {
     background-color: #ccc;
     cursor: not-allowed;

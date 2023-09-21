@@ -5,7 +5,6 @@ import Sidebar from './Sidebar/Sidebar';
 import TaskView from './TaskView/TaskView';
 import CalendarView from './CalendarView/CalendarView';
 import CompletedView from './CompletedView/CompletedView';
-import ShowAllCheckboxes from './ShowAllCheckboxes';
 import LoginButton from './authentication/LoginButton';
 import LogoutButton from './authentication/LogoutButton';
 import Cookies from 'js-cookie';
@@ -30,20 +29,21 @@ export class App extends React.Component {
       showCompleted: false, 
       view: 'task',
       userId: userIdCookie,
-      isAuthenticated: false,  // Added this line
+      isAuthenticated: false,
       categories: [],
+      nightMode: false
     };
 
     this.handleClick = this.handleClick.bind(this);
     this.changeView = this.changeView.bind(this);
+    this.toggleNightMode = this.toggleNightMode.bind(this);
   }
 
   async componentDidMount() {
     document.title = 'TaskTastic';
-    await this.checkAuthentication();  // Added this line
+    await this.checkAuthentication();
   }
 
-  // Added this method
   async checkAuthentication() {
     try {
       const response = await axios.get('http://localhost:5000/is_authenticated', { withCredentials: true });
@@ -80,17 +80,38 @@ export class App extends React.Component {
     }
   }
 
+  toggleNightMode() {
+    const currentNightMode = this.state.nightMode;
+    this.setState({ nightMode: !currentNightMode }, () => {
+      if (this.state.nightMode) {
+        document.body.classList.add('night-mode');
+      } else {
+        document.body.classList.remove('night-mode');
+      }
+    });
+  }
+
   render() {
+    const appStyle = this.state.nightMode ? {
+      backgroundColor: "black",
+      color: "white"
+    } : {
+      backgroundColor: "white",
+      color: "black"
+    };
+
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <Container fluid='true' style={{ flex: '1' }}>
-          <Row>
-            <Col style={{ paddingLeft: '0', paddingRight: '0' }} xs={2}>
+      <div style={{ ...appStyle, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <Container fluid='true' style={{ ...appStyle, flex: '1' }}>
+          <Row style={appStyle}>
+            <Col style={{ ...appStyle, paddingLeft: '0', paddingRight: '0' }} xs={2}>
               <Sidebar onInput={this.changeView.bind(this)} flaskUrl={flaskUrl} userId={this.state.userId} updateCategories={this.updateCategories} />
             </Col>
-            <Col style={{ paddingLeft: '0', paddingRight: '0' }}>
+            <Col style={{ ...appStyle, paddingLeft: '0', paddingRight: '0' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
-                <div></div> {/* Empty div for alignment */}
+                <Button onClick={this.toggleNightMode}>
+                  Toggle Night Mode
+                </Button>
                 <div>
                   <Button style={{ backgroundColor: 'lightgreen', border: 'none', color: 'black' }} onClick={() => this.changeView('task')}>
                     Categories
@@ -107,14 +128,14 @@ export class App extends React.Component {
                   <LogoutButton isAuthenticated={this.state.isAuthenticated} />
                 </div>
               </div>
-              {this.state.showTask && <div id='TaskView'><TaskView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} /></div>}
-              {this.state.showCalendar && <CalendarView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} />}
-              {this.state.showCompleted && <CompletedView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} />}
-              <ShowAllCheckboxes onClick={() => this.handleClick()} showAll={this.state.showAll} view={this.state.view} />
+              {this.state.showTask && <div id='TaskView' style={appStyle}><TaskView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} nightMode={this.state.nightMode}/></div>}
+              {this.state.showCalendar && <CalendarView style={appStyle} showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} nightMode={this.props.nightMode}/>}
+              {this.state.showCompleted && <CompletedView style={appStyle} showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} nightMode={this.props.nightMode}/>}
+              
             </Col>
           </Row>
         </Container>
       </div>
     );
-  }
+}
 }

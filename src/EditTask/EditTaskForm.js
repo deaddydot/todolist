@@ -71,7 +71,7 @@ export default class EditTaskForm extends React.Component {
     return (
       <><form onSubmit={this.handleSubmit} style={{display: 'flex', flexDirection: 'column'}}>
         <label>
-          Title:
+          Title:{" "}
           <input
             type="text"
             name="title"
@@ -81,7 +81,7 @@ export default class EditTaskForm extends React.Component {
           />
         </label>
         <label>
-          Description:
+          Description:{" "}
           <input
             type="text"
             name="description"
@@ -91,7 +91,7 @@ export default class EditTaskForm extends React.Component {
           />
         </label>
         <label>
-          Deadline:
+          Deadline:{" "}
           <input
             type="datetime-local"
             id="datetime"

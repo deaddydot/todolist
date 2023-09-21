@@ -4,6 +4,8 @@ import JsonCheckbox from '../JsonCheckbox';
 import { Col, Row, Card, Form, Button } from 'react-bootstrap';
 import AddTaskButtonByCategory from '../Sidebar/AddTask/AddTaskButtonByCategory';
 import EditCategoryButton from '../EditCategory/EditCategoryButton';
+import { FaSort } from 'react-icons/fa';
+import "./TaskViewCategories.css"
 
 export default class TaskViewCategories extends React.Component {
   constructor(props) {
@@ -99,42 +101,57 @@ export default class TaskViewCategories extends React.Component {
   };
 
   render() {
+    const containerStyle = {
+      backgroundColor: this.props.categories[this.props.category] || 'var(--tertiary-color)',
+      border: 'none',
+      padding: '1rem',
+      position: 'relative'
+    };
+
+    const headerStyle = {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginBottom: '1rem'
+    };
+
+    const titleStyle = {
+      fontSize: '1.5rem',
+      marginBottom: '1rem'
+    };
+
+    const filterContainerStyle = {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: '1rem'
+    };
+
+    const filterStyle = {
+      width: '150px',
+      marginLeft: '1rem'
+    };
+
+    const iconStyle = {
+      cursor: 'pointer',
+      marginRight: '1rem'
+    };
+
     return (
-      <Card   
-      style={{ backgroundColor: this.props.categories[this.props.category] || 'var(--tertiary-color)', border: 'none', padding: '1rem', position: 'relative' }}
-      onMouseEnter={this.handleHover}
-      onMouseLeave={this.handleMouseLeave}>
-        <h2>{this.props.category}</h2>
-        <Button variant="primary" onClick={this.toggleSortOrder}>
-          Sort by Deadline ({this.state.sortOrder.toUpperCase()})
-        </Button>
-        <div style={{ position: 'absolute', right: 15, top: 17 }}>
-          <div style={{ position: 'relative', left: 0, top: 0, marginBottom: '-0.5rem' }}>
-            {this.state.showEdit && 
-              <EditCategoryButton
-                category={this.props.category}
-                flaskUrl={this.props.flaskUrl}
-                userId={this.props.userId}
-              />
-            }
-          </div>
-          <div style={{ position: 'relative', right: 30, top: -24, marginBottom: '-0.5rem' }}>
-            {this.state.showEdit && 
-              <AddTaskButtonByCategory
-                category={this.props.category}
-                flaskUrl={this.props.flaskUrl}
-                userId={this.props.userId}
-              />
-            }
+      <Card style={containerStyle} onMouseEnter={this.handleHover} onMouseLeave={this.handleMouseLeave}>
+        <div style={headerStyle}>
+          <h2 style={titleStyle}>{this.props.category}</h2>
+          <div style={filterContainerStyle}>
+            <FaSort style={iconStyle} onClick={this.toggleSortOrder} title={`Sort by Deadline (${this.state.sortOrder.toUpperCase()})`} />
+            <Form.Control as="select" style={filterStyle} onChange={this.handleFilterChange} defaultValue="all">
+                <option value="all">All time</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="year">This Year</option>
+            </Form.Control>
           </div>
         </div>
-        <Form.Control as="select" onChange={this.handleFilterChange}>
-          <option value="week">This Week</option>
-          <option value="month">This Month</option>
-          <option value="year">This Year</option>
-        </Form.Control>
         {this.state.tasks.map((item, itemIndex) => (
-          <React.Fragment key={item.id}>
+          <div key={item.id} className="task-item">
             <JsonCheckbox 
               label={item.title} 
               deadline={item.deadline} 
@@ -146,7 +163,7 @@ export default class TaskViewCategories extends React.Component {
               userId={this.props.userId} 
               onTaskCompletion={this.handleTaskCompletion}
             />
-          </React.Fragment>
+          </div>
         ))}
       </Card>
     );
