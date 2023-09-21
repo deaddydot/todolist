@@ -85,3 +85,9 @@ a:hover {
   margin: 10px;
   border-radius: 10px;
 }
+
+.logo {
+  width: 100%; /* or any other value */
+  height: auto;
+  /* other styles as needed */
+}

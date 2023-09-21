@@ -1,7 +1,6 @@
 #myBtn {
     height: 100px;
     width: 100%;
-    background-color: var(--primary-color);
     border: none;
     font-size: 24px;
     font-weight: bold;

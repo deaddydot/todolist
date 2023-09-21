@@ -1,9 +1,9 @@
 /* Define color variables */
 :root {
-  --primary-color: #fce79d;
+  --primary-color: #282A3A;
   --secondary-color: #ffffff;
   --tertiary-color: #f8c046;
-  --text-color: #333;
+  --text-color: #ffffff;
   --border-color: #ccc;
   --night-background-color: #000;
   --night-text-color: #fff;
@@ -63,17 +63,17 @@ body, h1, h2, h3, p {
 
 /* Style login and logout buttons (if you have specific IDs or classes, replace these) */
 button {
-  background-color: var(--primary-color);
-  color: var(--text-color);
+  background-color: #735F32;
+  color: #ffffff;
   border: 1px solid var(--border-color);
   padding: 0.5em 1em;
   border-radius: 0.5em;
   cursor: pointer;
-  transition: background-color .2s ease-in-out;
+  transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
 button:hover {
-  background-color: var(--tertiary-color);
+  background-color: #C69749;
 }
 
 /* body {

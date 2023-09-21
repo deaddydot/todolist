@@ -60,7 +60,7 @@ export default class TaskViewDataDatabase extends React.Component {
     });
   
     return (
-      <Row style={{backgroundColor: this.props.nightMode ? 'var(--night-background-color)' : 'var(--secondary-color)', minHeight: '100vh'}}>
+      <Row style={{backgroundColor: this.props.nightMode ? 'var(--night-background-color)' : 'var(--secondary-color)', minHeight: '100vh', transition: 'background-color 0.5s ease-in-out'}}>
         {columns.map((column, colIndex) => (
           <Col key={`column-${colIndex}`}>
             {column.map((category, index) => (

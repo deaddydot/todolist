@@ -162,7 +162,7 @@ export default class CalendarViewDataDatabase extends React.Component {
   
   render() {
     return (
-      <Row style={{backgroundColor: 'var(--secondary-color)', minHeight: '100vh', position: 'relative'}}>
+      <Row style={{backgroundColor: this.props.nightMode ? 'var(--night-background-color)' : 'var(--secondary-color)', minHeight: '100vh'}}>
         {this.generateColumns()}
         <Button onClick={() => this.backwardsWeek()} style={{zIndex: '10', width: 'auto', bottom: '2rem', left: '2rem', position: 'absolute'}}>&lt;</Button>
         <Button onClick={() => this.forwardWeek()} style={{zIndex: '10', width: 'auto', bottom: '2rem', right: '2rem', position: 'absolute'}}>&gt;</Button>

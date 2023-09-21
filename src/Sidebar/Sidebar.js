@@ -19,14 +19,26 @@ function Sidebar(props) {
   const [open2, setOpen2] = useState(false);
   const [open3, setOpen3] = useState(false);
 
+  const sidebarStyle = {
+    padding: '20px',
+    backgroundColor: props.nightMode ? '#282A3A' : '#C69749', // Set background color based on nightMode
+    transition: 'background-color 0.5s ease-in-out',
+  };
+  
   return (
-    <div className='sidebar' style={{padding: '20px'}}>
+    <div className='sidebar' style={sidebarStyle}>
       <Row style={{height: '10%', paddingTop: '2rem'}}>
-        <h1 className='text-center'>TaskTastic</h1>
+        <h1 className='text-center'>
+          <img 
+            className="logo"
+            src={props.nightMode ? process.env.PUBLIC_URL + '/tasktastic-dark.png' : process.env.PUBLIC_URL + '/tasktastic-light.png'} 
+            alt="TaskTastic Logo" 
+          />
+        </h1>
       </Row>
       <Row>
-        <AddTaskButton flaskUrl={props.flaskUrl} userId={props.userId} />
-        <AddCategoryButton flaskUrl={props.flaskUrl} userId={props.userId} />
+      <AddTaskButton flaskUrl={props.flaskUrl} userId={props.userId} nightMode={props.nightMode} />
+      <AddCategoryButton flaskUrl={props.flaskUrl} userId={props.userId} nightMode={props.nightMode} />
       </Row>
       <Row>
         <h2 className='text-center'>Settings</h2>

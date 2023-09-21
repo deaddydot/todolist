@@ -66,17 +66,19 @@ export default class AddTaskButton extends React.Component {
   };
 
   render() {
+    const buttonStyle = {
+      height: 100,
+      width: "100%",
+      border: "none",
+      backgroundColor: this.props.nightMode ? '#282A3A' : '#C69749', // Set background color based on nightMode
+      color: this.props.nightMode ? 'white' : 'black', // Assuming you want the text color to be white
+    };
     return (
       <>
         <button
           id="myBtn"
           onClick={this.modalOpen}
-          style={{
-            height: 100,
-            width: "100%",
-            backgroundColor: "var(--primary-color)",
-            border: "none"
-          }}
+          style={buttonStyle}
         >
           <h2>Add a task</h2>
         </button>
