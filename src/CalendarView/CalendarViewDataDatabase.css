@@ -1,0 +1,5 @@
+.no-wrap {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent columns from wrapping */
+    overflow-x: auto; /* Add horizontal scrollbar if content overflows */
+  }

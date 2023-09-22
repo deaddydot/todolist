@@ -84,7 +84,7 @@ export default class AddTaskFormByCategory extends React.Component {
 
     
     return (
-      <div style={{ width: '100%', position: 'relative' }}>
+      <div style={{ width: '30%', position: 'relative' }}>
       {/* Add a close button at the top right corner within the form */}
       <form onSubmit={this.handleSubmit} className="add-task-form" style={formStyle}>
       <span style={CloseInsideForm} className="close" onClick={this.props.modalClose}>

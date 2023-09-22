@@ -182,6 +182,7 @@ export default class TaskViewCategories extends React.Component {
               flaskUrl={this.props.flaskUrl} 
               userId={this.props.userId} 
               onTaskCompletion={this.handleTaskCompletion}
+              nightMode={this.props.nightMode}
             />
           </div>
         ))}

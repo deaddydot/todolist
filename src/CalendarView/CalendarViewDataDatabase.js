@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import JsonCheckbox from '../JsonCheckbox';
 import {Col, Row, Card, Button} from 'react-bootstrap';
+import './CalendarViewDataDatabase.css'
 
 export default class CalendarViewDataDatabase extends React.Component {
   constructor(props) {
@@ -138,7 +139,7 @@ export default class CalendarViewDataDatabase extends React.Component {
     });
 
     return columns.map((columnItems, index) => (
-      <Col key={index}>
+      <Col key={index} style={{ padding: '0 5px' }}> {/* Changed to sm={2} to ensure all columns fit in one row */}
         <h2>{dayNames[index]}</h2>
         {Object.keys(data).map(category => {
           const itemsInCategory = columnItems.filter(item => item.category === category);
@@ -147,7 +148,7 @@ export default class CalendarViewDataDatabase extends React.Component {
               <Card key={`${index}-${category}`} style={{ backgroundColor: this.state.categories[category] || 'var(--tertiary-color)'}}>
                 <h5>{category}</h5>
                 {itemsInCategory.map(item => (
-                  <JsonCheckbox key={item.id} label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} userId={this.props.userId} />
+                  <JsonCheckbox key={item.id} label={item.title} deadline={item.deadline} taskId={item.id} description={item.description} showAll={this.props.showAll} flaskUrl={this.props.flaskUrl} userId={this.props.userId} nightMode={this.props.nightMode}/>
                 ))}
               </Card>
             );
@@ -162,7 +163,7 @@ export default class CalendarViewDataDatabase extends React.Component {
   
   render() {
     return (
-      <Row style={{backgroundColor: this.props.nightMode ? 'var(--night-background-color)' : 'var(--secondary-color)', minHeight: '100vh'}}>
+      <Row className="no-wrap" style={{backgroundColor: this.props.nightMode ? 'var(--night-background-color)' : 'var(--secondary-color)', minHeight: '100vh'}}>
         {this.generateColumns()}
         <Button onClick={() => this.backwardsWeek()} style={{zIndex: '10', width: 'auto', bottom: '2rem', left: '2rem', position: 'absolute'}}>&lt;</Button>
         <Button onClick={() => this.forwardWeek()} style={{zIndex: '10', width: 'auto', bottom: '2rem', right: '2rem', position: 'absolute'}}>&gt;</Button>

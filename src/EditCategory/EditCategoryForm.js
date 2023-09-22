@@ -89,11 +89,12 @@ export default class EditCategoryForm extends React.Component {
     return (
       <div style={FormStyle}>
         {/* Add a close button at the top right corner within the form */}
-        <span style={CloseInsideForm} className="close" onClick={this.props.modalClose}>
-          X
-        </span>
+
         <form onSubmit={this.handleSubmit} className={`edit-category-form ${this.props.nightMode ? 'night-mode' : ''}`}>
           <label>
+          <span style={CloseInsideForm} className="close" onClick={this.props.modalClose}>
+          X
+        </span>
             Name:{" "}
             <input
               type="text"
