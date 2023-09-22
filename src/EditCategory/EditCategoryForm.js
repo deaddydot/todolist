@@ -81,9 +81,10 @@ export default class EditCategoryForm extends React.Component {
     };
 
     const FormStyle = {
-      width: '40%',
+      width: "30%",
       margin: '0 auto',
     };
+
     
     return (
       <div style={FormStyle}>
@@ -91,7 +92,7 @@ export default class EditCategoryForm extends React.Component {
         <span style={CloseInsideForm} className="close" onClick={this.props.modalClose}>
           X
         </span>
-        <form onSubmit={this.handleSubmit} className="edit-category-form">
+        <form onSubmit={this.handleSubmit} className={`edit-category-form ${this.props.nightMode ? 'night-mode' : ''}`}>
           <label>
             Name:{" "}
             <input

@@ -3,7 +3,7 @@
   --primary-color: #282A3A;
   --secondary-color: #ffffff;
   --tertiary-color: #f8c046;
-  --text-color: #ffffff;
+  --text-color: #000000;
   --border-color: #ccc;
   --night-background-color: #000;
   --night-text-color: #fff;
@@ -64,7 +64,7 @@ body, h1, h2, h3, p {
 /* Style login and logout buttons (if you have specific IDs or classes, replace these) */
 button {
   background-color: #735F32;
-  color: #ffffff;
+  color: #000000;
   border: 1px solid var(--border-color);
   padding: 0.5em 1em;
   border-radius: 0.5em;

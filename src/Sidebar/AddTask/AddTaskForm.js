@@ -91,11 +91,18 @@ export default class AddTaskForm extends Component {
       cursor: 'pointer'
     };
   
-    const FormStyle = {
-      width: '30%',  // Set the form's width to 50% of the screen
-      margin: '0 auto',  // Center the form horizontally
-    };
+    // const FormStyle = {
+    //   width: '30%',  // Set the form's width to 50% of the screen
+    //   margin: '0 auto',  // Center the form horizontally
+    // };
     
+    const FormStyle = {
+      width: "30%",
+      backgroundColor: this.props.nightMode ? '#282A3A' : 'white', // Set background color based on nightMode
+      color: this.props.nightMode ? 'white' : 'black', // Assuming you want the text color to be white
+      margin: '0 auto',
+    };
+
     const CenterModal = {
       position: 'fixed',
       top: '50%',

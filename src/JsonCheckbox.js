@@ -61,6 +61,7 @@ export default class JsonCheckbox extends React.Component {
   async changeDisplay() {
     const newState = !this.state.checked;
     this.setState({ checked: newState });
+    this.setState({ display: newState ? 'none' : 'block' });
     if (!this.props.showAll && !this.state.checked) {
       const newDisplay = this.state.display === 'block' ? 'none' : 'block';
       this.setState({ display: newDisplay });
@@ -87,8 +88,9 @@ export default class JsonCheckbox extends React.Component {
   };
 
   render() {
+    if (this.state.display === 'none') return null;
     return (
-      <div style={{display: this.state.display}} onMouseEnter={this.handleHover} onMouseLeave={this.handleMouseLeave}>
+      <div onMouseEnter={this.handleHover} onMouseLeave={this.handleMouseLeave}>
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
           <ListGroup>
             <div style={{textAlign: 'left', padding: '0', margin: '0'}} onClick={() => this.setOpen(!this.state.open)} aria-controls='collapse1' aria-expanded={this.state.open}>

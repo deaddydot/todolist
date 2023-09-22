@@ -88,6 +88,7 @@ export default class AddTaskButton extends React.Component {
             flaskUrl={this.props.flaskUrl}
             modalClose={this.modalClose}  // Pass modalClose instead of modalOpen
             userId={this.props.userId}
+            nightMode={this.props.nightMode}
           />
         )}
       </>

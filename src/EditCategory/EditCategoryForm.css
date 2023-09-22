@@ -41,3 +41,13 @@
     cursor: not-allowed;
   }
   
+  /* Additional CSS for Night Mode */
+.edit-category-form.night-mode {
+  background-color: #282A3A;
+  color: white;
+}
+
+.edit-category-form.night-mode label,
+.edit-category-form.night-mode input {
+  color: white;
+}

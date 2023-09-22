@@ -45,7 +45,7 @@ export default class UserCategories extends React.Component {
     return (
       <>
         <label>
-          Category:
+          Category:{" "}
           <select key="category-select" value={selectedCategoryId} onChange={this.handleCategoryChange}>
             {currentCategory && (
               <option key={currentCategory.id} value={currentCategory.id}>

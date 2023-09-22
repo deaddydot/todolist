@@ -9,7 +9,8 @@ import LoginButton from './authentication/LoginButton';
 import LogoutButton from './authentication/LogoutButton';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-
+  
+export const NightModeContext = React.createContext();
 // dev flask url
 const flaskUrl = "http://127.0.0.1:5000";
 
@@ -132,7 +133,11 @@ export class App extends React.Component {
             </Col>
           </Row>
         </Container>
+        <NightModeContext.Provider value={this.state.nightMode}>
+        {/* Other components */}
+      </NightModeContext.Provider>
       </div>
+      
     );
 }
 }

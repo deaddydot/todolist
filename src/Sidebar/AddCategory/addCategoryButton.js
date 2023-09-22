@@ -85,14 +85,24 @@ export default class AddCategoryButton extends React.Component {
       backgroundColor: this.props.nightMode ? '#282A3A' : '#C69749', // Set background color based on nightMode
       color: this.props.nightMode ? 'white' : 'black', // Assuming you want the text color to be white
     };
+
+    const FormStyle = {
+      width: "30%",
+      backgroundColor: this.props.nightMode ? '#282A3A' : 'white', // Set background color based on nightMode
+      color: this.props.nightMode ? 'white' : 'black', // Assuming you want the text color to be white
+      margin: 'auto', // Changed from '15% auto'
+      padding: '20px',
+      border: '1px solid #888',
+      display: 'flex', // Added
+    };
     return (
       <>
         <button id="myBtn" onClick={this.modalOpen} style={buttonStyle}><h2>Add a Category</h2></button>
   
         {this.state.displayModal && (
           <div className="myModal" style={ModalLooks} ref={(ref) => (this.modalRef = ref)}>
-          <div style={ModalContent} className="modal-content">
-            <AddCategoryForm flaskUrl={this.props.flaskUrl} modalOpen={this.modalOpen} userId={this.props.userId} modalClose={this.modalClose}/>
+          <div style={FormStyle} className="modal-content">
+            <AddCategoryForm flaskUrl={this.props.flaskUrl} modalOpen={this.modalOpen} userId={this.props.userId} modalClose={this.modalClose} nightMode={this.props.nightMode}/>
           </div>
         </div>
         )}

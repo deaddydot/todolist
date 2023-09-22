@@ -136,6 +136,20 @@ export default class TaskViewCategories extends React.Component {
       marginRight: '1rem'
     };
 
+    const editButtonStyle = {
+      position: 'absolute', // Absolutely position the edit button
+      top: '10px', // Adjust as needed
+      right: '10px', // Adjust as needed
+    };
+
+    const buttonsContainerStyle = {
+      position: 'absolute', // Absolutely position the buttons container
+      top: '10px', // Adjust as needed
+      right: '10px', // Adjust as needed
+      display: 'flex', // Use flexbox to layout the buttons
+      gap: '10px' // Adjust the gap between the buttons as needed
+    };
+
     return (
       <Card style={containerStyle} onMouseEnter={this.handleHover} onMouseLeave={this.handleMouseLeave}>
         <div style={headerStyle}>
@@ -150,6 +164,12 @@ export default class TaskViewCategories extends React.Component {
             </Form.Control>
           </div>
         </div>
+        {this.state.showEdit && (
+          <div style={buttonsContainerStyle}>
+            <EditCategoryButton flaskUrl={this.props.flaskUrl} category={this.props.category} userId={this.props.userId} nightMode={this.props.nightMode} />
+            <AddTaskButtonByCategory flaskUrl={this.props.flaskUrl} category={this.props.category} userId={this.props.userId} nightMode={this.props.nightMode} />
+          </div>
+        )}
         {this.state.tasks.map((item, itemIndex) => (
           <div key={item.id} className="task-item">
             <JsonCheckbox 

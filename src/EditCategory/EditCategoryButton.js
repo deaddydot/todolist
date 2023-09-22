@@ -14,14 +14,6 @@ const ModalLooks = {
   backgroundColor: "rgba(0,0,0,0.4)"
 };
 
-const ModalContent = {
-  backgroundColor: "#fefefe",
-  margin: '15% auto',
-  padding: '20px',
-  border: '1px solid #888',
-  width: '40%',
-};
-
 const Close = {
   color: '#aaa',
   float: 'right',
@@ -63,13 +55,23 @@ export default class EditCategoryButton extends React.Component {
   };
 
   render() {
+
+    const ModalContent = {
+      backgroundColor: this.props.nightMode ? '#282A3A' : 'white',
+      color: this.props.nightMode ? 'white' : 'black',
+      margin: '15% auto',
+      padding: '20px',
+      border: '1px solid #888',
+      width: '40%',
+    };
+    
     return (
       <>
         <Button size='sm' onClick={this.modalOpen} style={{ backgroundColor: 'lightgrey', color: 'black', border: 'none', height: '2rem' }}>✎</Button>
         {this.state.displayModal && ReactDOM.createPortal( // Using React Portal
           <div className="myModal" style={ModalLooks} ref={(ref) => (this.modalRef = ref)}>
             <div style={ModalContent} className="modal-content">
-              <EditCategoryForm flaskUrl={this.props.flaskUrl} category={this.props.category} modalOpen={this.modalOpen} modalClose={this.modalClose} userId={this.props.userId} />
+              <EditCategoryForm flaskUrl={this.props.flaskUrl} category={this.props.category} modalOpen={this.modalOpen} modalClose={this.modalClose} userId={this.props.userId} nightMode={this.props.nightMode} />
             </div>
           </div>,
           document.body // Appending directly to body

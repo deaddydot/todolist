@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import UserCategories from '../../UserCategories';
+import './AddTaskFormByCategory.css'; // Import the same CSS file
 
 export default class AddTaskFormByCategory extends React.Component {
   constructor(props) {
@@ -48,7 +49,7 @@ export default class AddTaskFormByCategory extends React.Component {
       console.error(error);
     }
 
-    this.props.modalOpen();
+    this.props.modalClose();
 
     window.location.reload();
   };
@@ -60,12 +61,37 @@ export default class AddTaskFormByCategory extends React.Component {
   };
 
   render() {
-    const { title, description, deadline, category_id } = this.state;
+    const { title, description, deadline} = this.state;
 
+    const CloseInsideForm = {
+      color: '#aaa',
+      position: 'absolute',
+      right: '1rem',
+      top: '1rem',
+      fontSize: '28px',
+      fontWeight: 'bold',
+      cursor: 'pointer'
+    };
+
+    const formStyle = {
+      backgroundColor: this.props.nightMode ? '#282A3A' : 'white', // Set background color based on nightMode
+      color: this.props.nightMode ? 'white' : 'black', // Set text color based on nightMode
+      display: 'flex',
+      flexDirection: 'column',
+      width: '30%',
+      margin: '0 auto',
+    };
+
+    
     return (
-      <form onSubmit={this.handleSubmit} style={{display: 'flex', flexDirection: 'column'}}>
+      <div style={{ width: '100%', position: 'relative' }}>
+      {/* Add a close button at the top right corner within the form */}
+      <form onSubmit={this.handleSubmit} className="add-task-form" style={formStyle}>
+      <span style={CloseInsideForm} className="close" onClick={this.props.modalClose}>
+        X
+      </span>
         <label>
-          Title: 
+          Title: {" "}
           <input
             type="text"
             name="title"
@@ -74,7 +100,7 @@ export default class AddTaskFormByCategory extends React.Component {
           />
         </label>
         <label>
-          Description: 
+          Description: {" "}
           <input
             type="text"
             name="description"
@@ -83,7 +109,7 @@ export default class AddTaskFormByCategory extends React.Component {
           />
         </label>
         <label>
-          Deadline: 
+          Deadline: {" "}
           <input
             type="datetime-local"
             id="datetime"
@@ -93,10 +119,11 @@ export default class AddTaskFormByCategory extends React.Component {
           />
         </label>
         <label>
-          Category: {this.props.category}
+          Category: {" "}{this.props.category}
         </label>
         <Button style={{backgroundColor: 'blue', border: 'none'}} type="submit">Submit</Button>
       </form>
+      </div>
     );
   }
 }

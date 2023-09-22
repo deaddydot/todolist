@@ -67,10 +67,17 @@ export default class AddCategoryForm extends React.Component {
       cursor: 'pointer'
     };
   
+    const FormStyle = {
+      width: "30%",
+      backgroundColor: this.props.nightMode ? '#282A3A' : 'white', // Set background color based on nightMode
+      color: this.props.nightMode ? 'white' : 'black', // Assuming you want the text color to be white
+      margin: '0 auto',
+    };
+    
     return (
-      <div style={{ position: 'relative' }}>
+      <div style={FormStyle} className={this.props.nightMode ? 'night-mode' : ''}>
         <span style={closeButtonStyle} onClick={this.props.modalClose}>X</span>
-        <form onSubmit={this.handleSubmit} className="add-category-form">
+        <form onSubmit={this.handleSubmit} className="add-category-form"> 
           <label>
             Name:{" "}
             <input
