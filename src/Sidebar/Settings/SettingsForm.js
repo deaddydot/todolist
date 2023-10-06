@@ -35,11 +35,12 @@ const Close = {
 
 export default class SettingsForm extends Component {
   state = {
-    title: "",
-    description: "",
-    deadline: "",
-    category_id: "",
-    error: null
+    bold_hover: "",
+    // title: "",
+    // description: "",
+    // deadline: "",
+    // category_id: "",
+    // error: null
   };
 
   componentDidMount() {
@@ -52,18 +53,15 @@ export default class SettingsForm extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const { title, description, deadline, category_id } = this.state;
+    const { bold_hover } = this.state;
     const { flaskUrl, userId, onTaskAdded, modalClose } = this.props;
 
-    const datetimeObject = new Date(deadline);
-    const formattedDatetime = `${datetimeObject.getMonth() + 1}-${datetimeObject.getDate()}-${datetimeObject.getFullYear()} ${datetimeObject.getHours()}:${datetimeObject.getMinutes()}:${datetimeObject.getSeconds()}`;
+    // const datetimeObject = new Date(deadline);
+    // const formattedDatetime = `${datetimeObject.getMonth() + 1}-${datetimeObject.getDate()}-${datetimeObject.getFullYear()} ${datetimeObject.getHours()}:${datetimeObject.getMinutes()}:${datetimeObject.getSeconds()}`;
     const response = await axios.post(`${flaskUrl}/tasks/${userId}`, {
-      title,
-      description,
-      formattedDatetime,
-      category_id
+      bold_hover
     });
-    // onTaskAdded(response.data.category_id);
+    //onTaskAdded(response.data.category_id);
     modalClose();
     window.location.reload();
 
@@ -78,7 +76,7 @@ export default class SettingsForm extends Component {
   };
 
   render() {
-    const { title, description, deadline, error } = this.state;
+    const { bold_hover, error } = this.state;
     const { flaskUrl, userId, modalClose } = this.props;
   
     const CloseInsideForm = {
@@ -88,7 +86,8 @@ export default class SettingsForm extends Component {
       top: '1rem',
       fontSize: '28px',
       fontWeight: 'bold',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      zIndex: 2
     };
   
     // const FormStyle = {
@@ -132,12 +131,12 @@ export default class SettingsForm extends Component {
           </label> */}
           <label class="container">
             Bold Hover:{" "}
-            <input type="checkbox"/>
+            <input type="checkbox" name="bold_hover" value={bold_hover} onChange={this.handleChange} />
             <span class="checkmark"></span>
           </label>
-          <UserCategories flaskUrl={flaskUrl} userId={userId} onCategoryChange={this.handleCategoryChange} />
+          {/* <UserCategories flaskUrl={flaskUrl} userId={userId} onCategoryChange={this.handleCategoryChange} /> */}
           <div className="submit-button-container">
-            <Button className="submit-button" type="submit" disabled={!title || !deadline}>
+            <Button className="submit-button" type="submit">
               Submit
             </Button>
           </div>

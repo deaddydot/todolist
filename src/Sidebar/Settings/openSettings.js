@@ -48,6 +48,7 @@ export default class SettingsButton extends React.Component {
       border: "none",
       backgroundColor: this.props.nightMode ? '#282A3A' : '#C69749', // Set background color based on nightMode
       color: this.props.nightMode ? 'white' : 'black', // Assuming you want the text color to be white
+      //fontWeight: "bold"    //doesn't work for some reason
     };
     return (
       <>

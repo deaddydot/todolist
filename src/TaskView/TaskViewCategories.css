@@ -1,3 +1,12 @@
 /* .task-item:hover{
   font-weight: bold;
 } */
+
+/* .container input:not(:checked) ~ .checkmark + .task-item {
+  font-weight: bold;
+} */
+
+/* allows bold hover when checkbox is checked */
+/* .container input:checked ~ .checkmark + .task-item:hover {
+  font-weight: bold;
+} */
