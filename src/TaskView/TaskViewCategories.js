@@ -53,9 +53,19 @@ export default class TaskViewCategories extends React.Component {
     const today = new Date();
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth();
+    const currentDate = today.getDate(); // Get the current date
     const currentWeek = Math.floor((today.getDate() - 1) / 7);
   
     switch (filter) {
+      case 'today':
+        filteredTasks = this.props.tasksByCategory[this.props.category].filter(task => {
+          const taskDeadline = new Date(task.deadline);
+          const taskDate = taskDeadline.getDate(); // Get the task's date
+          const taskMonth = taskDeadline.getMonth();
+  
+          return taskDate === currentDate && taskMonth === currentMonth; // Check if the task's date and month match the current date and month
+        });
+        break;
       case 'week':
         filteredTasks = this.props.tasksByCategory[this.props.category].filter(task => {
           const taskDeadline = new Date(task.deadline);
@@ -71,14 +81,6 @@ export default class TaskViewCategories extends React.Component {
           const taskMonth = taskDeadline.getMonth();
   
           return taskMonth === currentMonth;
-        });
-        break;
-      case 'year':
-        filteredTasks = this.props.tasksByCategory[this.props.category].filter(task => {
-          const taskDeadline = new Date(task.deadline);
-          const taskYear = taskDeadline.getFullYear();
-  
-          return taskYear === currentYear;
         });
         break;
       default:
@@ -100,10 +102,23 @@ export default class TaskViewCategories extends React.Component {
     this.setState({ tasks: updatedTasks });
   };
 
+  getTextColor(backgroundColor) {
+    let r = parseInt(backgroundColor.slice(1, 3), 16);
+    let g = parseInt(backgroundColor.slice(3, 5), 16);
+    let b = parseInt(backgroundColor.slice(5, 7), 16);
+    let luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.5 ? '#000000' : '#ffffff';
+  }
+
   render() {
+
+    const backgroundColor = this.props.categories[this.props.category] || 'var(--tertiary-color)';
+    const textColor = this.getTextColor(backgroundColor);
+
     const containerStyle = {
-      backgroundColor: this.props.categories[this.props.category] || 'var(--tertiary-color)',
-      border: 'none',
+      backgroundColor: backgroundColor,
+      color: textColor,
+      border: `1px solid ${this.props.nightMode ? 'white' : 'black'}`, // Conditional border color based on nightMode
       padding: '1rem',
       position: 'relative'
     };
@@ -158,9 +173,9 @@ export default class TaskViewCategories extends React.Component {
             <FaSort style={iconStyle} onClick={this.toggleSortOrder} title={`Sort by Deadline (${this.state.sortOrder.toUpperCase()})`} />
             <Form.Control as="select" style={filterStyle} onChange={this.handleFilterChange} defaultValue="all">
                 <option value="all">All time</option>
+                <option value="today">Today</option>
                 <option value="week">This Week</option>
                 <option value="month">This Month</option>
-                <option value="year">This Year</option>
             </Form.Control>
           </div>
         </div>
@@ -183,6 +198,7 @@ export default class TaskViewCategories extends React.Component {
               userId={this.props.userId} 
               onTaskCompletion={this.handleTaskCompletion}
               nightMode={this.props.nightMode}
+              textColor={textColor}
             />
           </div>
         ))}

@@ -7,10 +7,10 @@ import CalendarView from './CalendarView/CalendarView';
 import CompletedView from './CompletedView/CompletedView';
 import LoginButton from './authentication/LoginButton';
 import LogoutButton from './authentication/LogoutButton';
+import UserClock from './TaskView/UserClock'
 import Cookies from 'js-cookie';
 import axios from 'axios';
   
-export const NightModeContext = React.createContext();
 // dev flask url
 const flaskUrl = "http://127.0.0.1:5000";
 
@@ -42,6 +42,14 @@ export class App extends React.Component {
 
   async componentDidMount() {
     document.title = 'TaskTastic';
+    const nightMode = Cookies.get('nightMode') === 'true';
+    this.setState({ nightMode }, () => {
+      if (this.state.nightMode) {
+        document.body.classList.add('night-mode');
+      } else {
+        document.body.classList.remove('night-mode');
+      }
+    });
     await this.checkAuthentication();
   }
 
@@ -86,8 +94,10 @@ export class App extends React.Component {
     this.setState({ nightMode: !currentNightMode }, () => {
       if (this.state.nightMode) {
         document.body.classList.add('night-mode');
+        Cookies.set('nightMode', 'true');
       } else {
         document.body.classList.remove('night-mode');
+        Cookies.set('nightMode', 'false');
       }
     });
   }
@@ -122,7 +132,9 @@ export class App extends React.Component {
                     Completed
                   </Button>
                 </div>
-                <div>
+
+                <div className="top-right-container">
+                <UserClock nightMode={this.state.nightMode} />
                   <LoginButton isAuthenticated={this.state.isAuthenticated} />
                   <LogoutButton isAuthenticated={this.state.isAuthenticated} />
                 </div>
@@ -133,9 +145,6 @@ export class App extends React.Component {
             </Col>
           </Row>
         </Container>
-        <NightModeContext.Provider value={this.state.nightMode}>
-        {/* Other components */}
-      </NightModeContext.Provider>
       </div>
       
     );

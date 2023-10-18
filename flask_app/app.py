@@ -3,13 +3,14 @@ from functools import wraps
 from jose import jwt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask_cors import CORS
 from sqlalchemy import asc, desc
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
 from dotenv import find_dotenv, load_dotenv
 import json
+import dateparser
 
 # Initialize Flask and other components
 app = Flask(__name__)
@@ -523,6 +524,80 @@ def is_authenticated():
         return jsonify({"isAuthenticated": True}), 200
     else:
         return jsonify({"isAuthenticated": False}), 401
+
+@app.route("/delete-overdue-tasks", methods=["DELETE"])
+def delete_overdue_tasks():
+    thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+    
+    # Find tasks where the deadline is older than 30 days
+    overdue_tasks = Task.query.filter(Task.deadline < thirty_days_ago).all()
+    
+    for task in overdue_tasks:
+        db.session.delete(task)  # Delete each overdue task
+    
+    try:
+        db.session.commit()  # Commit the changes to the database
+        return jsonify({"message": "Overdue tasks deleted successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
+import re
+
+def process_text(text):
+    # Extract time using regex
+    time_match = re.search(r'(\d{1,2}(?:AM|PM|am|pm)?)', text)
+    time_str = time_match.group(1) if time_match else None
+    
+    # If time is a single digit without AM/PM, assume PM
+    if time_str and len(time_str) == 1:
+        time_str += " PM"
+    
+    # Extract date using dateparser
+    date = dateparser.parse(text)
+    
+    # If only time is mentioned without a date, use today's date
+    if time_str and not date:
+        date = datetime.combine(datetime.today(), dateparser.parse(time_str).time())
+    elif time_str and date:
+        date = datetime.combine(date.date(), dateparser.parse(time_str).time())
+    
+    # Extract task title
+    task = re.sub(r'( at .+)?( on .+)?( next .+)?( tomorrow)?', '', text).strip()
+    
+    # Extract location (if any)
+    location_match = re.search(r'at ([^0-9]+)', text)
+    location = location_match.group(1).strip() if location_match else None
+    
+    return task, location, date
+
+
+
+@app.route('/magicbox', methods=['POST'])
+def magic_box():
+    text = request.json.get('text')
+    text = "Homework at 9"
+    task_title, location, deadline = process_text(text)
+    
+    # Assuming user_id is retrieved from the session or another method
+    user_id = session.get("user_id")
+    
+    # Get default category for the user
+    default_category = Category().get_default_category()
+    
+    # Create a new task
+    new_task = Task(title=task_title, description=location, deadline=deadline, category_id=default_category.id)
+    db.session.add(new_task)
+    db.session.commit()
+    
+    print(new_task)
+
+    return jsonify({
+        'task': task_title,
+        'location': location,
+        'deadline': deadline.strftime('%Y-%m-%d %H:%M:%S') if deadline else None
+    })
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 5000))

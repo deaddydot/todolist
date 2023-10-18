@@ -89,17 +89,24 @@ export default class JsonCheckbox extends React.Component {
 
   render() {
     if (this.state.display === 'none') return null;
+
+    const { textColor } = this.props;
+
+    const textStyle = {
+      color: textColor,
+    };
+
     return (
       <div onMouseEnter={this.handleHover} onMouseLeave={this.handleMouseLeave}>
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
           <ListGroup>
-            <div style={{textAlign: 'left', padding: '0', margin: '0'}} onClick={() => this.setOpen(!this.state.open)} aria-controls='collapse1' aria-expanded={this.state.open}>
-              <Form.Check className='checkbox' type='checkbox' label={this.props.label} onClick={() => this.changeDisplay()} />
-              <p>Due: {this.state.formattedDeadline}</p>
+            <div style={{...textStyle, textAlign: 'left', padding: '0', margin: '0'}} onClick={() => this.setOpen(!this.state.open)} aria-controls='collapse1' aria-expanded={this.state.open}>
+              <Form.Check className='checkbox' style={textStyle} type='checkbox' label={this.props.label} onClick={() => this.changeDisplay()} />
+              <p style={textStyle}>Due: {this.state.formattedDeadline}</p>
             </div>
             <Collapse in={this.state.open}>
               <div id='collapse1' style={{padding: '0', margin: '0'}}>
-                <p>{this.props.description}</p>
+                <p style={textStyle}>{this.props.description}</p>
               </div>
             </Collapse>
           </ListGroup>

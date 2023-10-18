@@ -1,5 +1,4 @@
 import React from 'react';
-import { SketchPicker } from 'react-color';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import DeleteCategoryButton from './../DeleteCategory/DeleteCategoryButton';
@@ -106,11 +105,11 @@ export default class EditCategoryForm extends React.Component {
           <label>
             Color:{" "}
             <input
-              type="color"
-              name="color"
-              value={color}
-              onChange={this.handleColorChange}
-            />
+  type="color"
+  name="color"
+  value={color}
+  onChange={this.handleChange}
+/>
           </label>
           <div className="button-container">
           <Button className="submit-button" type="submit">Submit</Button>
