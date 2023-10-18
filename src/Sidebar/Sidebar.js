@@ -9,6 +9,7 @@ import './Sidebar.css';
 import './../index.css';
 import AddTaskButton from './AddTask/addTaskButton';
 import AddCategoryButton from './AddCategory/addCategoryButton';
+import Settings from "./Settings/openSettings";
 
 function Sidebar(props) {
   function changeView(view) {
@@ -39,9 +40,10 @@ function Sidebar(props) {
       <Row>
       <AddTaskButton flaskUrl={props.flaskUrl} userId={props.userId} nightMode={props.nightMode} />
       <AddCategoryButton flaskUrl={props.flaskUrl} userId={props.userId} nightMode={props.nightMode} />
+      <Settings flaskUrl={props.flaskUrl} userId={props.userId} nightMode={props.nightMode} />
       </Row>
       <Row>
-        <h2 className='text-center'>Settings</h2>
+        {/* <h2 className='text-center'>Settings</h2> */}
       </Row>
     </div>
   )

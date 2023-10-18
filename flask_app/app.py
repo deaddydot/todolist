@@ -14,7 +14,7 @@ import dateparser
 
 # Initialize Flask and other components
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:s0r8Jh7Qv4&m@localhost/todo'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:100901huds@localhost/todo'
 db = SQLAlchemy(app)
 app.app_context().push()
 app.secret_key = 'a18230ac162cd97951b1ee3945154fc1'
@@ -92,6 +92,7 @@ class Task(db.Model):
     completed = db.Column(db.Boolean, default=False)
     priority = db.Column(db.Integer, default=3)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    #test_column = db.Column(db.Boolean, default=False)                                   # testing stuff
     
 
     def __repr__(self):
@@ -115,6 +116,7 @@ def format_task(task, category):
             "deadline": task.deadline,
             "completed": task.completed,
             "category_id": task.category_id,
+            #"test_column": task.completed,                                              # testing stuff
     }
 
 # Define a route that queries the database
@@ -269,6 +271,8 @@ def update_task(id):
         task.deadline = request.json["deadline"]
     if "completed" in request.json:
         task.completed = request.json["completed"]
+    #if "test_column" in request.json:                                                            # testing stuff
+        #task.completed = request.json["test_column"]
     if "priority" in request.json:
         task.priority = request.json["priority"]
     if "category_id" in request.json:
