@@ -13,7 +13,7 @@ import json
 
 # Initialize Flask and other components
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:100901huds@localhost/todo'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:3110@localhost/todo'
 db = SQLAlchemy(app)
 app.app_context().push()
 app.secret_key = 'a18230ac162cd97951b1ee3945154fc1'
