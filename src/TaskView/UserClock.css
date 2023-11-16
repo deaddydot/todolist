@@ -1,0 +1,19 @@
+.digital-clock {
+  background-color: #ffffff;
+  color: #735F32;
+  font-family: 'Digital-7 Mono', sans-serif;
+  font-size: 1rem;
+  padding: 5px;
+  border-radius: 5px;
+  text-align: center;
+  box-shadow: 0px 0px 1px 1px #735F32;
+  display: inline-block;
+  margin-right: 10px;
+  transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out; /* Added transition */
+}
+
+.digital-clock.dark-mode {
+  background-color: #282A3A;
+  color: #ffffff;
+  box-shadow: 0px 0px 1px 1px #ffffff;
+}

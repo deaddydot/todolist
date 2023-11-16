@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import UserCategories from '../../UserCategories';
-import './AddTaskForm.css';
+import './Settings.css';
 
 const ModalLooks = {
   position: "fixed",
@@ -33,13 +33,15 @@ const Close = {
   textAlign: 'center'
 };
 
-export default class AddTaskForm extends Component {
+
+export default class SettingsForm extends Component {
   state = {
-    title: "",
-    description: "",
-    deadline: "",
-    category_id: "",
-    error: null
+    bold_hover: true,
+    // title: "",
+    // description: "",
+    // deadline: "",
+    // category_id: "",
+    // error: null
   };
 
   componentDidMount() {
@@ -52,33 +54,28 @@ export default class AddTaskForm extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const { title, description, deadline, category_id } = this.state;
-    const { flaskUrl, userId, onTaskAdded, modalClose } = this.props;
+    const { bold_hover } = this.state;
+    const { flaskUrl, userId, modalClose } = this.props;
 
-    const datetimeObject = new Date(deadline);
-    const formattedDatetime = `${datetimeObject.getMonth() + 1}-${datetimeObject.getDate()}-${datetimeObject.getFullYear()} ${datetimeObject.getHours()}:${datetimeObject.getMinutes()}:${datetimeObject.getSeconds()}`;
-    const response = await axios.post(`${flaskUrl}/tasks/${userId}`, {
-      title,
-      description,
-      formattedDatetime,
-      category_id
+    const response = await axios.post(`${flaskUrl}/users/${userId}/settings`, {
+      bold_hover
     });
-    // onTaskAdded(response.data.category_id);
+    
     modalClose();
     window.location.reload();
-
   };
 
   handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-
-  handleCategoryChange = (categoryId) => {
-    this.setState({ category_id: categoryId });
+    const target = e.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
   };
 
   render() {
-    const { title, description, deadline, error } = this.state;
+    const { bold_hover, error } = this.state;
     const { flaskUrl, userId, modalClose } = this.props;
   
     const CloseInsideForm = {
@@ -88,7 +85,8 @@ export default class AddTaskForm extends Component {
       top: '1rem',
       fontSize: '28px',
       fontWeight: 'bold',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      zIndex: 2
     };
   
     // const FormStyle = {
@@ -112,13 +110,13 @@ export default class AddTaskForm extends Component {
     };
   
     return (
-      <div className="my-task-modal" style={{...ModalLooks, ...CenterModal}}>
+      <div className="myModal" style={{...ModalLooks, ...CenterModal}}>
         <form onSubmit={this.handleSubmit} className="add-task-form" style={FormStyle}>
           {/* Add a close button at the top right corner within the form */}
           <span style={CloseInsideForm} className="close" onClick={modalClose}>
             X
           </span>
-          <label>
+          {/* <label>
             Title:{" "}
             <input type="text" name="title" value={title} onChange={this.handleChange} />
           </label>
@@ -129,10 +127,15 @@ export default class AddTaskForm extends Component {
           <label>
             Deadline:{" "}
             <input type="datetime-local" name="deadline" value={deadline} onChange={this.handleChange} />
+          </label> */}
+          <label class="container">
+            Bold Hover:{" "}
+            <input type="checkbox" name="bold_hover" value={bold_hover} onChange={this.handleChange} />
+            <span class="checkmark"></span>
           </label>
-          <UserCategories flaskUrl={flaskUrl} userId={userId} onCategoryChange={this.handleCategoryChange} />
+          {/* <UserCategories flaskUrl={flaskUrl} userId={userId} onCategoryChange={this.handleCategoryChange} /> */}
           <div className="submit-button-container">
-            <Button className="submit-button" type="submit" disabled={!title || !deadline}>
+            <Button className="submit-button" type="submit">
               Submit
             </Button>
           </div>

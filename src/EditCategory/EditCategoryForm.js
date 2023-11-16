@@ -1,8 +1,8 @@
 import React from 'react';
-import { SketchPicker } from 'react-color';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import DeleteCategoryButton from './../DeleteCategory/DeleteCategoryButton';
+import './EditCategoryForm.css';
 
 export default class EditCategoryForm extends React.Component {
   constructor(props) {
@@ -69,38 +69,54 @@ export default class EditCategoryForm extends React.Component {
   render() {
     const { name, color } = this.state;
 
+    const CloseInsideForm = {
+      color: '#aaa',
+      position: 'absolute',
+      right: '1rem',
+      top: '1rem',
+      fontSize: '28px',
+      fontWeight: 'bold',
+      cursor: 'pointer'
+    };
+
+    const FormStyle = {
+      width: "30%",
+      margin: '0 auto',
+    };
+
+    
     return (
-      <><form onSubmit={this.handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
-        <label>
-          Name:
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={this.handleChange} 
-          />
-        </label>
-        <label>
-          Color:
-          <input
-            type="text"
-            name="color"
-            value={color}
-            onChange={this.handleChange} 
-          />
-        </label>
-        <SketchPicker
-          color={this.state.color}
-          onChangeComplete={(color) => {
-            this.setState({ color: color.hex });
-          } } 
-        />
-        <div>
-          <Button style={{ backgroundColor: 'blue', border: 'none', width: 200, margin: 20}} type="submit">Submit</Button>
-          <DeleteCategoryButton flaskUrl={this.props.flaskUrl} categoryId={this.state.category_id} modalOpen={this.props.modalOpen} />
+      <div style={FormStyle}>
+        {/* Add a close button at the top right corner within the form */}
+
+        <form onSubmit={this.handleSubmit} className={`edit-category-form ${this.props.nightMode ? 'night-mode' : ''}`}>
+          <label>
+          <span style={CloseInsideForm} className="close" onClick={this.props.modalClose}>
+          X
+        </span>
+            Name:{" "}
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={this.handleChange} 
+            />
+          </label>
+          <label>
+            Color:{" "}
+            <input
+  type="color"
+  name="color"
+  value={color}
+  onChange={this.handleChange}
+/>
+          </label>
+          <div className="button-container">
+          <Button className="submit-button" type="submit">Submit</Button>
+          <DeleteCategoryButton className="delete-button" flaskUrl={this.props.flaskUrl} categoryId={this.state.category_id} modalOpen={this.props.modalOpen} />
         </div>
       </form>
-      </>
-    );
-  }
+    </div>
+  );
+}
 }

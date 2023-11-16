@@ -1,10 +1,23 @@
 import React from 'react';
-import Form from 'react-bootstrap/Form'
+import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 import ListGroup from 'react-bootstrap/ListGroup';
 import EditTaskButton from './EditTask/EditTaskButton';
+
+function StarRating({ priority }) {
+  console.log('Priority is:', priority);
+  const stars = [];
+  for (let i = 1; i <= 5; i++) {
+      if (i <= priority) {
+          stars.push(<span key={i}>{'\u2605'}</span>);  // filled star
+      } else {
+          stars.push(<span key={i}>&#9734;</span>);  // empty star
+      }
+  }
+  return <span style={{ marginLeft: '10px' }}>{stars}</span>;
+}
 
 export default class JsonCheckbox extends React.Component {
   constructor(props) {
@@ -61,6 +74,7 @@ export default class JsonCheckbox extends React.Component {
   async changeDisplay() {
     const newState = !this.state.checked;
     this.setState({ checked: newState });
+    this.setState({ display: newState ? 'none' : 'block' });
     if (!this.props.showAll && !this.state.checked) {
       const newDisplay = this.state.display === 'block' ? 'none' : 'block';
       this.setState({ display: newDisplay });
@@ -71,6 +85,8 @@ export default class JsonCheckbox extends React.Component {
     const completed = newState;
     try {
       await axios.put(`${this.props.flaskUrl}/tasks-edit/${taskId}`, { completed });
+      // Invoke the callback function to update the parent's state
+      this.props.onTaskCompletion(taskId, completed);
     } catch (error) {
       console.error(error);
     }
@@ -85,22 +101,32 @@ export default class JsonCheckbox extends React.Component {
   };
 
   render() {
+    console.log('Priority prop passed to StarRating:', this.props.priority);
+    if (this.state.display === 'none') return null;
+
+    const { textColor } = this.props;
+
+    const textStyle = {
+      color: textColor,
+    };
+
     return (
-      <div style={{display: this.state.display}} onMouseEnter={this.handleHover} onMouseLeave={this.handleMouseLeave}>
+      <div onMouseEnter={this.handleHover} onMouseLeave={this.handleMouseLeave}>
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
           <ListGroup>
-            <div style={{textAlign: 'left', padding: '0', margin: '0'}} onClick={() => this.setOpen(!this.state.open)} aria-controls='collapse1' aria-expanded={this.state.open}>
-              <Form.Check className='checkbox' type='checkbox' label={this.props.label} onClick={() => this.changeDisplay()} />
-              <p>Due: {this.state.formattedDeadline}</p>
+            <div style={{...textStyle, textAlign: 'left', padding: '0', margin: '0'}} onClick={() => this.setOpen(!this.state.open)} aria-controls='collapse1' aria-expanded={this.state.open}>
+              <Form.Check className='checkbox' style={textStyle} type='checkbox' label={this.props.label} onClick={() => this.changeDisplay()} />
+              <StarRating priority={this.props.priority} />
+              <p style={textStyle}>Due: {this.state.formattedDeadline}</p>
             </div>
             <Collapse in={this.state.open}>
               <div id='collapse1' style={{padding: '0', margin: '0'}}>
-                <p>{this.props.description}</p>
+                <p style={textStyle}>{this.props.description}</p>
               </div>
             </Collapse>
           </ListGroup>
           {this.state.showEdit && 
-            <EditTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} hideEditButton={this.handleMouseLeave} userId={this.props.userId} />
+            <EditTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} hideEditButton={this.handleMouseLeave} userId={this.props.userId} nightMode={this.props.nightMode} />
           }
         </div>
       </div>

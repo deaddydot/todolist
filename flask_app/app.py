@@ -1,30 +1,64 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, url_for, render_template, session, redirect, make_response, g
+from functools import wraps
+from jose import jwt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask_cors import CORS
 from sqlalchemy import asc, desc
+from os import environ as env
+from urllib.parse import quote_plus, urlencode
+from dotenv import find_dotenv, load_dotenv
+import json
+import dateparser
+import spacy
 
+nlp = spacy.load("en_core_web_sm")
+
+# Initialize Flask and other components
 app = Flask(__name__)
-CORS(app)
-
-# prod server
-# with open('/database.txt', 'r') as file:
-#     text = file.readline().replace('\n', '').replace('\r', '').strip()
-# app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://ubuntu:{text}@localhost/test1'
-
-# local host
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ubuntu:ubuntu@localhost/test1'
-
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:s0r8Jh7Qv4&m@localhost/todo'
 db = SQLAlchemy(app)
-
 app.app_context().push()
+app.secret_key = 'a18230ac162cd97951b1ee3945154fc1'
+
+# Implement Auth0
+from authlib.integrations.flask_client import OAuth
+oauth = OAuth(app)
+
+ENV_FILE = find_dotenv()
+if ENV_FILE:
+    load_dotenv(ENV_FILE)
+
+# Custom decorator for requiring authentication
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = session.get("user_token")
+        if not token:
+            return jsonify({"error": "Authorization required"}), 401
+        try:
+            payload = jwt.decode(token["access_token"], env.get("AUTH0_CLIENT_SECRET"), algorithms=["RS256"])
+        except jwt.ExpiredSignatureError:
+            return jsonify({"error": "Token has expired"}), 401
+        except jwt.JWTError:
+            return jsonify({"error": "Invalid token"}), 401
+        g.user = payload["email"]
+        return f(*args, **kwargs)
+    return decorated
+
+# Secure your endpoints
+@app.route("/secure")
+@requires_auth
+def secure():
+    return f"This is a secure endpoint. Welcome, {g.user}!"
 
 # User class
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=True)
     categories = db.relationship('Category', backref='user', lazy=True)
+
 
 # Category class
 class Category(db.Model):
@@ -32,8 +66,8 @@ class Category(db.Model):
     name = db.Column(db.String(255), nullable=False)
     color = db.Column(db.String(255), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    is_toggled = db.Column(db.Boolean, nullable=False)
     tasks = db.relationship('Task', backref='category', lazy=True)
+    is_toggled = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return f"Category(name={self.name}, color={self.color} user_id={self.user_id})"
@@ -48,8 +82,7 @@ class Category(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "color": self.color,
-            "is_toggled": self.is_toggled
+            "color": self.color
         }
 
 # Task class
@@ -62,6 +95,8 @@ class Task(db.Model):
     completed = db.Column(db.Boolean, default=False)
     priority = db.Column(db.Integer, default=3)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    #test_column = db.Column(db.Boolean, default=False)                                   # testing stuff
+    
 
     def __repr__(self):
         return f"Task: {self.title}"
@@ -84,6 +119,7 @@ def format_task(task, category):
             "deadline": task.deadline,
             "completed": task.completed,
             "category_id": task.category_id,
+            "priority": task.priority
     }
 
 # Define a route that queries the database
@@ -106,28 +142,43 @@ def handle_options_request():
 @event.listens_for(User, 'after_insert')
 def create_default_category(mapper, connection, target):
     # create a new category with default values
-    default_category = Category(name='Default', user_id=target.id)
+    default_category = Category(name='Default', user_id=target.id, color="#ff0000")
     # add the category to the session
     db.session.add(default_category)
     # commit the transaction
-    db.session.commit()
+    # db.session.commit()
 
 # Create task
 @app.route("/tasks/<int:user_id>", methods=["POST"])
-def create_task(user_id):
-    # Extract the data from the request
-    title = request.json["title"]
-    description = request.json["description"]
-    deadline = request.json["formattedDatetime"]
-    category_id = request.json["category_id"]
+def create_task(user_id, task_data=None):
+    if task_data is None:
+        # Extract the data from the request if not provided as an argument
+        task_data = {
+            "title": request.json["title"],
+            "description": request.json["description"],
+            "formattedDatetime": request.json["formattedDatetime"],
+            "category_id": request.json["category_id"]
+        }
+
+    title = task_data["title"]
+    description = task_data["description"]
+    deadline = task_data["formattedDatetime"]
+    category_id = task_data["category_id"]
 
     # Find the category for the given ID
     category = Category.query.get(category_id)
+    
+    if category is None:
+        return jsonify({"error": "Category not found"}), 404
 
     # Create a new task object and add it to the database with the specified category
     task = Task(title=title, description=description, deadline=deadline, priority=3, category_id=category_id)
     db.session.add(task)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error: {e}")
 
     # Retrieve all tasks for the user, grouped by categories
     categories = Category.query.filter_by(user_id=user_id).all()
@@ -141,14 +192,29 @@ def create_task(user_id):
     return jsonify(tasksByCategory)
     
 # Get all tasks
-@app.route("/tasks/<int:user_id>", methods=["GET"])
-def get_tasks(user_id):
-    # Retrieve all tasks for a specific user
-    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id).order_by(Task.id.asc()).all()
+@app.route("/tasks", methods=["GET"])
+def get_tasks():
+    # Retrieve the user_id from the session
+    user_id = session.get("user_id")
+
+    if user_id is None:
+        # Handle the case where the user is not logged in or user_id is not in the session
+        return jsonify({"error": "User not logged in"}), 401
+
+    # Retrieve all tasks for the specified user_id by joining with the Category table
+    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id).all()
+
+    # Create a list to hold the formatted task data
     task_list = []
+
+    # Loop through the tasks and format each task
     for task, category in tasks:
-        task_list.append(format_task(task, category))
+        formatted_task = format_task(task, category)  # Use your format_task function to format the task
+        task_list.append(formatted_task)
+
+    # Return the list of formatted tasks as JSON
     return jsonify(task_list)
+
 
 # Get single task
 @app.route("/task/<int:id>", methods=["GET"])
@@ -163,13 +229,27 @@ def get_task(id):
 # Get all tasks by categories
 @app.route("/tasks-by-categories/<int:user_id>", methods=["GET"])
 def get_tasks_by_categories(user_id):
-    # Retrieve all tasks for a specific user, grouped by categories
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    # Convert string dates to datetime objects
+    if start_date:
+        start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+    if end_date:
+        end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
     categories = db.session.query(Category).filter_by(user_id=user_id).all()
     categories_dict = {}
+    
     for category in categories:
-        tasks = category.tasks
+        if start_date and end_date:
+            tasks = [task for task in category.tasks if task.deadline.date() >= start_date and task.deadline.date() <= end_date]
+        else:
+            tasks = category.tasks
+
         formatted_tasks = [format_task(task, category) for task in tasks]
         categories_dict[category.name] = formatted_tasks
+
     return jsonify(categories_dict)
 
 # Delete task
@@ -178,7 +258,11 @@ def delete_task(id):
     task = Task.query.filter_by(id=id).first()
     if task:
         db.session.delete(task)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
         return f"Task {id} deleted"
     else:
         return f"Task {id} not found", 404
@@ -198,6 +282,8 @@ def update_task(id):
         task.deadline = request.json["deadline"]
     if "completed" in request.json:
         task.completed = request.json["completed"]
+    #if "test_column" in request.json:                                                            # testing stuff
+        #task.completed = request.json["test_column"]
     if "priority" in request.json:
         task.priority = request.json["priority"]
     if "category_id" in request.json:
@@ -207,15 +293,37 @@ def update_task(id):
             task.category = category
 
     # Commit the changes to the database
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error: {e}")
 
     # Return the updated task as a response
     return format_task(task, task.category)
+
+@app.route('/users/<int:user_id>/settings', methods=['POST', 'OPTIONS'])
+def update_user(user_id):
+    if request.method == "OPTIONS":
+        return jsonify({"message": "CORS preflight succeeded"}), 200
+    
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    bold_hover_value = request.json.get('bold_hover')
+    if bold_hover_value is not None:
+        user.bold_hover = bold_hover_value
+        db.session.add(user)
+        db.session.commit()
+
+    return jsonify({"message": "Updated successfully"})
 
 # Get all categories for a user
 @app.route("/categories/<int:user_id>", methods=["GET"])
 def get_categories(user_id):
     categories = Category.query.filter_by(user_id=user_id).all()
+    serialized_categories = [{"id": category.id, "name": category.name, "color": category.color, "is_toggled": category.is_toggled} for category in categories]
+    
     return jsonify([category.serialize() for category in categories])
 
 # Create category
@@ -226,11 +334,15 @@ def create_category(user_id):
     color = request.json["color"]
 
     # Create a new category object
-    category = Category(name=name, user_id=user_id, color=color, is_toggled=True)
+    category = Category(name=name, user_id=user_id, color=color, is_toggled = True)
 
     # Add the category to the database
     db.session.add(category)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error: {e}")
 
     # Return the created category as a response
     return jsonify(category.serialize()), 201
@@ -260,7 +372,11 @@ def delete_category(category_id):
 
         # Delete the category
         db.session.delete(category)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
 
         return jsonify({"message": "Category and associated tasks deleted successfully"}), 200
     else:
@@ -285,7 +401,11 @@ def update_category(category_id):
         if color:
             category.color = color
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
 
         return jsonify({"message": "Category updated successfully"}), 200
     else:
@@ -301,32 +421,214 @@ def toggle_category(category_id):
     if category:
         # Toggle the category's status
         category.is_toggled = not category.is_toggled
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
 
         # Return the updated category status
         return jsonify({"message": "Category toggled successfully", "is_toggled": category.is_toggled}), 200
     else:
         return jsonify({"error": "Category not found"}), 404
 
-# Get tasks with category filtering
-@app.route("/tasks-by-filter/<int:user_id>", methods=["GET"])
-def get_tasks_by_filter(user_id):
-    # Retrieve all tasks for a specific user, filtered by toggled categories
-    toggled_categories = Category.query.filter_by(user_id=user_id, is_toggled=True).all()
-    toggled_category_ids = [category.id for category in toggled_categories]
+# Create User
+def create_user(email):
+    # Check if the user already exists in your database based on Auth0 user ID
+    existing_user = User.query.filter_by(email=email).first()
+    if not existing_user:
+        # Create the user in your database
+        new_user = User(email=email)
+        db.session.add(new_user)
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
+        return new_user
+    else:
+        return existing_user
 
-    tasks = db.session.query(Task, Category).join(Category).filter(Category.user_id == user_id, Category.id.in_(toggled_category_ids)).order_by(asc(Task.deadline), desc(Task.id)).all()
+oauth.register(
+    "auth0",
+    client_id=env.get("AUTH0_CLIENT_ID"),
+    client_secret=env.get("AUTH0_CLIENT_SECRET"),
+    client_kwargs={
+        "scope": "openid profile email",
+    },
+    server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration'
+)
 
-    tasks_dict = {}
-    for task, category in tasks:
-        category_name = category.name
-        if category_name not in tasks_dict:
-            tasks_dict[category_name] = []
-        tasks_dict[category_name].append(format_task(task, category))
+@app.route("/login")
+def login():
+    return oauth.auth0.authorize_redirect(
+        redirect_uri=url_for("callback", _external=True)
+    )
+
+# Import the session object at the top of your script
+from flask import session
+
+@app.route("/callback", methods=["GET", "POST"])
+def callback():
+    token = oauth.auth0.authorize_access_token()
+    session["user"] = token
+
+    # Decode the JWT to get the user's email
+    try:
+        email = token['userinfo']['email']
+    except Exception as e:
+        print(f"Error decoding JWT: {e}")
+        print("Received token:", token)
+        return jsonify({"error": "Invalid token"}), 401 
+
+    # Check if the user already exists in the database
+    existing_user = User.query.filter_by(email=email).first()
+
+    if existing_user:
+        user_id = existing_user.id
+    else:
+        # Create a new user
+        new_user = User(email=email)
+        db.session.add(new_user)
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error: {e}")
+        user_id = new_user.id
+
+    # Create a response object
+    response = make_response(redirect("http://localhost:3000/app"))
+
+
+    # Set the 'userId' cookie to the user's ID with a 7-day expiration
+    response.set_cookie('userId', str(user_id), max_age=604800)  # 604800 seconds = 7 days
+
+    return response
+
+# Auth0 Logout
+@app.route("/logout")
+def logout():
+    # Clear Flask session
+    session.clear()
+
+    # Redirect to Auth0 for logout
+    auth0_domain = env.get("AUTH0_DOMAIN")
+    client_id = env.get("AUTH0_CLIENT_ID")
+    return_to_url = "http://localhost:3000/app"  # This URL will handle React session clearing
+
+    logout_url = (
+        f"https://{auth0_domain}/v2/logout?"
+        + urlencode(
+            {"returnTo": return_to_url, "client_id": client_id},
+            quote_via=quote_plus,
+        )
+    )
+
+    # Create a response object for the redirect
+    response = make_response(redirect(logout_url))
+
+    # Set userId cookie to 0
+    response.set_cookie('userId', '0')
+
+    return response
+
+@app.route("/")
+def home():
+    return render_template("home.html", session=session.get('user'), pretty=json.dumps(session.get('user'), indent=4))
+
+@app.route("/app")
+def main_page():
+    # Retrieve the user ID from the query parameters
+    user_id = request.args.get("user_id")
+
+    # Return a response with the user ID
+    return jsonify({"user_id": user_id})
+
+CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
+
+@app.route("/is_authenticated", methods=["GET"])
+def is_authenticated():
+    token = session.get("user")
+    if token:
+        return jsonify({"isAuthenticated": True}), 200
+    else:
+        return jsonify({"isAuthenticated": False}), 401
+
+@app.route("/delete-overdue-tasks", methods=["DELETE"])
+def delete_overdue_tasks():
+    thirty_days_ago = datetime.utcnow() - timedelta(days=30)
     
-    return jsonify(tasks_dict)
+    # Find tasks where the deadline is older than 30 days
+    overdue_tasks = Task.query.filter(Task.deadline < thirty_days_ago).all()
+    
+    for task in overdue_tasks:
+        db.session.delete(task)  # Delete each overdue task
+    
+    try:
+        db.session.commit()  # Commit the changes to the database
+        return jsonify({"message": "Overdue tasks deleted successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
+import re
+
+def magic_box(magic_text):
+    """
+    Parses the text from the magic box and returns the task title and datetime.
+    """
+    date_obj, task_title = extract_dates_and_tasks(magic_text)
+    
+    # Format data for create_task function
+    task_data = {
+        "title": task_title,
+        "formattedDatetime": date_obj.strftime('%Y-%m-%dT%H:%M:%S'),
+        # Add other fields like "description" or "category_id" if necessary
+    }
+    return task_data
+
+def extract_dates_and_tasks(text):
+    doc = nlp(text)
+    date_str = None
+    task = text
+    
+    for ent in doc.ents:
+        if ent.label_ in ["DATE", "TIME"]:
+            date_str = ent.text
+            task = task.replace(ent.text, '').strip()
+    
+    # Convert date string to datetime object
+    if date_str:
+        date_obj = dateparser.parse(date_str)
+    else:
+        date_obj = datetime.datetime.now()  # default to now if no date found
+    
+    return date_obj, task
+
+@app.route("/magic-box/<int:user_id>", methods=["POST"])
+def magic_box_endpoint(user_id):
+    # Get the magic box text from the request
+    magic_box_text = request.json["magic_box_text"]
+    
+    # Parse the text using the magic_box function
+    task_data = magic_box(magic_box_text)
+    
+    # Provide additional data if needed
+    task_data["description"] = request.json.get("description", "")  # optional
+
+    # Find the category with the lowest ID for the given user
+    lowest_category = Category.query.filter_by(user_id=user_id).order_by(Category.id).first()
+    if lowest_category:
+        task_data["category_id"] = lowest_category.id
+    else:
+        # Handle the case where no categories are found for the user
+        return jsonify({"error": "No categories found for the user"}), 404
+
+    # Use the create_task function to create a task with the parsed data
+    return create_task(user_id, task_data)
 
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host="0.0.0.0", port=env.get("PORT", 5000))

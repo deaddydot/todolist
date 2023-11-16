@@ -1,5 +1,6 @@
 import React from "react";
-import "./styles.css";
+import ReactDOM from 'react-dom'; // Import ReactDOM for createPortal
+// import "./styles.css";
 import AddTaskFormByCategory from "./AddTaskFormByCategory";
 import Button from 'react-bootstrap/Button';
 
@@ -14,13 +15,6 @@ const ModalLooks = {
   backgroundColor: "rgba(0, 0, 0, 0.4)"
 };
 
-const ModalContent = {
-  backgroundColor: "#fefefe",
-  margin: '15% auto',
-  padding: '20px',
-  border: '1px solid #888',
-  width: '80%'
-};
 
 const Close = {
   color: '#aaa',
@@ -46,7 +40,6 @@ export default class AddTaskButtonByCategory extends React.Component {
     document.removeEventListener("click", this.handleOutsideClick, true);
   }
   
-
   handleOutsideClick = (event) => {
     const modalContent = document.querySelector(".modal-content");
     if (modalContent && !modalContent.contains(event.target)) {
@@ -54,7 +47,6 @@ export default class AddTaskButtonByCategory extends React.Component {
     }
   };
   
-
   modalOpen = () => {
     this.setState({ displayModal: true });
   };
@@ -64,27 +56,28 @@ export default class AddTaskButtonByCategory extends React.Component {
   };
 
   render() {
+    const ModalContent = {
+      backgroundColor: this.props.nightMode ? '#282A3A' : '#fefefe', // Set background color based on nightMode
+      color: this.props.nightMode ? 'white' : 'black', // Set text color based on nightMode
+      margin: '15% auto',
+      padding: '20px',
+      border: '1px solid #888',
+      width: '80%'
+    };
     return (
       <>
         <Button size='sm' onClick={this.modalOpen} style={{backgroundColor: 'lightgrey', color: 'black', border: 'none', height: '2rem' }}>+</Button>
-  
-        {this.state.displayModal && (
-          <div className="myModal" style={ModalLooks} ref={(ref) => (this.modalRef = ref)}>
-            <div style={ModalContent} className="modal-content">
-              <div className="modal-header">
-                <h2>Create Your Task</h2>
-                <span style={Close} className="close" onClick={this.modalClose}>
-                  &times;
-                </span>
-              </div>
+        {this.state.displayModal && ReactDOM.createPortal( // Using React Portal
+          <div className="myModal" style={ModalLooks}>
               <AddTaskFormByCategory
                 flaskUrl={this.props.flaskUrl}
-                modalOpen={this.modalOpen}
+                modalClose={this.modalClose} // Pass modalClose as prop
                 category={this.props.category}
                 userId={this.props.userId}
+                nightMode={this.props.nightMode}
               />
-            </div>
-          </div>
+          </div>,
+          document.body // Appending directly to body
         )}
       </>
     );

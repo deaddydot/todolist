@@ -61,7 +61,7 @@ export default class CompletedViewDataDatabase extends React.Component {
     });
   
     return (
-      <Row style={{backgroundColor: 'var(--secondary-color)', minHeight: '100vh'}}>
+      <Row style={{backgroundColor: this.props.nightMode ? 'var(--night-background-color)' : 'var(--secondary-color)', minHeight: '100vh'}}>
         {columns.map((column, colIndex) => (
           <Col key={`column-${colIndex}`}>
             {column.map((category, index) => (

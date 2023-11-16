@@ -1,4 +1,13 @@
 .task-view-col {
   background-color: var(--secondary-color);
   height: 100vh;
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  padding: 1em; /* Add some padding around the content */
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); /* Add an inner shadow for depth */
+  transition: background-color .3s ease-in-out; /* Add transition for smooth color change */
+}
+
+/* You can add a hover effect if you like */
+.task-view-col:hover {
+  background-color: var(--tertiary-color); /* Change background color on hover */
 }

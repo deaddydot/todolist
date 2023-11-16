@@ -1,0 +1,57 @@
+.edit-task-form {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #ffffff; /* Dark Background */
+  color: #000000; /* Light Text */
+}
+
+.edit-task-form label,
+.edit-task-form input {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.edit-task-form input {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.submit-button {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  width: 100px;
+  height: 40px;
+}
+
+.submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Night Mode Styles */
+.edit-task-form.night-mode {
+  background-color: #282A3A; /* Dark Background */
+  color: #ffffff; /* Light Text */
+}
+
+.edit-task-form.night-mode label,
+.edit-task-form.night-mode input {
+  color: #ffffff; /* Light Text */
+}
+
+.submit-button.night-mode {
+  background-color: #7289da; /* Different Button Color for Night Mode */
+}
