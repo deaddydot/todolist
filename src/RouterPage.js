@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom'; // Added useLocation
 import { App } from './App';
 import Cookies from 'js-cookie';
+import LoginButton from './authentication/LoginButton';
 
 // These could be different components for your different pages
 const Title = () => (
@@ -9,7 +11,7 @@ const Title = () => (
     <h1>Tasktastic</h1>
     <nav>
       <Link to="/app">Test Environment</Link>
-      <Link to="/logout">Logout</Link> {/* Added Logout Link */}
+      <LoginButton />
     </nav>
   </div>
 );
@@ -34,8 +36,21 @@ export default function RouterPage() {
     <Router>
       <Routes>
         <Route path="/" element={<Title />} />
-        <Route path="/app" element={<App />} />
-        <Route path="/logout" element={<Logout />} /> {/* Added Logout Route */}
+        <Route path="/app"
+          element={
+          Cookies.get('userId') === '0' ? (
+      // Treat as unauthenticated
+          (() => {
+          console.log("Redirecting to /");
+          return <Navigate to="/" replace={true} />; // Redirect to "/"
+           })()
+          ) : (
+      // Render the App component when authenticated
+          <App />
+    )
+  }
+/>
+        <Route path="/login" element={<LoginButton isAuthenticated={Cookies.get('userId') === '0'} />} />
       </Routes>
     </Router>
   );
@@ -51,10 +66,4 @@ function Logout() {
       Cookies.remove('userId');
     }
   }, [location]);
-
-  return (
-    <div>
-      You have been logged out.
-    </div>
-  );
 }
