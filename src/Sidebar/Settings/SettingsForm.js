@@ -33,9 +33,10 @@ const Close = {
   textAlign: 'center'
 };
 
+
 export default class SettingsForm extends Component {
   state = {
-    bold_hover: "",
+    bold_hover: true,
     // title: "",
     // description: "",
     // deadline: "",
@@ -54,25 +55,23 @@ export default class SettingsForm extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const { bold_hover } = this.state;
-    const { flaskUrl, userId, onTaskAdded, modalClose } = this.props;
+    const { flaskUrl, userId, modalClose } = this.props;
 
-    // const datetimeObject = new Date(deadline);
-    // const formattedDatetime = `${datetimeObject.getMonth() + 1}-${datetimeObject.getDate()}-${datetimeObject.getFullYear()} ${datetimeObject.getHours()}:${datetimeObject.getMinutes()}:${datetimeObject.getSeconds()}`;
-    const response = await axios.post(`${flaskUrl}/tasks/${userId}`, {
+    const response = await axios.post(`${flaskUrl}/users/${userId}/settings`, {
       bold_hover
     });
-    //onTaskAdded(response.data.category_id);
+    
     modalClose();
     window.location.reload();
-
   };
 
   handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-
-  handleCategoryChange = (categoryId) => {
-    this.setState({ category_id: categoryId });
+    const target = e.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
   };
 
   render() {

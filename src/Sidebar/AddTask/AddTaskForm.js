@@ -112,7 +112,7 @@ export default class AddTaskForm extends Component {
     };
   
     return (
-      <div className="myModal" style={{...ModalLooks, ...CenterModal}}>
+      <div className="my-task-modal" style={{...ModalLooks, ...CenterModal}}>
         <form onSubmit={this.handleSubmit} className="add-task-form" style={FormStyle}>
           {/* Add a close button at the top right corner within the form */}
           <span style={CloseInsideForm} className="close" onClick={modalClose}>

@@ -39,21 +39,21 @@ export default class AddTaskButton extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener("click", this.handleOutsideClick, true);
-  }
+    document.addEventListener("click", this.handleOutsideClick, false);
+}
   
-  componentWillUnmount() {
-    document.removeEventListener("click", this.handleOutsideClick, true);
-  }
+componentWillUnmount() {
+    document.removeEventListener("click", this.handleOutsideClick, false);
+}
   
 
-  handleOutsideClick = (event) => {
-    const modalContent = document.querySelector(".modal-content");
-    if (modalContent && !modalContent.contains(event.target)) {
+handleOutsideClick = (event) => {
+  const modal = document.querySelector(".my-task-modal");
+  const modalContent = document.querySelector(".modal-content");
+  if (modal.contains(event.target) && !modalContent.contains(event.target)) {
       this.modalClose();
-    }
-  };
-  
+  }
+};
 
   modalOpen = () => {
     this.setState({ displayModal: true });
@@ -85,6 +85,7 @@ export default class AddTaskButton extends React.Component {
   
         {this.state.displayModal && (
           <AddTaskForm
+            className="modal-content"
             flaskUrl={this.props.flaskUrl}
             modalClose={this.modalClose}  // Pass modalClose instead of modalOpen
             userId={this.props.userId}

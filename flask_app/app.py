@@ -11,10 +11,13 @@ from urllib.parse import quote_plus, urlencode
 from dotenv import find_dotenv, load_dotenv
 import json
 import dateparser
+import spacy
+
+nlp = spacy.load("en_core_web_sm")
 
 # Initialize Flask and other components
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:100901huds@localhost/todo'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:s0r8Jh7Qv4&m@localhost/todo'
 db = SQLAlchemy(app)
 app.app_context().push()
 app.secret_key = 'a18230ac162cd97951b1ee3945154fc1'
@@ -116,7 +119,7 @@ def format_task(task, category):
             "deadline": task.deadline,
             "completed": task.completed,
             "category_id": task.category_id,
-            #"test_column": task.completed,                                              # testing stuff
+            "priority": task.priority
     }
 
 # Define a route that queries the database
@@ -147,12 +150,20 @@ def create_default_category(mapper, connection, target):
 
 # Create task
 @app.route("/tasks/<int:user_id>", methods=["POST"])
-def create_task(user_id):
-    # Extract the data from the request
-    title = request.json["title"]
-    description = request.json["description"]
-    deadline = request.json["formattedDatetime"]
-    category_id = request.json["category_id"]
+def create_task(user_id, task_data=None):
+    if task_data is None:
+        # Extract the data from the request if not provided as an argument
+        task_data = {
+            "title": request.json["title"],
+            "description": request.json["description"],
+            "formattedDatetime": request.json["formattedDatetime"],
+            "category_id": request.json["category_id"]
+        }
+
+    title = task_data["title"]
+    description = task_data["description"]
+    deadline = task_data["formattedDatetime"]
+    category_id = task_data["category_id"]
 
     # Find the category for the given ID
     category = Category.query.get(category_id)
@@ -291,12 +302,27 @@ def update_task(id):
     # Return the updated task as a response
     return format_task(task, task.category)
 
+@app.route('/users/<int:user_id>/settings', methods=['POST', 'OPTIONS'])
+def update_user(user_id):
+    if request.method == "OPTIONS":
+        return jsonify({"message": "CORS preflight succeeded"}), 200
+    
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    bold_hover_value = request.json.get('bold_hover')
+    if bold_hover_value is not None:
+        user.bold_hover = bold_hover_value
+        db.session.add(user)
+        db.session.commit()
+
+    return jsonify({"message": "Updated successfully"})
+
 # Get all categories for a user
 @app.route("/categories/<int:user_id>", methods=["GET"])
 def get_categories(user_id):
     categories = Category.query.filter_by(user_id=user_id).all()
     serialized_categories = [{"id": category.id, "name": category.name, "color": category.color, "is_toggled": category.is_toggled} for category in categories]
-    print(serialized_categories)
     
     return jsonify([category.serialize() for category in categories])
 
@@ -548,59 +574,60 @@ def delete_overdue_tasks():
 
 import re
 
-def process_text(text):
-    # Extract time using regex
-    time_match = re.search(r'(\d{1,2}(?:AM|PM|am|pm)?)', text)
-    time_str = time_match.group(1) if time_match else None
+def magic_box(magic_text):
+    """
+    Parses the text from the magic box and returns the task title and datetime.
+    """
+    date_obj, task_title = extract_dates_and_tasks(magic_text)
     
-    # If time is a single digit without AM/PM, assume PM
-    if time_str and len(time_str) == 1:
-        time_str += " PM"
-    
-    # Extract date using dateparser
-    date = dateparser.parse(text)
-    
-    # If only time is mentioned without a date, use today's date
-    if time_str and not date:
-        date = datetime.combine(datetime.today(), dateparser.parse(time_str).time())
-    elif time_str and date:
-        date = datetime.combine(date.date(), dateparser.parse(time_str).time())
-    
-    # Extract task title
-    task = re.sub(r'( at .+)?( on .+)?( next .+)?( tomorrow)?', '', text).strip()
-    
-    # Extract location (if any)
-    location_match = re.search(r'at ([^0-9]+)', text)
-    location = location_match.group(1).strip() if location_match else None
-    
-    return task, location, date
+    # Format data for create_task function
+    task_data = {
+        "title": task_title,
+        "formattedDatetime": date_obj.strftime('%Y-%m-%dT%H:%M:%S'),
+        # Add other fields like "description" or "category_id" if necessary
+    }
+    return task_data
 
+def extract_dates_and_tasks(text):
+    doc = nlp(text)
+    date_str = None
+    task = text
+    
+    for ent in doc.ents:
+        if ent.label_ in ["DATE", "TIME"]:
+            date_str = ent.text
+            task = task.replace(ent.text, '').strip()
+    
+    # Convert date string to datetime object
+    if date_str:
+        date_obj = dateparser.parse(date_str)
+    else:
+        date_obj = datetime.datetime.now()  # default to now if no date found
+    
+    return date_obj, task
 
+@app.route("/magic-box/<int:user_id>", methods=["POST"])
+def magic_box_endpoint(user_id):
+    # Get the magic box text from the request
+    magic_box_text = request.json["magic_box_text"]
+    
+    # Parse the text using the magic_box function
+    task_data = magic_box(magic_box_text)
+    
+    # Provide additional data if needed
+    task_data["description"] = request.json.get("description", "")  # optional
 
-@app.route('/magicbox', methods=['POST'])
-def magic_box():
-    text = request.json.get('text')
-    text = "Homework at 9"
-    task_title, location, deadline = process_text(text)
-    
-    # Assuming user_id is retrieved from the session or another method
-    user_id = session.get("user_id")
-    
-    # Get default category for the user
-    default_category = Category().get_default_category()
-    
-    # Create a new task
-    new_task = Task(title=task_title, description=location, deadline=deadline, category_id=default_category.id)
-    db.session.add(new_task)
-    db.session.commit()
-    
-    print(new_task)
+    # Find the category with the lowest ID for the given user
+    lowest_category = Category.query.filter_by(user_id=user_id).order_by(Category.id).first()
+    if lowest_category:
+        task_data["category_id"] = lowest_category.id
+    else:
+        # Handle the case where no categories are found for the user
+        return jsonify({"error": "No categories found for the user"}), 404
 
-    return jsonify({
-        'task': task_title,
-        'location': location,
-        'deadline': deadline.strftime('%Y-%m-%d %H:%M:%S') if deadline else None
-    })
+    # Use the create_task function to create a task with the parsed data
+    return create_task(user_id, task_data)
+
 
 
 if __name__ == "__main__":

@@ -185,23 +185,25 @@ export default class TaskViewCategories extends React.Component {
             <AddTaskButtonByCategory flaskUrl={this.props.flaskUrl} category={this.props.category} userId={this.props.userId} nightMode={this.props.nightMode} />
           </div>
         )}
-        {this.state.tasks.map((item, itemIndex) => (
-          <div key={item.id} className="task-item">
+        {this.state.tasks.map((task) => (
+          <div key={task.id} className="task-item">
             <JsonCheckbox 
-              label={item.title} 
-              deadline={item.deadline} 
-              taskId={item.id} 
-              description={item.description} 
+              label={task.title} 
+              deadline={task.deadline} 
+              taskId={task.id} 
+              description={task.description} 
               category={this.props.category} 
               showAll={this.props.showAll} 
               flaskUrl={this.props.flaskUrl} 
               userId={this.props.userId} 
               onTaskCompletion={this.handleTaskCompletion}
               nightMode={this.props.nightMode}
+              priority={task.priority} // This should be task.priority, not this.props.priority
               textColor={textColor}
             />
           </div>
         ))}
+
       </Card>
     );
   }

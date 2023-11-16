@@ -7,6 +7,7 @@ import CalendarView from './CalendarView/CalendarView';
 import CompletedView from './CompletedView/CompletedView';
 import LoginButton from './authentication/LoginButton';
 import LogoutButton from './authentication/LogoutButton';
+import MagicBox from './MagicBox';
 import UserClock from './TaskView/UserClock'
 import Cookies from 'js-cookie';
 import axios from 'axios';
@@ -33,6 +34,7 @@ export class App extends React.Component {
       isAuthenticated: false,
       categories: [],
       nightMode: false
+
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -103,18 +105,24 @@ export class App extends React.Component {
   }
 
   render() {
-    const appStyle = 
-    {backgroundColor: this.state.nightMode ? 'black' : 'white',
-    color: this.state.nightMode ? 'white' : 'black',
-    transition: 'background-color 0.5s ease-in-out',
+    const appStyle = {
+      backgroundColor: this.state.nightMode ? 'black' : 'white',
+      color: this.state.nightMode ? 'white' : 'black',
+      transition: 'background-color 0.5s ease-in-out',
     };
-
+  
+    const magicBoxContainerStyle = {
+      marginTop: '20px', // Adjust this value as needed to create space
+      paddingLeft: '1rem',
+      paddingRight: '1rem'
+    };
+  
     return (
       <div style={{ ...appStyle, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <Container fluid='true' style={{ ...appStyle, flex: '1' }}>
+        <Container fluid={true} style={{ ...appStyle, flex: '1' }}>
           <Row style={appStyle}>
-            <Col style={{ ...appStyle, paddingLeft: '0', paddingRight: '0' }} xs={2}>
-              <Sidebar onInput={this.changeView.bind(this)} flaskUrl={flaskUrl} userId={this.state.userId} updateCategories={this.updateCategories} nightMode={this.state.nightMode}/>
+            <Col xs={2} style={{ ...appStyle, paddingLeft: '0', paddingRight: '0' }}>
+              <Sidebar onInput={this.changeView} flaskUrl={flaskUrl} userId={this.state.userId} updateCategories={this.updateCategories} nightMode={this.state.nightMode}/>
             </Col>
             <Col style={{ ...appStyle, paddingLeft: '0', paddingRight: '0' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
@@ -132,21 +140,30 @@ export class App extends React.Component {
                     Completed
                   </Button>
                 </div>
-
                 <div className="top-right-container">
-                <UserClock nightMode={this.state.nightMode} />
+                  <UserClock nightMode={this.state.nightMode} />
                   <LoginButton isAuthenticated={this.state.isAuthenticated} />
                   <LogoutButton isAuthenticated={this.state.isAuthenticated} />
                 </div>
               </div>
-              {this.state.showTask && <div id='TaskView' style={appStyle}><TaskView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} nightMode={this.state.nightMode}/></div>}
-              {this.state.showCalendar && <CalendarView style={appStyle} showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} nightMode={this.state.nightMode} />}
-              {this.state.showCompleted && <CompletedView style={appStyle} showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} nightMode={this.state.nightMode} />}      
+              {this.state.showTask && 
+                <div id='TaskView' style={appStyle}>
+                  <div style={magicBoxContainerStyle}>
+                    <MagicBox flaskUrl={flaskUrl} userId={this.state.userId} />
+                  </div>
+                  <TaskView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} nightMode={this.state.nightMode}/>
+                </div>
+              }
+              {this.state.showCalendar && 
+                <CalendarView style={appStyle} showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} nightMode={this.state.nightMode} />
+              }
+              {this.state.showCompleted && 
+                <CompletedView style={appStyle} showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} nightMode={this.state.nightMode} />
+              }      
             </Col>
           </Row>
         </Container>
       </div>
-      
     );
-}
-}
+  }
+}  

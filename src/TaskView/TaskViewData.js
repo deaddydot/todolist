@@ -48,7 +48,7 @@ export default class TaskViewData extends React.Component {
                   <h2>{category}</h2>
                   {data[category].map((item, itemIndex) => (
                     <React.Fragment key={item.id}>
-                      <JsonCheckbox label={item.title} deadline={item.deadline}  showAll={this.props.showAll} nightMode={this.props.nightMode}/>
+                      <JsonCheckbox label={item.title} deadline={item.deadline}  showAll={this.props.showAll} nightMode={this.props.nightMode} priority={this.props.priority}/>
                     </React.Fragment>
                   ))}
                 </Card>
