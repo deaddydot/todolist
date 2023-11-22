@@ -186,7 +186,7 @@ export default class TaskViewCategories extends React.Component {
           </div>
         )}
         {this.state.tasks.map((task) => (
-          <div key={task.id} className="task-item">
+          <div key={task.id} id="task-item">
             <JsonCheckbox 
               label={task.title} 
               deadline={task.deadline} 
@@ -198,6 +198,7 @@ export default class TaskViewCategories extends React.Component {
               userId={this.props.userId} 
               onTaskCompletion={this.handleTaskCompletion}
               nightMode={this.props.nightMode}
+              //boldHover={this.props.boldHover}
               priority={task.priority} // This should be task.priority, not this.props.priority
               textColor={textColor}
             />

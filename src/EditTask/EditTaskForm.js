@@ -17,6 +17,8 @@ export default class EditTaskForm extends React.Component {
     };
   }
 
+  
+
   componentDidMount() {
     axios.get(`${this.props.flaskUrl}/task/${this.props.taskId}`)
       .then(response => {
@@ -83,11 +85,13 @@ export default class EditTaskForm extends React.Component {
     const ButtonContainerStyle = {
       display: 'flex',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
+      width: "30%",
+      margin: '0 auto',
     };
 
     return (
-      <div style={{ position: 'relative', width: "30%", margin: '0 auto' }}>
+      <div style={{ position: 'relative', width: "30%", margin: '0 auto' , top: "50%", left: "50%", transform: 'translate(-50%, -50%)', position: 'fixed'}}>
         <form onSubmit={this.handleSubmit} className={`edit-task-form ${this.props.nightMode ? 'night-mode' : ''}`}>
           <span style={CloseInsideForm} className="close" onClick={this.props.modalClose}>
             X

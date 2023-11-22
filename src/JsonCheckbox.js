@@ -7,7 +7,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import EditTaskButton from './EditTask/EditTaskButton';
 
 function StarRating({ priority }) {
-  console.log('Priority is:', priority);
+  //console.log('Priority is:', priority);
   const stars = [];
   for (let i = 1; i <= 5; i++) {
       if (i <= priority) {
@@ -101,7 +101,7 @@ export default class JsonCheckbox extends React.Component {
   };
 
   render() {
-    console.log('Priority prop passed to StarRating:', this.props.priority);
+    //console.log('Priority prop passed to StarRating:', this.props.priority);
     if (this.state.display === 'none') return null;
 
     const { textColor } = this.props;

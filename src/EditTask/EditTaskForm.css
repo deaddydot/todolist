@@ -47,11 +47,24 @@
   color: #ffffff; /* Light Text */
 }
 
+/* .edit-task-form.bold-hover:hover {
+  font-weight: bold;
+} */
+
 .edit-task-form.night-mode label,
 .edit-task-form.night-mode input {
   color: #ffffff; /* Light Text */
 }
 
+/* .edit-task-form.bold-hover:hover label,
+.edit-task-form.bold-hover:hover input {
+  font-weight: bold;
+} */
+
 .submit-button.night-mode {
   background-color: #7289da; /* Different Button Color for Night Mode */
 }
+
+/* .submit-button.bold-hover:hover {
+  font-weight: bold;
+} */

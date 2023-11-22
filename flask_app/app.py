@@ -13,11 +13,12 @@ import json
 import dateparser
 import spacy
 
+
 nlp = spacy.load("en_core_web_sm")
 
 # Initialize Flask and other components
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:s0r8Jh7Qv4&m@localhost/todo'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:100901huds@localhost/todo'
 db = SQLAlchemy(app)
 app.app_context().push()
 app.secret_key = 'a18230ac162cd97951b1ee3945154fc1'
@@ -182,11 +183,16 @@ def create_task(user_id, task_data=None):
 
     # Retrieve all tasks for the user, grouped by categories
     categories = Category.query.filter_by(user_id=user_id).all()
+    # categories = []
+    # categories.append(Category(id="2", name="manualtest1", color="blue"))
+    # categories.append(Category(id="3", name="manualtest2", color="red"))
+    # categories.append(Category(id="4", name="manualtest3", color="green"))
     tasksByCategory = {}
     for category in categories:
         tasks = category.tasks
         formatted_tasks = [format_task(task, category) for task in tasks]
         tasksByCategory[category.name] = formatted_tasks
+        
 
     # Return the updated tasksByCategory object as a response
     return jsonify(tasksByCategory)
@@ -628,7 +634,30 @@ def magic_box_endpoint(user_id):
     # Use the create_task function to create a task with the parsed data
     return create_task(user_id, task_data)
 
-
-
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 5000))
+
+# # Update user settings
+# @app.route("/users/<int:user_id>/settings", methods=["POST"])
+# def update_user_settings(user_id):
+#     # Retrieve the user from the database
+#     user = User.query.get(user_id)
+
+#     # Check if the user exists
+#     if not user:
+#         return jsonify({"error": "User not found"}), 404
+
+#     # Get the updated settings from the request
+#     bold_hover_value = request.json.get('bold_hover')
+
+#     # Update the user settings
+#     if bold_hover_value is not None:
+#         user.bold_hover = bold_hover_value
+
+#     # Commit the changes to the database
+#     try:
+#         db.session.commit()
+#         return jsonify({"message": "User settings updated successfully"}), 200
+#     except Exception as e:
+#         db.session.rollback()
+#         return jsonify({"error": f"An error occurred: {str(e)}"}), 500

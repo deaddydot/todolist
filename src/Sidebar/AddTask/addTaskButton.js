@@ -11,7 +11,10 @@ const ModalLooks = {
   width: "100%",
   height: "100%",
   overflow: "auto",
-  backgroundColor: "rgba(0, 0, 0, 0.4)"
+  backgroundColor: "rgba(0, 0, 0, 0.4)",
+  display: 'flex', // Added
+  justifyContent: 'center', // Added
+  alignItems: 'center' // Added
 };
 
 const ModalContent = {
@@ -36,33 +39,33 @@ export default class AddTaskButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = { displayModal: false };
+
+    this.modalOpen = this.modalOpen.bind(this);
+    //this.modalClose = this.modalClose.bind(this);
   }
 
   componentDidMount() {
-    document.addEventListener("click", this.handleOutsideClick, false);
-}
-  
-componentWillUnmount() {
-    document.removeEventListener("click", this.handleOutsideClick, false);
-}
+    document.addEventListener("click", this.handleOutsideClick, true);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("click", this.handleOutsideClick, true);
+  }
   
 
-handleOutsideClick = (event) => {
-  const modal = document.querySelector(".my-task-modal");
-  const modalContent = document.querySelector(".modal-content");
-  if (modal.contains(event.target) && !modalContent.contains(event.target)) {
+  handleOutsideClick = (event) => {
+    const modalContent = document.querySelector(".add-task-form");
+    if (modalContent && !modalContent.contains(event.target)) {
       this.modalClose();
-  }
-};
+    }
+  };
 
   modalOpen = () => {
     this.setState({ displayModal: true });
-    document.body.style.overflow = 'hidden';
   };
 
   modalClose = () => {
     this.setState({ displayModal: false });
-    document.body.style.overflow = 'hidden';
   };
 
   render() {
@@ -85,7 +88,6 @@ handleOutsideClick = (event) => {
   
         {this.state.displayModal && (
           <AddTaskForm
-            className="modal-content"
             flaskUrl={this.props.flaskUrl}
             modalClose={this.modalClose}  // Pass modalClose instead of modalOpen
             userId={this.props.userId}

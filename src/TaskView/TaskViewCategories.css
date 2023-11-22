@@ -1,4 +1,8 @@
-/* .task-item:hover{
+.setBold:hover{
+  font-weight: bold;
+}
+
+/* #setBold:hover{
   font-weight: bold;
 } */
 

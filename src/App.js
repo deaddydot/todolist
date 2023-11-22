@@ -11,12 +11,15 @@ import MagicBox from './MagicBox';
 import UserClock from './TaskView/UserClock'
 import Cookies from 'js-cookie';
 import axios from 'axios';
+
   
 // dev flask url
 const flaskUrl = "http://127.0.0.1:5000";
 
 // prod flask url
 // const flaskUrl = "https://tasktastic.link:5001";
+
+
 
 export class App extends React.Component {
   constructor(props) {
@@ -33,14 +36,20 @@ export class App extends React.Component {
       userId: userIdCookie,
       isAuthenticated: false,
       categories: [],
-      nightMode: false
+      nightMode: false,
+      //boldHover: false
 
     };
 
     this.handleClick = this.handleClick.bind(this);
     this.changeView = this.changeView.bind(this);
     this.toggleNightMode = this.toggleNightMode.bind(this);
+    this.toggleBoldHover = this.toggleBoldHover.bind(this);
   }
+
+  
+  
+  //export{toggleBoldHover};
 
   async componentDidMount() {
     document.title = 'TaskTastic';
@@ -104,6 +113,27 @@ export class App extends React.Component {
     });
   }
 
+  toggleBoldHover() {
+    const currentBoldHover = this.state.boldHover;
+    //var bold = document.getElementById("setBold");
+    var bold = document.querySelectorAll("#task-item");
+    this.setState({ boldHover: !currentBoldHover }, () => {
+      if (this.state.boldHover) {
+        for (var i = 0; i < bold.length; ++i) {
+          bold[i].classList.add('setBold');
+        }
+        Cookies.set('boldHover', 'true');
+      } else {
+        for (var i = 0; i < bold.length; ++i) {
+          bold[i].classList.remove('setBold');
+        }
+        Cookies.set('boldHover', 'false');
+      }
+    });
+  }
+
+  
+
   render() {
     const appStyle = {
       backgroundColor: this.state.nightMode ? 'black' : 'white',
@@ -128,6 +158,9 @@ export class App extends React.Component {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
                 <Button onClick={this.toggleNightMode}>
                   Toggle Night Mode
+                </Button>
+                <Button onClick={this.toggleBoldHover}>
+                  Toggle Bold
                 </Button>
                 <div>
                   <Button style={{ backgroundColor: 'lightgreen', border: 'none', color: 'black' }} onClick={() => this.changeView('task')}>

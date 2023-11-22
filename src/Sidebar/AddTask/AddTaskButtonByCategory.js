@@ -41,7 +41,7 @@ export default class AddTaskButtonByCategory extends React.Component {
   }
   
   handleOutsideClick = (event) => {
-    const modalContent = document.querySelector(".modal-content");
+    const modalContent = document.querySelector(".add-task-form");
     if (modalContent && !modalContent.contains(event.target)) {
       this.modalClose();
     }
@@ -68,7 +68,7 @@ export default class AddTaskButtonByCategory extends React.Component {
       <>
         <Button size='sm' onClick={this.modalOpen} style={{backgroundColor: 'lightgrey', color: 'black', border: 'none', height: '2rem' }}>+</Button>
         {this.state.displayModal && ReactDOM.createPortal( // Using React Portal
-          <div className="myModal" style={ModalLooks}>
+          <div style={ModalLooks}>
               <AddTaskFormByCategory
                 flaskUrl={this.props.flaskUrl}
                 modalClose={this.modalClose} // Pass modalClose as prop

@@ -47,7 +47,16 @@
   color: white;
 }
 
+/* .edit-category-form.bold-hover:hover {
+  font-weight: bold;
+} */
+
 .edit-category-form.night-mode label,
 .edit-category-form.night-mode input {
   color: white;
 }
+
+/* .edit-category-form.bold-hover:hover label,
+.edit-category-form.bold-hover:hover input {
+  font-weight: bold;
+} */

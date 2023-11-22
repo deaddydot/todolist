@@ -3,6 +3,7 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import UserCategories from '../../UserCategories';
 import './Settings.css';
+import Cookies from 'js-cookie';
 
 const ModalLooks = {
   position: "fixed",
@@ -116,22 +117,10 @@ export default class SettingsForm extends Component {
           <span style={CloseInsideForm} className="close" onClick={modalClose}>
             X
           </span>
-          {/* <label>
-            Title:{" "}
-            <input type="text" name="title" value={title} onChange={this.handleChange} />
-          </label>
-          <label>
-            Description:{" "}
-            <input type="text" name="description" value={description} onChange={this.handleChange} />
-          </label>
-          <label>
-            Deadline:{" "}
-            <input type="datetime-local" name="deadline" value={deadline} onChange={this.handleChange} />
-          </label> */}
-          <label class="container">
+          <label className="container">
             Bold Hover:{" "}
-            <input type="checkbox" name="bold_hover" value={bold_hover} onChange={this.handleChange} />
-            <span class="checkmark"></span>
+            <input type="checkbox" name="bold_hover" value={bold_hover} onChange={this.handleChange}/>
+            <span className="checkmark"></span>
           </label>
           {/* <UserCategories flaskUrl={flaskUrl} userId={userId} onCategoryChange={this.handleCategoryChange} /> */}
           <div className="submit-button-container">
