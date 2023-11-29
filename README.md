@@ -1,96 +1,70 @@
-# Tasktastic
-![image](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![image](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
-![image](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+# Getting Started with Create React App
 
-Tasktastic is a simple task management application built with React, Flask, and Postgres. The app allows users to create, read, update, and delete tasks, as well as assign tasks to categories. 
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Prerequisites
-Before you can run Tasktastic on your machine, you will need to have the following installed:
-- [Node.js](https://nodejs.org/en/)
-- [Python](https://www.python.org/downloads/)
-- [Flask](https://flask.palletsprojects.com/en/2.0.x/installation/)
-- [PostgreSQL](https://www.postgresql.org/download/)
+## Available Scripts
 
-## Installation
+In the project directory, you can run:
 
-Clone the repository:
+### `npm start`
 
-`
-git clone https://github.com/deaddydot/todolist.git
-`
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-Change into the project directory:
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-`
-cd todolist
-`
+### `npm test`
 
-Install the frontend dependencies:
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-`
-npm install react react-bootstrap axios react-scripts react-dom bootstrap @auth0/auth0-react react-color react-router-dom js-cookie
-`
+### `npm run build`
 
-Install the backend dependencies:
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-`
-pip install -r requirements.txt
-`
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-Install flask-cors inside todolist/flask_app:
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-`
-pip install -U flask-cors
-`
+### `npm run eject`
 
-Create a new Postgres database:
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-`
-createdb test1
-`
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Initialize the database schema:
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-`
-python manage.py initdb
-`
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-Start the Flask server:
+## Learn More
 
-`
-flask run
-`
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-Start the React development server:
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-`
-npm start
-`
+### Code Splitting
 
-Open Tasktastic in your browser: 
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-`
-http://localhost:3000
-`
+### Analyzing the Bundle Size
 
-## Usage
-Tasktastic allows users to create, read, update, and delete tasks. Users can also assign tasks to categories.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
+### Making a Progressive Web App
 
-## Contributing
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
+### Advanced Configuration
 
-Please make sure to update tests as appropriate.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-## License
+### Deployment
 
-[MIT](https://choosealicense.com/licenses/mit/)
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-## Team members
-- Jack Carver: Team lead, Front-end developer
-- Drew Nguyen: Back-end developer, database specialist
-- Long Ta: Back-end developer, authentication specialist
-- Hudson Bailey: Front-end developer
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
