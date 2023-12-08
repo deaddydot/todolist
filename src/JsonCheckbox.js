@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 import ListGroup from 'react-bootstrap/ListGroup';
 import EditTaskButton from './EditTask/EditTaskButton';
+import CopyButton from './copybutton/123';
 
 function StarRating({ priority }) {
   console.log('Priority is:', priority);
@@ -125,9 +126,18 @@ export default class JsonCheckbox extends React.Component {
               </div>
             </Collapse>
           </ListGroup>
-          {this.state.showEdit && 
-            <EditTaskButton flaskUrl={this.props.flaskUrl} taskId={this.props.taskId} hideEditButton={this.handleMouseLeave} userId={this.props.userId} nightMode={this.props.nightMode} />
-          }
+          {this.state.showEdit && (
+            <>
+              <CopyButton  taskData={{ title: this.props.label, deadline: this.state.formattedDeadline }} />
+              <EditTaskButton
+                flaskUrl={this.props.flaskUrl}
+                taskId={this.props.taskId}
+                hideEditButton={this.handleMouseLeave}
+                userId={this.props.userId}
+                nightMode={this.props.nightMode}
+              />
+             </>
+          )}
         </div>
       </div>
     );

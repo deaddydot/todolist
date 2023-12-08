@@ -57,13 +57,13 @@ export default class SettingsForm extends Component {
     const { bold_hover } = this.state;
     const { flaskUrl, userId, modalClose } = this.props;
 
-    const response = await axios.post(`${flaskUrl}/users/${userId}/settings`, {
-      bold_hover
+    await axios.post(`${flaskUrl}/users/${userId}/settings`, {
+        bold_hover
     });
     
     modalClose();
     window.location.reload();
-  };
+};
 
   handleChange = (e) => {
     const target = e.target;
@@ -130,7 +130,7 @@ export default class SettingsForm extends Component {
           </label> */}
           <label class="container">
             Bold Hover:{" "}
-            <input type="checkbox" name="bold_hover" value={bold_hover} onChange={this.handleChange} />
+            <input type="checkbox" name="bold_hover" checked={bold_hover} onChange={this.handleChange} />
             <span class="checkmark"></span>
           </label>
           {/* <UserCategories flaskUrl={flaskUrl} userId={userId} onCategoryChange={this.handleCategoryChange} /> */}

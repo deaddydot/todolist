@@ -127,7 +127,7 @@ export class App extends React.Component {
             <Col style={{ ...appStyle, paddingLeft: '0', paddingRight: '0' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
                 <Button onClick={this.toggleNightMode}>
-                  Toggle Night Mode
+                🌙
                 </Button>
                 <div>
                   <Button style={{ backgroundColor: 'lightgreen', border: 'none', color: 'black' }} onClick={() => this.changeView('task')}>
