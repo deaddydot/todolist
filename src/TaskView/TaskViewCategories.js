@@ -186,7 +186,7 @@ export default class TaskViewCategories extends React.Component {
           </div>
         )}
         {this.state.tasks.map((task) => (
-          <div key={task.id} className="task-item">
+          <div key={task.id} id="task-item">
             <JsonCheckbox 
               label={task.title} 
               deadline={task.deadline} 

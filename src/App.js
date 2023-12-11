@@ -40,6 +40,7 @@ export class App extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.changeView = this.changeView.bind(this);
     this.toggleNightMode = this.toggleNightMode.bind(this);
+    this.toggleBoldHover = this.toggleBoldHover.bind(this);
   }
 
   async componentDidMount() {
@@ -104,6 +105,25 @@ export class App extends React.Component {
     });
   }
 
+  toggleBoldHover() {
+    const currentBoldHover = this.state.boldHover;
+    //var bold = document.getElementById("setBold");
+    var bold = document.querySelectorAll("#task-item");
+    this.setState({ boldHover: !currentBoldHover }, () => {
+      if (this.state.boldHover) {
+        for (var i = 0; i < bold.length; ++i) {
+          bold[i].classList.add('setBold');
+        }
+        Cookies.set('boldHover', 'true');
+      } else {
+        for (var i = 0; i < bold.length; ++i) {
+          bold[i].classList.remove('setBold');
+        }
+        Cookies.set('boldHover', 'false');
+      }
+    });
+  }
+
   render() {
     const appStyle = {
       backgroundColor: this.state.nightMode ? 'black' : 'white',
@@ -129,6 +149,9 @@ export class App extends React.Component {
                 <Button onClick={this.toggleNightMode}>
                 🌙
                 </Button>
+                <Button onClick={this.toggleBoldHover}>
+                  Toggle Bold
+                </Button>
                 <div>
                   <Button style={{ backgroundColor: 'lightgreen', border: 'none', color: 'black' }} onClick={() => this.changeView('task')}>
                     Categories
@@ -151,7 +174,7 @@ export class App extends React.Component {
                   <div style={magicBoxContainerStyle}>
                     <MagicBox flaskUrl={flaskUrl} userId={this.state.userId} />
                   </div>
-                  <TaskView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} nightMode={this.state.nightMode}/>
+                  <TaskView showAll={this.state.showAll} flaskUrl={flaskUrl} userId={this.state.userId} nightMode={this.state.nightMode} boldHover={this.state.boldHover}/>
                 </div>
               }
               {this.state.showCalendar && 

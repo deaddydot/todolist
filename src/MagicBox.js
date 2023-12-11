@@ -30,7 +30,7 @@ export default function MagicBox({ flaskUrl, userId }) {
           value={magicText}
           onChange={(e) => setMagicText(e.target.value)}
         />
-        <button type="submit">Add Task</button>
+        <button type="submit">Go</button>
       </form>
     </div>
   );
