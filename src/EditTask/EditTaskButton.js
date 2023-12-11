@@ -12,7 +12,6 @@ const ModalLooks = {
     width: "100%", /* Full width */
     height: "100%", /* Full height */
     overflow: "auto", /* Enable scroll if needed */
-    backgroundColor: "rgb(0,0,0)", /* Fallback color */
     backgroundColor: "rgba(0,0,0,0.4)" /* Black w/ opacity */
 }
 const ModalContent = {
@@ -40,25 +39,9 @@ export default class EditTaskButton extends React.Component {
         this.state = {displayModal: false};
     
         this.modalOpen = this.modalOpen.bind(this);
-        this.modalClose = this.modalClose.bind(this);
+        //this.modalClose = this.modalClose.bind(this);
     }
     
-    modalOpen = () => {
-        this.setState({ displayModal: true });
-        const modal = document.createElement("div");
-        modal.id = "myModal";
-        modal.style = { ...ModalLooks };
-        document.body.appendChild(modal);
-        // Render your form inside this modal
-      };
-    
-      modalClose = () => {
-        this.setState({ displayModal: false });
-        const modal = document.getElementById("myModal");
-        if (modal) {
-          document.body.removeChild(modal);
-        }
-      };
       
     componentDidMount() {
         document.addEventListener("click", this.handleOutsideClick, true);
@@ -70,7 +53,7 @@ export default class EditTaskButton extends React.Component {
     
 
     handleOutsideClick = (event) => {
-        const modalContent = document.querySelector(".modal-content");
+        const modalContent = document.querySelector(".edit-task-form");
         if (modalContent && !modalContent.contains(event.target)) {
             this.modalClose();
         }
@@ -98,11 +81,11 @@ export default class EditTaskButton extends React.Component {
             <>
             <Button size='sm' onClick={this.modalOpen} style={{backgroundColor: 'lightgrey', color: 'black', border: 'none', height: '2rem' }}>✎</Button>
             {this.state.displayModal && ReactDOM.createPortal(
-            <div className="myModal" style={ModalLooks}>
+            <div style={ModalLooks}>
                 <EditTaskForm 
                     flaskUrl={this.props.flaskUrl} 
                     taskId={this.props.taskId} 
-                    modalOpen={this.modalOpen} 
+                    //modalOpen={this.modalOpen} 
                     userId={this.props.userId} 
                     nightMode={this.props.nightMode} 
                     modalClose={this.modalClose}

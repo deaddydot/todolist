@@ -143,9 +143,9 @@
 }
 
 /* Bolds task when hovering over them */
-.task-item:hover{
+/* .task-item:hover{
   font-weight: bold;
-}
+} */
 
 /* allows bold hover when checkbox is checked */
 /* .container input:checked ~ .checkmark + .task-item:hover {

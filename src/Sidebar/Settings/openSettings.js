@@ -24,7 +24,7 @@ export default class SettingsButton extends React.Component {
   
 
   handleOutsideClick = (event) => {
-    const modalContent = document.querySelector(".modal-content");
+    const modalContent = document.querySelector(".add-task-form");
     if (modalContent && !modalContent.contains(event.target)) {
       this.modalClose();
     }
