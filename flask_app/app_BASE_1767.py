@@ -3,27 +3,17 @@ from functools import wraps
 from jose import jwt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
-from datetime import datetime, timedelta
+from datetime import datetime
 from flask_cors import CORS
 from sqlalchemy import asc, desc
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
 from dotenv import find_dotenv, load_dotenv
-from dateutil.parser import parse as dateutil_parse
-import parsedatetime as pdt
 import json
-import dateparser
-import spacy
-import uuid
-
-nlp = spacy.load("en_core_web_sm")
-
-# parsedatetime context
-cal = pdt.Calendar()
 
 # Initialize Flask and other components
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:s0r8Jh7Qv4&m@localhost/todo'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:100901huds@localhost/todo'
 db = SQLAlchemy(app)
 app.app_context().push()
 app.secret_key = 'a18230ac162cd97951b1ee3945154fc1'
@@ -64,7 +54,6 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True, nullable=True)
     categories = db.relationship('Category', backref='user', lazy=True)
-    bold_hover = db.Column(db.Boolean, default=False)
 
 
 # Category class
@@ -126,7 +115,7 @@ def format_task(task, category):
             "deadline": task.deadline,
             "completed": task.completed,
             "category_id": task.category_id,
-            "priority": task.priority
+            #"test_column": task.completed,                                              # testing stuff
     }
 
 # Define a route that queries the database
@@ -157,20 +146,12 @@ def create_default_category(mapper, connection, target):
 
 # Create task
 @app.route("/tasks/<int:user_id>", methods=["POST"])
-def create_task(user_id, task_data=None):
-    if task_data is None:
-        # Extract the data from the request if not provided as an argument
-        task_data = {
-            "title": request.json["title"],
-            "description": request.json["description"],
-            "formattedDatetime": request.json["formattedDatetime"],
-            "category_id": request.json["category_id"]
-        }
-
-    title = task_data["title"]
-    description = task_data["description"]
-    deadline = task_data["formattedDatetime"]
-    category_id = task_data["category_id"]
+def create_task(user_id):
+    # Extract the data from the request
+    title = request.json["title"]
+    description = request.json["description"]
+    deadline = request.json["formattedDatetime"]
+    category_id = request.json["category_id"]
 
     # Find the category for the given ID
     category = Category.query.get(category_id)
@@ -309,27 +290,12 @@ def update_task(id):
     # Return the updated task as a response
     return format_task(task, task.category)
 
-@app.route('/users/<int:user_id>/settings', methods=['POST', 'OPTIONS'])
-def update_user(user_id):
-    if request.method == "OPTIONS":
-        return jsonify({"message": "CORS preflight succeeded"}), 200
-    
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({"error": "User not found"}), 404
-    bold_hover_value = request.json.get('bold_hover')
-    if bold_hover_value is not None:
-        user.bold_hover = bold_hover_value
-        db.session.add(user)
-        db.session.commit()
-
-    return jsonify({"message": "Updated successfully"})
-
 # Get all categories for a user
 @app.route("/categories/<int:user_id>", methods=["GET"])
 def get_categories(user_id):
     categories = Category.query.filter_by(user_id=user_id).all()
     serialized_categories = [{"id": category.id, "name": category.name, "color": category.color, "is_toggled": category.is_toggled} for category in categories]
+    print(serialized_categories)
     
     return jsonify([category.serialize() for category in categories])
 
@@ -554,25 +520,6 @@ def main_page():
 
 CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
-@app.route("/delete-overdue-tasks", methods=["DELETE"])
-def delete_overdue_tasks():
-    thirty_days_ago = datetime.utcnow() - timedelta(days=30)
-    
-    # Find tasks where the deadline is older than 30 days
-    overdue_tasks = Task.query.filter(Task.deadline < thirty_days_ago).all()
-    
-    for task in overdue_tasks:
-        db.session.delete(task)  # Delete each overdue task
-    
-    try:
-        db.session.commit()  # Commit the changes to the database
-        return jsonify({"message": "Overdue tasks deleted successfully"}), 200
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
-
-import re
-
 @app.route("/is_authenticated", methods=["GET"])
 def is_authenticated():
     token = session.get("user")
@@ -580,132 +527,6 @@ def is_authenticated():
         return jsonify({"isAuthenticated": True}), 200
     else:
         return jsonify({"isAuthenticated": False}), 401
-
-def magic_box(magic_text):
-    """
-    Parses the text from the magic box and returns the task title and datetime.
-    """
-    date_obj, task_title = extract_dates_and_tasks(magic_text)
-    
-    # Format data for create_task function
-    task_data = {
-        "title": task_title,
-        "formattedDatetime": date_obj.strftime('%Y-%m-%dT%H:%M:%S'),
-        # Add other fields like "description" or "category_id" if necessary
-    }
-    return task_data
-
-def custom_date_parser(text):
-    # Extract date and time using a regular expression
-    match = re.search(r'(\w+ \d{1,2} at \d{1,2}:\d{2} [APMapm]{2})', text)
-    if match:
-        datetime_str = match.group(1)
-        # Parse using dateutil.parser.parse for more robust parsing
-        try:
-            return datetime_str, dateutil_parse(datetime_str)
-        except ValueError:
-            return None, None
-    return None, None
-
-def extract_dates_and_tasks(text):
-    # First, try custom date parser
-    datetime_str, date_obj = custom_date_parser(text)
-
-    task = text
-    if date_obj:
-        # Remove the date part from the task
-        task = task.replace(datetime_str, '').strip()
-    else:
-        # Fall back to the existing method if custom parser fails
-        doc = nlp(text)
-        date_str = None
-        for ent in doc.ents:
-            if ent.label_ == "DATE":
-                date_str = ent.text
-                task = task.replace(ent.text, '').strip()
-
-        if date_str:
-            date_obj = dateparser.parse(date_str, settings={
-                'PREFER_DATES_FROM': 'future',
-                'RELATIVE_BASE': datetime.now(),
-            })
-
-            if not date_obj:
-                time_struct, parse_status = cal.parse(date_str)
-                if parse_status == 1:
-                    date_obj = datetime(*time_struct[:6])
-                else:
-                    raise ValueError(f"Unable to parse date from string: '{date_str}'")
-        else:
-            raise ValueError("No date entity found in the text")
-
-    return date_obj, task
-
-@app.route("/magic-box/<int:user_id>", methods=["POST"])
-def magic_box_endpoint(user_id):
-    # Get the magic box text from the request
-    magic_box_text = request.json["magic_box_text"]
-    
-    # Parse the text using the magic_box function
-    task_data = magic_box(magic_box_text)
-    
-    # Provide additional data if needed
-    task_data["description"] = request.json.get("description", "")  # optional
-
-    # Find the category with the lowest ID for the given user
-    lowest_category = Category.query.filter_by(user_id=user_id).order_by(Category.id).first()
-    if lowest_category:
-        task_data["category_id"] = lowest_category.id
-    else:
-        # Handle the case where no categories are found for the user
-        return jsonify({"error": "No categories found for the user"}), 404
-
-    # Use the create_task function to create a task with the parsed data
-    return create_task(user_id, task_data)
-
-class TaskShareLink(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    token = db.Column(db.String(255), unique=True, nullable=False)
-    task_id = db.Column(db.Integer, db.ForeignKey('task.id'), nullable=False)
-
-    def __repr__(self):
-        return f"<TaskShareLink token={self.token} task_id={self.task_id}>"
-    
-@app.route("/generate-share-link/<int:task_id>", methods=["GET"])
-def generate_share_link(task_id):
-    task = Task.query.get(task_id)
-    if not task:
-        return jsonify({"error": "Task not found"}), 404
-
-    token = str(uuid.uuid4())
-
-    # Create a new TaskShareLink instance
-    new_link = TaskShareLink(token=token, task_id=task.id)
-    db.session.add(new_link)
-    try:
-        db.session.commit()
-    except Exception as e:
-        print(f"Error: {e}")
-        db.session.rollback()
-        return jsonify({"error": "Could not create share link"}), 500
-
-    share_link = f"http://localhost:3000/shared-task/{token}"
-    return jsonify({"share_link": share_link}), 200
-
-@app.route("/shared-task/<token>", methods=["GET"])
-def shared_task(token):
-    link = TaskShareLink.query.filter_by(token=token).first()
-    if not link:
-        return jsonify({"error": "Invalid or expired link"}), 404
-
-    task = Task.query.get(link.task_id)
-    if not task:
-        return jsonify({"error": "Task not found"}), 404
-
-    formatted_task = format_task(task, task.category)
-    return jsonify(formatted_task), 200
-
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 5000))

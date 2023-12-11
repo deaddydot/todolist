@@ -13,7 +13,8 @@ export default class EditTaskForm extends React.Component {
       title: "",
       description: "",
       deadline: "",
-      category_id: ""
+      category_id: "",
+      priority: 3 // Default priority
     };
   }
 
@@ -31,37 +32,37 @@ export default class EditTaskForm extends React.Component {
           description: task.description,
           deadline: formattedDeadline,
           category_id: task.category_id,
+          priority: task.priority // Set priority from the task
         });
       })
       .catch(error => {
         console.log(error);
       });
   }
-  
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const { title, description, deadline, category_id } = this.state;
+    const { title, description, deadline, category_id, priority } = this.state;
     const data = {
       title,
       description,
       deadline,
       category_id,
+      priority
     };
     try {
-      const response = await axios.put(`${this.props.flaskUrl}/tasks-edit/${this.props.taskId}`, data);
+      await axios.put(`${this.props.flaskUrl}/tasks-edit/${this.props.taskId}`, data);
     } catch (error) {
       console.error(error);
     }
 
     this.props.modalOpen();
-
     window.location.reload();
   };
 
   handleChange = (e) => {
     this.setState({
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
@@ -70,7 +71,7 @@ export default class EditTaskForm extends React.Component {
   };
 
   render() {
-    const { task, title, description, deadline, category_id } = this.state;
+    const { title, description, deadline, category_id, priority } = this.state;
 
     const CloseInsideForm = {
       color: '#aaa',
@@ -126,6 +127,17 @@ export default class EditTaskForm extends React.Component {
               onChange={this.handleChange}
             />
           </label>
+          <label>
+            Priority:{" "}
+            <input
+              type="number"
+              name="priority"
+              key="priority"
+              value={priority}
+              onChange={this.handleChange}
+              min="1" max="5" // Assuming priority scale is 1 to 5
+            />
+          </label>
           <UserCategories flaskUrl={this.props.flaskUrl} userId={this.props.userId} onCategoryChange={this.handleCategoryChange} selectedCategoryId={category_id} />
           <div style={ButtonContainerStyle}>
             <Button style={{backgroundColor: 'blue', border: 'none', width: 200, margin: 20}} type="submit">Submit</Button>
@@ -134,5 +146,5 @@ export default class EditTaskForm extends React.Component {
         </form>
       </div>
     );
-}
+  }
 }

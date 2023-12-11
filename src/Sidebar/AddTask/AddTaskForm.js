@@ -39,6 +39,7 @@ export default class AddTaskForm extends Component {
     description: "",
     deadline: "",
     category_id: "",
+    priority: 3,  // Default priority
     error: null
   };
 
@@ -52,16 +53,18 @@ export default class AddTaskForm extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const { title, description, deadline, category_id } = this.state;
+    const { title, description, deadline, category_id, priority } = this.state;
     const { flaskUrl, userId, onTaskAdded, modalClose } = this.props;
 
     const datetimeObject = new Date(deadline);
     const formattedDatetime = `${datetimeObject.getMonth() + 1}-${datetimeObject.getDate()}-${datetimeObject.getFullYear()} ${datetimeObject.getHours()}:${datetimeObject.getMinutes()}:${datetimeObject.getSeconds()}`;
+    // Include priority in your POST request
     const response = await axios.post(`${flaskUrl}/tasks/${userId}`, {
       title,
       description,
       formattedDatetime,
-      category_id
+      category_id,
+      priority  // Added priority
     });
     // onTaskAdded(response.data.category_id);
     modalClose();
@@ -78,7 +81,7 @@ export default class AddTaskForm extends Component {
   };
 
   render() {
-    const { title, description, deadline, error } = this.state;
+    const { title, description, deadline, priority, error } = this.state;
     const { flaskUrl, userId, modalClose } = this.props;
   
     const CloseInsideForm = {
@@ -126,6 +129,17 @@ export default class AddTaskForm extends Component {
             Description:{" "}
             <input type="text" name="description" value={description} onChange={this.handleChange} />
           </label>
+          <label>
+        Priority:{" "}
+        <input
+          type="number"
+          name="priority"
+          value={priority}
+          onChange={this.handleChange}
+          min="1" max="5"  // Assuming priority scale is 1 to 5
+        />
+      </label>
+
           <label>
             Deadline:{" "}
             <input type="datetime-local" name="deadline" value={deadline} onChange={this.handleChange} />

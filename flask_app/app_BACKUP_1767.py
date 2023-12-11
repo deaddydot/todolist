@@ -9,21 +9,19 @@ from sqlalchemy import asc, desc
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
 from dotenv import find_dotenv, load_dotenv
-from dateutil.parser import parse as dateutil_parse
-import parsedatetime as pdt
 import json
 import dateparser
 import spacy
-import uuid
 
 nlp = spacy.load("en_core_web_sm")
 
-# parsedatetime context
-cal = pdt.Calendar()
-
 # Initialize Flask and other components
 app = Flask(__name__)
+<<<<<<< HEAD
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:s0r8Jh7Qv4&m@localhost/todo'
+=======
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:3110@localhost/todo'
+>>>>>>> 5f9c25fea2a66a9330d62de902de6b49e7094ebd
 db = SQLAlchemy(app)
 app.app_context().push()
 app.secret_key = 'a18230ac162cd97951b1ee3945154fc1'
@@ -64,7 +62,6 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True, nullable=True)
     categories = db.relationship('Category', backref='user', lazy=True)
-    bold_hover = db.Column(db.Boolean, default=False)
 
 
 # Category class
@@ -554,6 +551,14 @@ def main_page():
 
 CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
+@app.route("/is_authenticated", methods=["GET"])
+def is_authenticated():
+    token = session.get("user")
+    if token:
+        return jsonify({"isAuthenticated": True}), 200
+    else:
+        return jsonify({"isAuthenticated": False}), 401
+
 @app.route("/delete-overdue-tasks", methods=["DELETE"])
 def delete_overdue_tasks():
     thirty_days_ago = datetime.utcnow() - timedelta(days=30)
@@ -573,14 +578,6 @@ def delete_overdue_tasks():
 
 import re
 
-@app.route("/is_authenticated", methods=["GET"])
-def is_authenticated():
-    token = session.get("user")
-    if token:
-        return jsonify({"isAuthenticated": True}), 200
-    else:
-        return jsonify({"isAuthenticated": False}), 401
-
 def magic_box(magic_text):
     """
     Parses the text from the magic box and returns the task title and datetime.
@@ -595,50 +592,22 @@ def magic_box(magic_text):
     }
     return task_data
 
-def custom_date_parser(text):
-    # Extract date and time using a regular expression
-    match = re.search(r'(\w+ \d{1,2} at \d{1,2}:\d{2} [APMapm]{2})', text)
-    if match:
-        datetime_str = match.group(1)
-        # Parse using dateutil.parser.parse for more robust parsing
-        try:
-            return datetime_str, dateutil_parse(datetime_str)
-        except ValueError:
-            return None, None
-    return None, None
-
 def extract_dates_and_tasks(text):
-    # First, try custom date parser
-    datetime_str, date_obj = custom_date_parser(text)
-
+    doc = nlp(text)
+    date_str = None
     task = text
-    if date_obj:
-        # Remove the date part from the task
-        task = task.replace(datetime_str, '').strip()
+    
+    for ent in doc.ents:
+        if ent.label_ in ["DATE", "TIME"]:
+            date_str = ent.text
+            task = task.replace(ent.text, '').strip()
+    
+    # Convert date string to datetime object
+    if date_str:
+        date_obj = dateparser.parse(date_str)
     else:
-        # Fall back to the existing method if custom parser fails
-        doc = nlp(text)
-        date_str = None
-        for ent in doc.ents:
-            if ent.label_ == "DATE":
-                date_str = ent.text
-                task = task.replace(ent.text, '').strip()
-
-        if date_str:
-            date_obj = dateparser.parse(date_str, settings={
-                'PREFER_DATES_FROM': 'future',
-                'RELATIVE_BASE': datetime.now(),
-            })
-
-            if not date_obj:
-                time_struct, parse_status = cal.parse(date_str)
-                if parse_status == 1:
-                    date_obj = datetime(*time_struct[:6])
-                else:
-                    raise ValueError(f"Unable to parse date from string: '{date_str}'")
-        else:
-            raise ValueError("No date entity found in the text")
-
+        date_obj = datetime.datetime.now()  # default to now if no date found
+    
     return date_obj, task
 
 @app.route("/magic-box/<int:user_id>", methods=["POST"])
@@ -662,48 +631,6 @@ def magic_box_endpoint(user_id):
 
     # Use the create_task function to create a task with the parsed data
     return create_task(user_id, task_data)
-
-class TaskShareLink(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    token = db.Column(db.String(255), unique=True, nullable=False)
-    task_id = db.Column(db.Integer, db.ForeignKey('task.id'), nullable=False)
-
-    def __repr__(self):
-        return f"<TaskShareLink token={self.token} task_id={self.task_id}>"
-    
-@app.route("/generate-share-link/<int:task_id>", methods=["GET"])
-def generate_share_link(task_id):
-    task = Task.query.get(task_id)
-    if not task:
-        return jsonify({"error": "Task not found"}), 404
-
-    token = str(uuid.uuid4())
-
-    # Create a new TaskShareLink instance
-    new_link = TaskShareLink(token=token, task_id=task.id)
-    db.session.add(new_link)
-    try:
-        db.session.commit()
-    except Exception as e:
-        print(f"Error: {e}")
-        db.session.rollback()
-        return jsonify({"error": "Could not create share link"}), 500
-
-    share_link = f"http://localhost:3000/shared-task/{token}"
-    return jsonify({"share_link": share_link}), 200
-
-@app.route("/shared-task/<token>", methods=["GET"])
-def shared_task(token):
-    link = TaskShareLink.query.filter_by(token=token).first()
-    if not link:
-        return jsonify({"error": "Invalid or expired link"}), 404
-
-    task = Task.query.get(link.task_id)
-    if not task:
-        return jsonify({"error": "Task not found"}), 404
-
-    formatted_task = format_task(task, task.category)
-    return jsonify(formatted_task), 200
 
 
 
