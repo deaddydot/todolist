@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, url_for, render_template, session, redirect, make_response, g
+from flask import Flask, jsonify, request, url_for, render_template, session, redirect, make_response, g, send_from_directory
 from functools import wraps
 from jose import jwt
 from flask_sqlalchemy import SQLAlchemy
@@ -15,6 +15,7 @@ import json
 import dateparser
 import spacy
 import uuid
+import os
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -22,12 +23,20 @@ nlp = spacy.load("en_core_web_sm")
 cal = pdt.Calendar()
 
 # Initialize Flask and other components
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:s0r8Jh7Qv4&m@localhost/todo'
+app = Flask(__name__, static_folder='build', static_url_path='')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
 app.app_context().push()
 app.secret_key = 'a18230ac162cd97951b1ee3945154fc1'
 
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
+    
 # Implement Auth0
 from authlib.integrations.flask_client import OAuth
 oauth = OAuth(app)
