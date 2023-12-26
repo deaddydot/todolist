@@ -1,2 +1,2 @@
 web: npm start
-worker: python flask_app/app.py
+worker: gunicorn flask_app:app
