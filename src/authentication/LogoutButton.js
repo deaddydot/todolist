@@ -1,8 +1,6 @@
 const LogoutButton = ({ isAuthenticated }) => {  
   const handleLogoutClick = () => {
-    const logoutUrl = process.env.REACT_APP_BACKEND_URL 
-                    ? process.env.REACT_APP_BACKEND_URL + '/logout' 
-                    : 'http://localhost:5000/logout';
+    const logoutUrl = process.env.REACT_APP_BACKEND_URL + '/logout';
     window.location.href = logoutUrl;
   };
 

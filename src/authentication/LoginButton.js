@@ -1,8 +1,6 @@
 const LoginButton = ({ isAuthenticated }) => { 
   const handleLoginClick = () => {
-    const loginUrl = process.env.REACT_APP_BACKEND_URL 
-                    ? process.env.REACT_APP_BACKEND_URL + '/login' 
-                    : 'http://localhost:5000/login';
+    const loginUrl = process.env.REACT_APP_BACKEND_URL + '/login';
     window.location.href = loginUrl;
   };
 

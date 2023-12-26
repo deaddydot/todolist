@@ -514,7 +514,7 @@ def callback():
         user_id = new_user.id
 
     # Get the frontend URL from environment variables (or default to localhost)
-    frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+    frontend_url = os.environ.get('FRONTEND_URL')
 
     # Create a response object that redirects to the frontend URL
     response = make_response(redirect(frontend_url + "/app"))
@@ -533,7 +533,7 @@ def logout():
     # Redirect to Auth0 for logout
     auth0_domain = env.get("AUTH0_DOMAIN")
     client_id = env.get("AUTH0_CLIENT_ID")
-    return_to_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000/app')  # This URL will handle React session clearing
+    return_to_url = os.environ.get('FRONTEND_URL')  # This URL will handle React session clearing
 
     logout_url = (
         f"https://{auth0_domain}/v2/logout?"
@@ -563,7 +563,7 @@ def main_page():
     # Return a response with the user ID
     return jsonify({"user_id": user_id})
 
-frontend_origin = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+frontend_origin = os.environ.get('FRONTEND_URL')
 CORS(app, origins=[frontend_origin], supports_credentials=True)
 
 
