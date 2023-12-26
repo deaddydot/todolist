@@ -27,7 +27,7 @@ app = Flask(__name__, static_folder='build', static_url_path='')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
 app.app_context().push()
-app.secret_key = 'a18230ac162cd97951b1ee3945154fc1'
+app.secret_key = os.environ.get('SECRET_KEY', 'default-secret-key')
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -513,11 +513,13 @@ def callback():
             print(f"Error: {e}")
         user_id = new_user.id
 
-    # Create a response object
-    response = make_response(redirect("http://localhost:3000/app"))
+    # Get the frontend URL from environment variables (or default to localhost)
+    frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
 
+    # Create a response object that redirects to the frontend URL
+    response = make_response(redirect(frontend_url + "/app"))
 
-    # Set the 'userId' cookie to the user's ID with a 7-day expiration
+    # Set the 'userId' cookie in the response object
     response.set_cookie('userId', str(user_id), max_age=604800)  # 604800 seconds = 7 days
 
     return response
@@ -531,7 +533,7 @@ def logout():
     # Redirect to Auth0 for logout
     auth0_domain = env.get("AUTH0_DOMAIN")
     client_id = env.get("AUTH0_CLIENT_ID")
-    return_to_url = "http://localhost:3000/app"  # This URL will handle React session clearing
+    return_to_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000/app')  # This URL will handle React session clearing
 
     logout_url = (
         f"https://{auth0_domain}/v2/logout?"
@@ -561,7 +563,9 @@ def main_page():
     # Return a response with the user ID
     return jsonify({"user_id": user_id})
 
-CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
+frontend_origin = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+CORS(app, origins=[frontend_origin], supports_credentials=True)
+
 
 @app.route("/delete-overdue-tasks", methods=["DELETE"])
 def delete_overdue_tasks():
@@ -698,7 +702,7 @@ def generate_share_link(task_id):
         db.session.rollback()
         return jsonify({"error": "Could not create share link"}), 500
 
-    share_link = f"http://localhost:3000/shared-task/{token}"
+    share_link = f"https://intense-waters-52427-5bdd90815e12.herokuapp.com/shared-task/{token}"
     return jsonify({"share_link": share_link}), 200
 
 @app.route("/shared-task/<token>", methods=["GET"])

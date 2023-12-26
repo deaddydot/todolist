@@ -19,7 +19,7 @@ const Title = () => (
 export default function RouterPage() {
   useEffect(() => {
     // Fetch the userId from the Flask backend
-    fetch('http://localhost:5000/callback', {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/callback`, {
       method: 'GET',
       credentials: 'include',  // Important for sending cookies across origins
     })

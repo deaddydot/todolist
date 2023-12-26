@@ -13,7 +13,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
   
 // dev flask url
-const flaskUrl = "http://127.0.0.1:5000";
+const flaskUrl = process.env.REACT_APP_BACKEND_URL;
 
 // prod flask url
 // const flaskUrl = "https://tasktastic.link:5001";
@@ -58,7 +58,7 @@ export class App extends React.Component {
 
   async checkAuthentication() {
     try {
-      const response = await axios.get('http://localhost:5000/is_authenticated', { withCredentials: true });
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/is_authenticated`, { withCredentials: true });
       if (response.data.isAuthenticated) {
         this.setState({ isAuthenticated: true });
       } else {
